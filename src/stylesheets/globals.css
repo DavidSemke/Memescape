@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 
+Note that there is an odd error with this build. Dynamic use of Tailwind breakpoints 
+(breakpoint inserted via template string) followed by an edit to this file may cause 
+breakpoint utility classes to stop working. This occurred with `hidden ${bp}:block`.
+*/
+
+:root {
+  --primary: #0000b4;
+  --secondary: #E4FCFF;
+  --tertiary: black;
+  --action-primary: #FC7A03;
+  --action-primary-hover: #FF9738;
+  --action-secondary: #00D1FF;
+  --action-secondary-hover: #47DEFF;
+  --action-tertiary: #6b6bff;
+  --action-tertiary-hover: #afafff;
+  --stress-primary: #D96800;
+  --stress-secondary: #00b3db;
+  --stress-tertiary: #000050;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary: #000030;
+    --secondary: #000050;
+    --tertiary: white;
+    --action-primary: #6e3500;
+    --action-primary-hover: #8b4300;
+    --action-secondary: #00414d;
+    --action-secondary-hover: #005464;
+    --action-tertiary: #A3A3FF;
+    --action-tertiary-hover: #dadaff;
+    --stress-primary: #d16500;
+    --stress-secondary: #0093ad;
+    --stress-tertiary: #0000b4;
+  }
+}
+
+@layer base {
+  a {
+    color: var(--action-tertiary);
+  }
+  
+  a:hover {
+    color: var(--action-tertiary-hover);
+  }
+
+  /* input[type="file"] {
+    @apply relative;
+  }
+
+  input[type="file"]::before {
+    @apply absolute pointer-events-none
+  }
+
+  input[type="file"]::after {
+
+  }
+
+  input[type="file"]::file-selector-button {
+    @apply px-4 py-1 rounded-xl border-2 bg-action-secondary hover:bg-action-secondary-hover border-stress-secondary text-tertiary;
+  } */
+}
+
+@layer components { 
+  .btn-primary {
+    @apply flex gap-2 px-4 py-1 rounded-xl border-2 bg-action-primary hover:bg-action-primary-hover border-stress-primary text-tertiary hover:text-tertiary;
+  }
+
+  .btn-secondary {
+    @apply flex gap-2 px-4 py-1 rounded-xl border-2 bg-action-secondary hover:bg-action-secondary-hover border-stress-secondary text-tertiary;
+  }
+}
+
+@layer utilities {
+  .h-10vh {
+    height: 10vh;
+  }
+
+  .input-bg-none {
+    background: none;
+  }
+}

@@ -2,19 +2,23 @@ import type { Config } from "tailwindcss";
 
 const config: Config = {
   content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/components/**/*.{js,ts,jsx,tsx,mdx}'
   ],
   theme: {
-    extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-      },
-    },
+    colors: {
+      'primary': 'var(--primary)',
+      'secondary': 'var(--secondary)',
+      'tertiary': 'var(--tertiary)',
+      'stress-primary': 'var(--stress-primary)',
+      'stress-secondary': 'var(--stress-secondary)',
+      'stress-tertiary': 'var(--stress-tertiary)',
+      'action-primary': 'var(--action-primary)',
+      'action-primary-hover': 'var(--action-primary-hover)',
+      'action-secondary': 'var(--action-secondary)',
+      'action-secondary-hover': 'var(--action-secondary-hover)',
+    }
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/forms')],
 };
 export default config;
