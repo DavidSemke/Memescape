@@ -1,10 +1,6 @@
 import SignForm from '@/components/form/SignForm'
 
-export default function SignInPage({
-    children,
-}: {
-    children: React.ReactNode
-}) {
+export default function SignInPage() {
     return (
         <main>
             <SignForm />
