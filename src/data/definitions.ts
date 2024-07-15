@@ -16,14 +16,6 @@ export type Meme = {
 }
 
 export type Bookmark = {
-    id: number,
     user_id: number,
     meme_id: number | null
-}
-
-export type Template = {
-    id: string,
-    name: string,
-    lines: number,
-    keywords: string[]
 }
