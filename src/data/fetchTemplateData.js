@@ -11,10 +11,18 @@ async function main() {
         }
 
         const templates = await response.json();
-        let fileString = 'export default templates = [\n'
+        let fileString = 'module.exports = [\n'
+        
+        const idSet = new Set()
 
         for (const template of templates) {
             let { id, name, lines, keywords} = template
+            
+            if (idSet.has(id)) {
+                continue
+            }
+            
+            idSet.add(id)
             name = name.toLowerCase()
 
             fileString += '\t{\n'

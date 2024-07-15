@@ -1,10 +1,10 @@
 const { db } = require('@vercel/postgres');
-const {
-  users,
-  memes,
-  bookmarks
-} = require('./placeholder.js');
+const users = require('./placeholder/users');
+const memes = require('./placeholder/memes');
+const bookmarks = require('./placeholder/bookmarks');
+const templates = require('./placeholder/templates');
 const bcrypt = require('bcrypt');
+require('dotenv').config()
 
 async function seedUsers(client) {
   try {
@@ -54,7 +54,7 @@ async function seedMemes(client) {
         user_id UUID NOT NULL,
         text VARCHAR(60)[] NOT NULL,
         private BOOLEAN NOT NULL,
-        product_image: BYTEA NOT NULL,
+        product_image BYTEA NOT NULL,
         create_date DATE NOT NULL,
         CONSTRAINT fk_template
           FOREIGN KEY(template_id)
@@ -171,10 +171,10 @@ async function main() {
   const client = await db.connect();
 
   await seedUsers(client);
+  await seedTemplates(client);
   await seedMemes(client);
   await seedBookmarks(client);
-  await seedTemplates(client);
-
+  
   await client.end();
 }
 

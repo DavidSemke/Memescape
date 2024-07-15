@@ -1,4 +1,4 @@
-export default templates = [
+module.exports = [
 	{
 		id: "aag",
 		name: "ancient aliens guy",
@@ -871,11 +871,9 @@ export default templates = [
 	},
 	{
 		id: "money",
-		name: "shut up and take my money!",
+		name: "",
 		lines: 2,
 		keywords: [
-			"futurama",
-			"philip j. fry",
 		],
 	},
 	{
@@ -1083,13 +1081,6 @@ export default templates = [
 		id: "rollsafe",
 		name: "roll safe",
 		lines: 2,
-		keywords: [
-		],
-	},
-	{
-		id: "rollsafe",
-		name: "roll safe",
-		lines: 1,
 		keywords: [
 		],
 	},
