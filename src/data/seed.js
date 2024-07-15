@@ -2,7 +2,6 @@ const { db } = require('@vercel/postgres');
 const users = require('./placeholder/users');
 const memes = require('./placeholder/memes');
 const bookmarks = require('./placeholder/bookmarks');
-const templates = require('./placeholder/templates');
 const bcrypt = require('bcrypt');
 require('dotenv').config()
 
@@ -56,9 +55,6 @@ async function seedMemes(client) {
         private BOOLEAN NOT NULL,
         product_image BYTEA NOT NULL,
         create_date DATE NOT NULL,
-        CONSTRAINT fk_template
-          FOREIGN KEY(template_id)
-            REFERENCES templates(id),
         CONSTRAINT fk_user
           FOREIGN KEY(user_id)
             REFERENCES users(id)
@@ -130,48 +126,10 @@ async function seedBookmarks(client) {
   }
 }
 
-async function seedTemplates(client) {
-  try {
-    await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-
-    const createTable = await client.sql`
-      CREATE TABLE IF NOT EXISTS templates (
-        id VARCHAR(30) PRIMARY KEY,
-        name VARCHAR(60) NOT NULL,
-        lines SMALLINT NOT NULL,
-        keywords VARCHAR(60)[] NOT NULL
-      );
-    `;
-
-    console.log(`Created "templates" table`);
-
-    const insertedTemplates = await Promise.all(
-      templates.map(
-        (template) => client.sql`
-        INSERT INTO templates
-        VALUES (${template.id}, ${template.name}, ${template.lines}, 
-        ${template.keywords});
-      `,
-      ),
-    );
-
-    console.log(`Seeded ${insertedTemplates.length} templates`);
-
-    return {
-      createTable,
-      templates: insertedTemplates,
-    };
-  } catch (error) {
-    console.error('Error seeding templates:', error);
-    throw error;
-  }
-}
-
 async function main() {
   const client = await db.connect();
 
   await seedUsers(client);
-  await seedTemplates(client);
   await seedMemes(client);
   await seedBookmarks(client);
   
