@@ -1,21 +1,33 @@
 export type User = {
-    id: number,
+    id: string,
     name: string,
     password: string,
-    profile_image: Buffer | null
+    profile_image_id: string
 }
 
 export type Meme = {
-    id: number,
+    id: string,
     template_id: string,
-    user_id: number,
+    user_id: string,
     text: string[],
     private: boolean,
-    product_image: Buffer,
+    product_image_id: string,
     create_date: Date
 }
 
 export type Bookmark = {
-    user_id: number,
-    meme_id: number | null
+    user_id: string,
+    meme_id: string | null
+}
+
+export type Template = {
+    id: string,
+    name: string,
+    keywords: string[]
+}
+
+export type Image = {
+    id: string,
+    data: Buffer,
+    mime_type: string
 }

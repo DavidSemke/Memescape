@@ -1,6 +1,4 @@
-const fs = require('fs')
-
-module.exports = [
+export default [
     {
         id: '410544b2-4001-4271-9855-fec4b6a6442a',
         template_id: 'dodgson',
@@ -10,7 +8,7 @@ module.exports = [
             'see? nobody cares'
         ],
         private: false,
-        product_image: fs.readFileSync(`${__dirname}/../images/nobody_cares.png`),
+        product_image_id: 'CC27C14A-0ACF-4F4A-A6C9-D45682C144B5',
         create_date: new Date()
     },
     {
@@ -22,7 +20,7 @@ module.exports = [
             'ain\'t nobody got time for that'
         ],
         private: false,
-        product_image: fs.readFileSync(`${__dirname}/../images/aint_got_time.png`),
+        product_image_id: 'CC27C14A-0ACF-4F4A-A6C9-D45682C144B4',
         create_date: new Date()
     },
     {
@@ -34,7 +32,7 @@ module.exports = [
             'but it was aliens'
         ],
         private: true,
-        product_image: fs.readFileSync(`${__dirname}/../images/aag.png`),
+        product_image_id: 'CC27C14A-0ACF-4F4A-A6C9-D45682C144B3',
         create_date: new Date()
     }
 ]

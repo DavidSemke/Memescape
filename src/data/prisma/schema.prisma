@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model Image {
+  id        String @id @default(uuid()) @db.Uuid
+  data      Bytes  @db.ByteA
+  mime_type String @db.VarChar(50)
+  User      User?
+  Meme      Meme?
+}
+
+model User {
+  id               String     @id @default(uuid()) @db.Uuid
+  name             String     @db.VarChar(20)
+  password         String     @db.Text
+  profile_image_id String?    @unique @db.Uuid
+  profile_image    Image?     @relation(fields: [profile_image_id], references: [id])
+  Meme             Meme[]
+  Bookmark         Bookmark[]
+}
+
+model Template {
+  id       String   @id @db.VarChar(30)
+  name     String   @db.VarChar(60)
+  keywords String[] @db.VarChar(60)
+  Meme     Meme[]
+}
+
+model Meme {
+  id               String     @id @default(uuid()) @db.Uuid
+  template_id      String     @db.VarChar(30)
+  template         Template   @relation(fields: [template_id], references: [id])
+  user_id          String     @db.Uuid
+  user             User       @relation(fields: [user_id], references: [id])
+  text             String[]   @db.VarChar(60)
+  private          Boolean
+  product_image_id String     @unique @db.Uuid
+  product_image    Image      @relation(fields: [product_image_id], references: [id])
+  create_date      DateTime   @default(now()) @db.Date
+  Bookmark         Bookmark[]
+}
+
+model Bookmark {
+  user_id String @db.Uuid
+  user    User   @relation(fields: [user_id], references: [id])
+  meme_id String @db.Uuid
+  meme    Meme   @relation(fields: [meme_id], references: [id])
+
+  @@id([user_id, meme_id])
+}

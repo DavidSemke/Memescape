@@ -2,20 +2,28 @@
   "name": "memescape",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
+  "prisma": {
+    "schema": "src/data/prisma/schema.prisma"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "seed-db": "tsx src/data/seed",
+    "prisma-migrate": "prisma format & prisma generate & prisma migrate deploy & next build",
+    "prisma-push": "prisma format & prisma db push",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
     "@heroicons/react": "^2.1.4",
+    "@prisma/client": "^5.17.0",
     "@vercel/postgres": "^0.9.0",
-    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
     "clsx": "^2.1.1",
     "dotenv": "^16.4.5",
     "next": "14.2.4",
-    "next-auth": "^4.24.7",
+    "next-auth": "^5.0.0-beta.19",
     "react": "^18",
     "react-dom": "^18",
     "use-debounce": "^10.0.1",
@@ -23,7 +31,7 @@
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.7",
-    "@types/bcrypt": "^5.0.2",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
@@ -34,7 +42,9 @@
     "postcss": "^8",
     "prettier": "3.3.2",
     "prettier-plugin-tailwindcss": "^0.6.5",
+    "prisma": "^5.17.0",
     "tailwindcss": "^3.4.1",
+    "tsx": "^4.16.2",
     "typescript": "^5"
   }
 }
