@@ -1,5 +1,12 @@
-import Logo from "../Logo"
+'use client'
+
 import Link from "next/link"
+import { signInUser, postUser } from "@/data/api/controllers/user"
+import { useFormState } from "react-dom"
+import { Input } from "./Input"
+import Logo from "../image/Logo"
+import { FormStateView } from "./FormStateView"
+import { Action, FormState } from "@/data/api/definitions"
 
 type SignFormProps = {
     signingUp?: boolean,
@@ -8,35 +15,54 @@ type SignFormProps = {
 export default function SignForm({ signingUp=false }: SignFormProps) {
     let heading = 'Sign In'
     let bottomText = "Don't have an account?"
+    let otherSignPath = '/sign-up'
+    let otherSignHeading = 'Sign Up'
+    let signAction: Action = signInUser
 
     if (signingUp) {
         heading = 'Sign Up'
         bottomText = 'Already have an account?'
+        otherSignPath = '/sign-in'
+        otherSignHeading = 'Sign In'
+        signAction = postUser
     }
 
-    const otherSignPath = '/' + heading.toLowerCase().split(' ').join('-')
+    const [state, action] = useFormState<FormState, FormData>(signAction, false)
+    const errors = typeof state === "object" && "errors" in state ? state.errors : null
 
     return (
-        <form 
-            method="post"
+        <form
+            action={action}
             className="flex flex-col items-center gap-4 w-full"
         >
-            <header className="flex justify-center gap-4">
+            <header className="flex justify-center items-center gap-4">
                 <Logo />
-                <h1>{heading}</h1>
+                <h1 className="text-2xl">{heading}</h1>
             </header>
-            <div className="w-full">
-                <label htmlFor="username">Username</label>
-                <input id="username" name="username" type="text" />
-            </div>
-            <div className="w-full">
-                <label htmlFor="password">Password</label>
-                <input id="password" name="password" type="password" />
-            </div>
+            <Input 
+                name='username' 
+                errors={errors?.username} 
+            />
+            <Input 
+                name='password'
+                errors={errors?.password} 
+                attrs={{
+                    input: {
+                        type: 'password'
+                    }
+                }}
+            />
             <button type='submit' className="btn-primary">{heading}</button>
+            <FormStateView state={state}/>
+
             <div className="flex flex-col items-center">
-                <p>{bottomText}</p>
-                <Link href={otherSignPath}>{heading}</Link>
+                <p className="text-sm">{bottomText}</p>
+                <Link 
+                    href={otherSignPath}
+                    className="text-sm"
+                >
+                    {otherSignHeading}
+                </Link>
             </div>
         </form>
     )

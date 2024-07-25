@@ -3,40 +3,54 @@
 @tailwind utilities;
 
 /* 
-Note that there is an odd error with this build. Dynamic use of Tailwind breakpoints 
-(breakpoint inserted via template string) followed by an edit to this file may cause 
-breakpoint utility classes to stop working. This occurred with `hidden ${bp}:block`.
+  Note that there is an odd error with this build. Dynamic use of Tailwind breakpoints 
+  (breakpoint inserted via template string) followed by an edit to this file may cause 
+  breakpoint utility classes to stop working. This occurred with `hidden ${bp}:block`.
+
+  Also, if a component accepts a class string via an attrs object prop, make sure to 
+  assign the classes separately to avoid server/client class clashes, e.g.:
+  <div {...attrs.root} className={attrs.root.className}>...</div>
 */
 
 :root {
+  --color: black;
   --primary: #0000b4;
   --secondary: #E4FCFF;
-  --tertiary: black;
+  --tertiary: #E4FCFF;
   --action-primary: #FC7A03;
   --action-primary-hover: #FF9738;
   --action-secondary: #00D1FF;
   --action-secondary-hover: #47DEFF;
   --action-tertiary: #6b6bff;
   --action-tertiary-hover: #afafff;
+  --error: red;
+  --input-primary: #0000b4;
+  --input-secondary: #E4FCFF;
   --stress-primary: #D96800;
   --stress-secondary: #00b3db;
   --stress-tertiary: #000050;
+  --success: green;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
+    --color: white;
     --primary: #000030;
     --secondary: #000050;
-    --tertiary: white;
+    --tertiary: #000070;
     --action-primary: #6e3500;
     --action-primary-hover: #8b4300;
     --action-secondary: #00414d;
     --action-secondary-hover: #005464;
     --action-tertiary: #A3A3FF;
     --action-tertiary-hover: #dadaff;
+    --error: red;
+    --input-primary: #000000;
+    --input-secondary: #222222;
     --stress-primary: #d16500;
     --stress-secondary: #0093ad;
-    --stress-tertiary: #0000b4;
+    --stress-tertiary: #4f4fff;
+    --success: green;
   }
 }
 
@@ -47,6 +61,10 @@ breakpoint utility classes to stop working. This occurred with `hidden ${bp}:blo
   
   a:hover {
     color: var(--action-tertiary-hover);
+  }
+
+  input::placeholder {
+    color: #dbdbdb;
   }
 
   /* input[type="file"] {
@@ -62,17 +80,21 @@ breakpoint utility classes to stop working. This occurred with `hidden ${bp}:blo
   }
 
   input[type="file"]::file-selector-button {
-    @apply px-4 py-1 rounded-xl border-2 bg-action-secondary hover:bg-action-secondary-hover border-stress-secondary text-tertiary;
+    @apply px-4 py-1 rounded-xl border-2 bg-action-secondary hover:bg-action-secondary-hover border-stress-secondary text-color;
   } */
+  
+  main {
+    @apply w-full;
+  }
 }
 
 @layer components { 
   .btn-primary {
-    @apply flex gap-2 px-4 py-1 rounded-xl border-2 bg-action-primary hover:bg-action-primary-hover border-stress-primary text-tertiary hover:text-tertiary;
+    @apply flex gap-2 px-4 py-1 rounded-xl border-2 bg-action-primary hover:bg-action-primary-hover border-stress-primary text-color hover:text-color;
   }
 
   .btn-secondary {
-    @apply flex gap-2 px-4 py-1 rounded-xl border-2 bg-action-secondary hover:bg-action-secondary-hover border-stress-secondary text-tertiary;
+    @apply flex gap-2 px-4 py-1 rounded-xl border-2 bg-action-secondary hover:bg-action-secondary-hover border-stress-secondary text-color;
   }
 }
 

@@ -1,20 +1,14 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import clsx from 'clsx'
+import { attrsStyleMerge } from '../utils'
 
 type LogoProps = {
     title?: boolean,
     slogan?: boolean,
     attrs?: {
-        root?: {
-            [key: string]: any
-        },
-        title?: {
-            [key: string]: any
-        },
-        slogan?: {
-            [key: string]: any
-        }
+        root?: Record<string, any>,
+        title?: Record<string, any>,
+        slogan?: Record<string, any>
     }
 }
 
@@ -24,17 +18,10 @@ export default function Logo({ title=false, slogan=false, attrs={} }: LogoProps)
         title: 'text-lg',
         slogan: 'text-sm'
     }
-    const els = ['root', 'title', 'slogan'] as const;
-
-    const [rootClasses, titleClasses, sloganClasses] = els.map((el) => {
-        return clsx(
-            defaultStyles[el],
-            attrs[el]?.className
-        )
-    })
+    const styles = attrsStyleMerge(attrs, defaultStyles)
 
     return (
-        <div {...attrs.root} className={rootClasses}>
+        <div {...attrs.root} className={styles.root}>
             <Link href='/'>
                 <div className='rounded-full overflow-hidden'>
                     <Image 
@@ -50,14 +37,14 @@ export default function Logo({ title=false, slogan=false, attrs={} }: LogoProps)
                     <div className='flex flex-col justify-center'>
                         {   
                             title && (
-                                <div {...attrs.title} className={titleClasses}>
+                                <div {...attrs.title} className={styles.title}>
                                     Memescape
                                 </div>
                             )
                         }
                         {
                             slogan && (
-                                <p {...attrs.slogan} className={sloganClasses}>
+                                <p {...attrs.slogan} className={styles.slogan}>
                                     Find memes, create memes, share memes.
                                 </p>
                             )

@@ -1,5 +1,5 @@
 import Searchbar from "@/components/form/Searchbar";
-import ImageGrid from "@/components/ImageGrid";
+import ImageGrid from "@/components/grid/ImageGrid";
 
 export default function MemeSearchPage() {
   return (

@@ -1,14 +1,20 @@
 'use client'
 
-import { MagnifyingGlassIcon, Bars3Icon } from '@heroicons/react/24/outline'
-import Logo from '../Logo'
+import { Bars3Icon } from '@heroicons/react/24/outline'
+import Logo from '../image/Logo'
 import { SidebarContext } from '../context/SidebarContext'
+import { SignButton } from '../button/SignButton'
 import { useContext } from 'react'
 import Link from 'next/link'
+import { Session } from 'next-auth'
 
-export default function Topbar() {
-    const isSignedIn = false
+type TopbarProps = {
+    session: Session | null
+}
+
+export default function Topbar({ session }: TopbarProps) {
     const { setShowSidebar } = useContext(SidebarContext)
+    const user = session?.user
 
     return (
         <nav className='flex justify-between px-4 bg-primary h-10vh min-h-16 sticky top-0 z-10 border-b-2 border-stress-tertiary'>
@@ -24,11 +30,14 @@ export default function Topbar() {
             </div>
             <div className='flex items-center gap-4'>
                 {
-                    isSignedIn ? (
-                        <Link href='/' className='btn-primary'>Create</Link>
-                    ) : (
-                        <Link href='/sign-in' className='btn-primary'>Sign In</Link>
-                    )
+                    user ? (
+                        <Link 
+                            href={`/${user.name}/memes/create`} 
+                            className='btn-primary'
+                        >
+                            Create
+                        </Link>
+                    ) : <SignButton type='in'/> 
                 }
                 <button 
                     type='button' 

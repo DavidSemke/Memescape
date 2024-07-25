@@ -1,4 +1,4 @@
-import Logo from "../Logo"
+import Logo from "../image/Logo"
 
 export default function Footer() {
     return (

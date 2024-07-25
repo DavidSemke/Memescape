@@ -1,6 +1,6 @@
 import { BookmarkSquareIcon, BookmarkIcon, ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import Searchbar from "@/components/form/Searchbar";
-import ImageGrid from "@/components/ImageGrid";
+import ImageGrid from "@/components/grid/ImageGrid";
 import Image from "next/image";
 
 export default function MemePage() {

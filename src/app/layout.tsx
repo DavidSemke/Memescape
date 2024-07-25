@@ -19,7 +19,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={clsx(
         inter.className,
-        'bg-secondary text-tertiary min-h-screen antialiased'
+        'bg-secondary text-color min-h-screen antialiased'
       )}>
         {children}
       </body>

@@ -21,7 +21,7 @@ model Image {
 
 model User {
   id               String     @id @default(uuid()) @db.Uuid
-  name             String     @db.VarChar(20)
+  name             String     @unique @db.VarChar(20)
   password         String     @db.Text
   profile_image_id String?    @unique @db.Uuid
   profile_image    Image?     @relation(fields: [profile_image_id], references: [id])
@@ -32,7 +32,7 @@ model User {
 model Template {
   id       String   @id @db.VarChar(30)
   name     String   @db.VarChar(60)
-  keywords String[] @db.VarChar(60)
+  keywords String[] @default([]) @db.VarChar(60)
   Meme     Meme[]
 }
 
@@ -42,7 +42,7 @@ model Meme {
   template         Template   @relation(fields: [template_id], references: [id])
   user_id          String     @db.Uuid
   user             User       @relation(fields: [user_id], references: [id])
-  text             String[]   @db.VarChar(60)
+  text             String[]   @default([]) @db.VarChar(60)
   private          Boolean
   product_image_id String     @unique @db.Uuid
   product_image    Image      @relation(fields: [product_image_id], references: [id])
