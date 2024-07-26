@@ -27,9 +27,10 @@ export default function Sidebar({ session }: SidebarProps) {
 
     return (
         <nav className={clsx(
-            'flex flex-col items-center gap-4 p-4 fixed z-10 bg-primary w-full h-full',
+            'flex flex-col items-center gap-4 p-4 fixed z-10 bg-primary w-full h-full ease-in-out duration-300',
             {
-                'hidden': !showSidebar
+                'translate-x-0': showSidebar,
+                'translate-x-full': !showSidebar
             }
         )}>
             <section className='flex items-center gap-4 w-full pb-4 border-b-2 border-stress-secondary'>
