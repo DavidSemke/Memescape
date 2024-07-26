@@ -17,7 +17,7 @@ export function FormStateView({ state }: FormStateViewProps) {
     const { pending } = useFormStatus()
     
     if (pending) {
-        return <p>Pending...</p>
+        return <p className="text-pending">Pending...</p>
     }
 
     if (state === false) {

@@ -26,6 +26,7 @@
   --error: red;
   --input-primary: #0000b4;
   --input-secondary: #E4FCFF;
+  --pending: #ffff00;
   --stress-primary: #D96800;
   --stress-secondary: #00b3db;
   --stress-tertiary: #000050;
@@ -47,6 +48,7 @@
     --error: red;
     --input-primary: #000000;
     --input-secondary: #222222;
+    --pending: #ffff00;
     --stress-primary: #d16500;
     --stress-secondary: #0093ad;
     --stress-tertiary: #4f4fff;

@@ -20,6 +20,7 @@ const config: Config = {
       'error': 'var(--error)',
       'input-primary': 'var(--input-primary)',
       'input-secondary': 'var(--input-secondary)',
+      'pending': 'var(--pending)',
       'stress-primary': 'var(--stress-primary)',
       'stress-secondary': 'var(--stress-secondary)',
       'stress-tertiary': 'var(--stress-tertiary)',
