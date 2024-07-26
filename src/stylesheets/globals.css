@@ -29,7 +29,7 @@
   --stress-primary: #D96800;
   --stress-secondary: #00b3db;
   --stress-tertiary: #000050;
-  --success: green;
+  --success: #04ff00;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -50,7 +50,7 @@
     --stress-primary: #d16500;
     --stress-secondary: #0093ad;
     --stress-tertiary: #4f4fff;
-    --success: green;
+    --success: #04ff00;
   }
 }
 

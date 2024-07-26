@@ -5,7 +5,6 @@ import prisma from "@/data/prisma/client"
 import bcrypt from 'bcryptjs'
 import { signIn } from '@/app/api/auth/[...nextauth]/auth'
 import { postUserSchema } from "@/data/api/validation/user";
-import { Prisma } from "@prisma/client";
 import { AuthError } from 'next-auth'
 import { FormState } from '@/data/api/definitions'
 import { error500Msg } from '../validation/errorMsg'
@@ -15,12 +14,18 @@ export async function signInUser(
   prevState: FormState, formData: FormData
 ): Promise<FormState> {
     try {
-      await signIn('credentials', formData)
+      await signIn('credentials', {
+        redirect: false,
+        username: formData.get('username'),
+        password: formData.get('password')
+      })
     }
     catch(error) {
       if (error instanceof AuthError) {
         return 'Invalid username or password.'
       }
+
+      return error500Msg
     }
 
     redirect('/')
