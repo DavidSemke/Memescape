@@ -1,5 +1,5 @@
 import Searchbar from "@/components/form/Searchbar";
-import ImageGrid from "@/components/grid/ImageGrid";
+import MemeGrid from "@/components/grid/MemeGrid";
 
 export default function MemeSearchPage() {
   return (
@@ -7,8 +7,8 @@ export default function MemeSearchPage() {
       <Searchbar 
         placeholder="Search for memes"
       />
-      <ImageGrid 
-        images={[]}
+      <MemeGrid 
+        memes={[]}
       />
     </main>
   )

@@ -1,6 +1,6 @@
 import { BookmarkSquareIcon, BookmarkIcon, ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import Searchbar from "@/components/form/Searchbar";
-import ImageGrid from "@/components/grid/ImageGrid";
+import MemeGrid from "@/components/grid/MemeGrid";
 import Image from "next/image";
 
 export default function MemePage() {
@@ -48,8 +48,8 @@ export default function MemePage() {
       </section>
       <section>
         <h2 className="pb-2 border-b border-stress-secondary">Related Memes</h2>
-        <ImageGrid 
-          images={[]}
+        <MemeGrid 
+          memes={[]}
         />
       </section>
     </main>

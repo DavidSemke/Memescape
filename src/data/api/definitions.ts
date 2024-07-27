@@ -1,4 +1,4 @@
-import { User } from '@prisma/client'
+import { User, Image, Meme, Template } from '@prisma/client'
 
 export type NestedJoinedUser = User
     & Partial<{ profile_image: Image }>
@@ -6,11 +6,15 @@ export type NestedJoinedUser = User
 export type JoinedUser = User 
     & Partial<Omit<Image, 'id'>>
 
-type Image = {
-    id: string,
-    data: Buffer,
-    mime_type: string
-}
+export type NestedJoinedMeme = Meme
+    & { 
+        product_image: Image,
+        template: Template
+    }
+
+export type JoinedMeme = Meme
+    & Omit<Image, 'id'>
+    & Omit<Template, 'id'>
 
 export type Action = (
     state: FormState, formData: FormData

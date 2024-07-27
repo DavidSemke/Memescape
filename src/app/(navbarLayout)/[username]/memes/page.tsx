@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Searchbar from "@/components/form/Searchbar";
-import ImageGrid from "@/components/grid/ImageGrid";
+import MemeGrid from "@/components/grid/MemeGrid";
 import Link from "next/link";
 
 export default function UserMemesPage() {
