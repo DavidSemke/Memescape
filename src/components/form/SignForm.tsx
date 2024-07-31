@@ -6,7 +6,7 @@ import { useFormState } from "react-dom"
 import { Input } from "./Input"
 import Logo from "../image/Logo"
 import { FormStateView } from "./FormStateView"
-import { Action, FormState } from "@/data/api/definitions"
+import { Action, FormState } from "@/data/api/types/action"
 
 type SignFormProps = {
     signingUp?: boolean,

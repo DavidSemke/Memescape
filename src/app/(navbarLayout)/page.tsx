@@ -6,12 +6,14 @@ import { auth } from "@/app/api/auth/[...nextauth]/auth"
 import { getMemes } from "@/data/api/controllers/meme";
 
 export default async function IndexPage() {
-  const session = await auth()
+  const [session, memes] = await Promise.all([
+    auth(),
+    getMemes(null, undefined, 10)
+  ])
   const user = session?.user
-  const memes = await getMemes(undefined, 9)
 
   return (
-    <main className="flex flex-col gap-4 items-center min-h-screen p-4">
+    <main className="flex flex-col gap-4 items-center">
       <Searchbar 
         placeholder="Search for memes"
       />
@@ -19,7 +21,7 @@ export default async function IndexPage() {
       <MemeGrid 
         memes={memes}
       />
-      <div className="flex flex-col items-center gap-4">
+      <div className="flex flex-col items-center gap-4 my-4">
         {
           user ? (
             <>

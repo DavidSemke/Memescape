@@ -84,6 +84,14 @@
   input[type="file"]::file-selector-button {
     @apply px-4 py-1 rounded-xl border-2 bg-action-secondary hover:bg-action-secondary-hover border-stress-secondary text-color;
   } */
+
+  h1 {
+    @apply text-2xl;
+  }
+
+  h2 {
+    @apply text-xl;
+  }
   
   main {
     @apply w-full;
@@ -92,11 +100,11 @@
 
 @layer components { 
   .btn-primary {
-    @apply flex gap-2 px-4 py-1 rounded-xl border-2 bg-action-primary hover:bg-action-primary-hover border-stress-primary text-color hover:text-color;
+    @apply flex gap-2 px-2 py-1 rounded-xl border-2 bg-action-primary hover:bg-action-primary-hover border-stress-primary text-color hover:text-color;
   }
 
   .btn-secondary {
-    @apply flex gap-2 px-4 py-1 rounded-xl border-2 bg-action-secondary hover:bg-action-secondary-hover border-stress-secondary text-color;
+    @apply flex gap-2 px-2 py-1 rounded-xl border-2 bg-action-secondary hover:bg-action-secondary-hover border-stress-secondary text-color;
   }
 }
 

@@ -1,9 +1,9 @@
 import Image from "next/image"
 import Link from "next/link"
-import { NestedJoinedMeme } from "@/data/api/definitions"
+import { NestedMeme } from "@/data/api/types/model"
 
 type MemeGridProps = {
-    memes: NestedJoinedMeme[]
+    memes: NestedMeme[]
 }
 
 export default function MemeGrid({ memes }: MemeGridProps) {
@@ -11,7 +11,7 @@ export default function MemeGrid({ memes }: MemeGridProps) {
         <div className='columns-2 gap-4 w-full sm:columns-4 md:columns-4 lg:columns-6'>
             {
                 memes.map((meme) => {
-                    const { data, mime_type } = meme.product_image
+                    const imageSrc = meme.product_image.base64
                     const alt = `${meme.template.name}. ${meme.text.join('. ')}`
 
                     return (
@@ -23,7 +23,7 @@ export default function MemeGrid({ memes }: MemeGridProps) {
                                 href={`/memes/${meme.id}`}
                             >
                                 <Image
-                                    src={`data:${mime_type};base64,${data.toString('base64')}`}
+                                    src={imageSrc}
                                     width={0}
                                     height={0}
                                     alt={alt}

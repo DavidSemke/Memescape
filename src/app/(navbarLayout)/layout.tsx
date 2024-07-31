@@ -17,7 +17,9 @@ export default async function NavbarLayout({
                 <Topbar session={session}/>
                 <Sidebar session={session}/>
             </SidebarProvider>
-            {children}
+            <div className="min-h-screen p-4">
+                {children}
+            </div>
             <Footer />
         </>
     )

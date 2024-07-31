@@ -17,7 +17,7 @@ export default function Topbar({ session }: TopbarProps) {
     const user = session?.user
 
     return (
-        <nav className='flex justify-between px-4 bg-primary h-10vh min-h-16 sticky top-0 z-10 border-b-2 border-stress-tertiary'>
+        <nav className='flex justify-between p-4 bg-primary h-10vh min-h-16 sticky top-0 z-10 border-b-2 border-stress-tertiary'>
             <div className='flex items-center gap-2'>
                 <Logo 
                     title={true}

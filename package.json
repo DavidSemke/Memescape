@@ -21,6 +21,7 @@
     "@vercel/postgres": "^0.9.0",
     "bcryptjs": "^2.4.3",
     "clsx": "^2.1.1",
+    "compromise": "^14.13.0",
     "dotenv": "^16.4.5",
     "next": "^14.2.5",
     "next-auth": "^5.0.0-beta.19",
