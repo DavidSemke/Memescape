@@ -1,14 +1,15 @@
 'use server'
 
-import { JoinedUser, NestedJoinedUser } from '@/data/api/definitions'
 import prisma from "@/data/prisma/client"
 import bcrypt from 'bcryptjs'
 import { signIn } from '@/app/api/auth/[...nextauth]/auth'
 import { postUserSchema } from "@/data/api/validation/user";
 import { AuthError } from 'next-auth'
-import { FormState } from '@/data/api/definitions'
+import { FormState } from '@/data/api/types/action'
+import { JoinedUser, NestedUser } from '@/data/api/types/model'
 import { error500Msg } from '../validation/errorMsg'
 import { redirect } from 'next/navigation'
+import { preWhereUserQuery, base64String } from "../utils";
 
 export async function signInUser(
   prevState: FormState, formData: FormData
@@ -33,62 +34,46 @@ export async function signInUser(
 
 export async function getUserByName(
   name: string, profile_image=false
-): Promise<NestedJoinedUser | null> {
+): Promise<NestedUser | null> {
+    const query = preWhereUserQuery(profile_image) 
+      + ` WHERE name ILIKE ${name} LIMIT 1`
+    let user = null
+
     try {
-      let user = null
-
-      if (profile_image) {
-        const users = await prisma.$queryRaw<JoinedUser[]>`
-          SELECT u.*, i.data, i.mime_type FROM "User" as u 
-          LEFT JOIN "Image" as i ON u.profile_image_id = i.id 
-          WHERE name ILIKE ${name} LIMIT 1
-        `
-        user = users[0]
-      }
-      else {
-        const users = await prisma.$queryRaw<JoinedUser[]>`
-          SELECT * FROM "User" 
-          WHERE name ILIKE ${name} LIMIT 1
-        `
-        user = users[0]
-      }
-      
-
-      if (!user) {
-        return user
-      }
-
-      if (
-        !profile_image 
-        || !user.profile_image_id 
-        || !user.data 
-        || !user.mime_type
-      ) {
-        delete user.data
-        delete user.mime_type
-
-        return user
-      }
-
-      const image = {
-        id: user.profile_image_id,
-        data: user.data,
-        mime_type: user.mime_type
-      }
-      delete user.data
-      delete user.mime_type
-
-      const nestedUser: NestedJoinedUser = {
-        ...user,
-        profile_image: image
-      }
-      
-      return nestedUser
-    } 
+      const users = await prisma.$queryRawUnsafe<JoinedUser[]>(query)
+      user = users[0]
+    }
     catch (error) {
       console.error('Database Error:', error);
       throw new Error('Failed to fetch user.');
     }
+
+    if (!user) {
+      return user
+    }
+
+    const nestedUser: NestedUser = {
+      id: user.u_id,
+      name: user.u_name,
+      password: user.u_password,
+      profile_image_id: user.u_profile_image_id,
+      profile_image: null
+    }
+
+    if (
+      !profile_image
+      || !user.u_profile_image_id
+    ) {
+      return nestedUser
+    }
+
+    const image = {
+      id: user.ui_id,
+      base64: base64String(user.ui_data, user.ui_mime_type)
+    }
+    nestedUser.profile_image = image
+
+    return nestedUser
 }
 
 export async function postUser(

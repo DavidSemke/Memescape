@@ -6,7 +6,6 @@ export async function getBookmarks(userId: string) {
     try {
         const bookmarks = await prisma.bookmark.findMany({
             include: { 
-                user: true,
                 meme: true
             },
             where: { 
