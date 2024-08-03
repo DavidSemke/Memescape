@@ -3,11 +3,9 @@
 import { createContext, SetStateAction } from 'react'
 import { useState } from 'react'
 
-type ShowSidebarSetter = SetStateAction<boolean>
-
 export const SidebarContext = createContext({
     showSidebar: false,
-    setShowSidebar: (update: ShowSidebarSetter) => {},
+    setShowSidebar: (update: SetStateAction<boolean>) => {},
 })
  
 export function SidebarProvider({

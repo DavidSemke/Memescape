@@ -25,6 +25,17 @@ const config: Config = {
       'stress-secondary': 'var(--stress-secondary)',
       'stress-tertiary': 'var(--stress-tertiary)',
       'success': 'var(--success)',
+    },
+    extend: {
+      keyframes: {
+        bounce: {
+          '0%, 100%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.2)' },
+        },
+      },
+      animation: {
+        bounce: 'bounce 1s ease-in-out',
+      },
     }
   },
   plugins: [require('@tailwindcss/forms')],

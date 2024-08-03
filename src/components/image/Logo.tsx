@@ -23,14 +23,13 @@ export default function Logo({ title=false, slogan=false, attrs={} }: LogoProps)
     return (
         <div {...attrs.root} className={styles.root}>
             <Link href='/'>
-                <div className='rounded-full overflow-hidden'>
                     <Image 
                         src='/logo.png'
-                        width={56} 
-                        height={56}
+                        width={50} 
+                        height={50}
                         alt='Memescape home.'
+                        className='rounded-full'
                     />
-                </div>
             </Link>
             {
                 (title || slogan) && (

@@ -31,6 +31,9 @@
   --stress-secondary: #00b3db;
   --stress-tertiary: #000050;
   --success: #04ff00;
+
+  --min-h-topbar: 4rem;
+  --h-topbar: 8vh;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -100,20 +103,16 @@
 
 @layer components { 
   .btn-primary {
-    @apply flex gap-2 px-2 py-1 rounded-xl border-2 bg-action-primary hover:bg-action-primary-hover border-stress-primary text-color hover:text-color;
+    @apply flex gap-2 px-3 py-2 rounded-xl border-2 bg-action-primary hover:bg-action-primary-hover border-stress-primary text-color hover:text-color;
   }
 
   .btn-secondary {
-    @apply flex gap-2 px-2 py-1 rounded-xl border-2 bg-action-secondary hover:bg-action-secondary-hover border-stress-secondary text-color;
+    @apply flex gap-2 px-3 py-2 rounded-xl border-2 bg-action-secondary hover:bg-action-secondary-hover border-stress-secondary text-color;
   }
 }
 
 @layer utilities {
-  .h-10vh {
-    height: 10vh;
-  }
-
-  .input-bg-none {
+  .bg-gone {
     background: none;
   }
 }

@@ -1,8 +1,9 @@
 'use client'
 
-import { Bars3Icon } from '@heroicons/react/24/outline'
+import { Bars3Icon, MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import Logo from '../image/Logo'
 import { SidebarContext } from '../context/SidebarContext'
+import { SearchbarContext } from '../context/SearchContext'
 import { SignButton } from '../button/SignButton'
 import { useContext } from 'react'
 import Link from 'next/link'
@@ -14,11 +15,12 @@ type TopbarProps = {
 
 export default function Topbar({ session }: TopbarProps) {
     const { setShowSidebar } = useContext(SidebarContext)
+    const { showSearchbarButton, setShowSearchbar } = useContext(SearchbarContext)
     const user = session?.user
 
     return (
-        <nav className='flex justify-between p-4 bg-primary h-10vh min-h-16 sticky top-0 z-10 border-b-2 border-stress-tertiary'>
-            <div className='flex items-center gap-2'>
+        <nav className='flex justify-around p-2 bg-primary h-[--h-topbar] min-h-[--min-h-topbar] sticky top-0 z-10 border-b-2 border-stress-tertiary'>
+            <div className='flex items-center gap-4'>
                 <Logo 
                     title={true}
                     attrs={{
@@ -27,6 +29,21 @@ export default function Topbar({ session }: TopbarProps) {
                         }
                     }}
                 />
+                {
+                    showSearchbarButton && (
+                        <button
+                            type='button'
+                            aria-label='Search memes'
+                            className='btn-secondary px-3 animate-bounce'
+                            onClick={() => setShowSearchbar(bool => !bool)}
+                        >
+                            <MagnifyingGlassIcon 
+                                className='w-6 h-6'
+                            />
+                        </button>
+                    )
+                }
+                
             </div>
             <div className='flex items-center gap-4'>
                 {
@@ -48,7 +65,7 @@ export default function Topbar({ session }: TopbarProps) {
                     }}
                 >
                     <Bars3Icon 
-                        className='w-8 h-8'
+                        className='w-6 h-6'
                     />
                 </button>
             </div>

@@ -15,7 +15,7 @@ export default async function IndexPage() {
   return (
     <main className="flex flex-col gap-4 items-center">
       <Searchbar 
-        placeholder="Search for memes"
+        placeholder="Search memes"
       />
       <h1>Hot Memes</h1>
       <MemeGrid 
