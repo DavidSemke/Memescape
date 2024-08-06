@@ -2,16 +2,12 @@ import {
   BookmarkIcon, 
   ArrowDownTrayIcon,
   UserCircleIcon
-} from "@heroicons/react/24/outline";
-import RedirectSearchbar from "@/components/search/RedirectSearchbar";
-import MemeGrid from "@/components/grid/MemeGrid";
-import Image from "next/image";
-import { 
-  getMemeById, 
-  getMemes, 
-  getRelatedMemes 
-} from "@/data/api/controllers/meme";
-import { notFound } from "next/navigation";
+} from "@heroicons/react/24/outline"
+import RedirectSearchbar from "@/components/search/RedirectSearchbar"
+import ShallowMemeGrid from "@/components/grid/ShallowMemeGrid"
+import Image from "next/image"
+import { getMemeById } from "@/data/api/controllers/meme"
+import { notFound } from "next/navigation"
 import { formatDate } from '@/components/utils'
 
 export default async function MemePage({ params }: { params: { memeId: string }}) {
@@ -30,19 +26,6 @@ export default async function MemePage({ params }: { params: { memeId: string }}
 
   if (author.profile_image) {
     authorImageSrc = author.profile_image.base64
-  }
-
-  const limit = 20
-  const moreMemes = await getRelatedMemes(mainMeme)
-  const shortCount = limit - moreMemes.length
-  
-  if (shortCount > 0) {
-    const excludeIds = moreMemes.map(meme => meme.id)
-    excludeIds.push(mainMeme.id)
-    const shortMemes = await getMemes(
-      null, 1, shortCount, undefined, excludeIds
-    )
-    moreMemes.push(...shortMemes)
   }
   
   return (
@@ -105,8 +88,8 @@ export default async function MemePage({ params }: { params: { memeId: string }}
       </section>
       <section className="w-full">
         <h2 className="pb-2 mb-4 border-b-2 border-stress-secondary">More Memes</h2>
-        <MemeGrid 
-          memes={moreMemes}
+        <ShallowMemeGrid 
+          relationMeme={mainMeme}
         />
       </section>
     </main>

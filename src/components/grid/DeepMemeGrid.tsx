@@ -14,6 +14,7 @@ type DeepMemeGridProps = {
     Shows up to one page's worth of memes in a grid initially.
     Scrolling to the bottom reveals more memes if they exist.
     Memes shown are chosen using URL query.
+    <Suspense> is not necessary for this component.
 */
 export default function DeepMemeGrid({ query }: DeepMemeGridProps) {
     const [memes, setMemes] = useState<NestedMeme[]>([])
