@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Searchbar from "@/components/form/Searchbar";
+import UrlSearchbar from "@/components/search/UrlSearchbar";
 import MemeGrid from "@/components/grid/MemeGrid";
 import Link from "next/link";
 
@@ -8,7 +8,7 @@ export default function UserMemesPage() {
 
   return (
     <main className="flex flex-col gap-4 items-center">
-      <Searchbar 
+      <UrlSearchbar 
         placeholder="Search your memes"
       />
       <div>

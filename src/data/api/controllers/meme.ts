@@ -16,82 +16,30 @@ import {
 } from '../types/model';
 
 export async function getMemeById(id: string): Promise<NestedMeme | null> {
-    let meme = null
+    const query = preWhereMemeQuery() + ` WHERE m.id = '${id}'`
 
     try {
-        meme = await prisma.meme.findUnique({
-            include: {
-                product_image: true,
-                template: true,
-                user: {
-                    include: {
-                        profile_image: true
-                    }
-                }
-            },
-            where: { id }
-        })
+        const [meme=null] = await prisma.$queryRawUnsafe<JoinedMeme[]>(query)
+
+        if (!meme) {
+            return meme
+        }
+
+        return nestedMeme(meme)
     }
     catch(error) {
         console.error('Database Error:', error);
         throw new Error('Failed to fetch memes.');
     }
-
-    if (!meme) {
-        return meme
-    }
-
-    // Process nested meme images
-    // Images include:
-    // 1 - meme product image
-    // 2 - user profile image
-    const { 
-        data: productData, 
-        mime_type: productMimeType 
-    } = meme.product_image
-    const productBase64 = base64String(productData, productMimeType)
-    
-    const nestedMeme: Record<string, any> = {
-        ...meme,
-        product_image: {
-            id: meme.product_image_id,
-            base64: productBase64
-        }
-    }
-
-    if (!meme.user.profile_image) {
-        if (isNestedMeme(nestedMeme)) {
-            return nestedMeme
-        }
-
-        throw new TypeError('Value is not of type NestedMeme')
-    }
-
-    const { 
-        data: profileData, 
-        mime_type: profileMimeType 
-    } = meme.user.profile_image
-    const profileBase64 = base64String(profileData, profileMimeType)
-
-    nestedMeme.user.profile_image = {
-        id: nestedMeme.user.profile_image_id,
-        base64: profileBase64
-    }
-
-    if (isNestedMeme(nestedMeme)) {
-        return nestedMeme
-    }
-
-    throw new TypeError('Value is not of type NestedMeme')
 }
 
 export async function getMemes(
     searchInput: string | null = null,
+    page: number = 1,
+    pageSize: number = 20,
     userId: string | undefined = undefined, 
-    limit: number | undefined = undefined,
     excludeIds: string[] | undefined = undefined,
     includePrivate: boolean = false,
-    random: boolean = true,
 ): Promise<NestedMeme[]> {
     let query = preWhereMemeQuery()
 
@@ -112,6 +60,10 @@ export async function getMemes(
             })
         
             wherePredicates.push(`(${searchPredicates.join(' AND ')})`)
+        }
+        // If a user's search input is an empty string, no memes should be fetched
+        else {
+            return []
         }
     }
 
@@ -134,13 +86,12 @@ export async function getMemes(
         query += ` WHERE ${wherePredicates.join(' AND ')}`
     }
 
-    if (random) {
-        query += ' ORDER BY RANDOM()'
+    if (page < 1) {
+        throw new Error('Page number cannot be less than 1.')
     }
 
-    if (limit !== undefined) {
-        query += ` LIMIT ${limit}`
-    }
+    const offset = (page - 1) * pageSize;
+    query += ` LIMIT ${pageSize} OFFSET ${offset}`
 
     try {
         const memes = await prisma.$queryRawUnsafe<JoinedMeme[]>(
@@ -161,7 +112,8 @@ export async function getMemes(
 */
 export async function getRelatedMemes(
     meme: NestedMeme,
-    limit: number | undefined = undefined,
+    page: number = 1,
+    pageSize: number = 20,
     includePrivate: boolean = false,
 ): Promise<NestedMeme[]> {
     let query = preWhereMemeQuery()
@@ -202,9 +154,12 @@ export async function getRelatedMemes(
         query += ` WHERE ${wherePredicates.join(' AND ')}`
     }
 
-    if (limit !== undefined) {
-        query += ` LIMIT ${limit}`
+    if (page < 1) {
+        throw new Error('Page number cannot be less than 1.')
     }
+
+    const offset = (page - 1) * pageSize;
+    query += ` LIMIT ${pageSize} OFFSET ${offset}`
 
     try {
         // All user input is safely injected via query parameters (e.g. $1)

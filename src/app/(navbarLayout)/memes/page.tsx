@@ -1,15 +1,22 @@
-import Searchbar from "@/components/form/Searchbar";
-import MemeGrid from "@/components/grid/MemeGrid";
+import UrlSearchbar from "@/components/search/UrlSearchbar";
+import DeepMemeGrid from "@/components/grid/DeepMemeGrid";
 
-export default function MemeSearchPage() {
+type PageProps = {
+  searchParams?: {
+    query?: string;
+    page?: string;
+  }
+}
+
+export default async function MemeSearchPage({ searchParams }: PageProps) {
+  const query = searchParams?.query || ''
+  
   return (
     <main className="flex flex-col gap-4 items-center">
-      <Searchbar 
+      <UrlSearchbar 
         placeholder="Search for memes"
       />
-      <MemeGrid 
-        memes={[]}
-      />
+      <DeepMemeGrid query={query}/>
     </main>
   )
 }

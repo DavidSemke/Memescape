@@ -1,5 +1,4 @@
-import Image from "next/image";
-import Searchbar from "@/components/form/Searchbar";
+// import Searchbar from "@/components/form/Searchbar";
 import MemeGrid from "@/components/grid/MemeGrid";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 

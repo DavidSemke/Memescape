@@ -8,9 +8,17 @@ import { useDebouncedCallback } from 'use-debounce'
 
 type SearchbarProps = {
     placeholder: string,
+    defaultValue?: string | undefined,
+    onSearch: (input: string) => void
 }
 
-export default function Searchbar({ placeholder }: SearchbarProps) {
+/* 
+    Searchbar currently sticks to the navbar. 
+    Refactoring is necessary if a non-navbar-sticky searchbar is required.
+*/
+export default function Searchbar({ 
+    placeholder, defaultValue=undefined, onSearch
+}: SearchbarProps) {
     const { 
         showSearchbar, 
         setShowSearchbar,
@@ -41,6 +49,8 @@ export default function Searchbar({ placeholder }: SearchbarProps) {
         }
     }, []);
 
+    const debouncedSearch = useDebouncedCallback(onSearch, 500)
+
     return (
         <div
             role='search'
@@ -70,6 +80,8 @@ export default function Searchbar({ placeholder }: SearchbarProps) {
                         'focus:ring-0': !showSearchbar
                     }
                 )}
+                onChange={(e) => debouncedSearch(e.target.value)}
+                defaultValue={defaultValue}
             />
         </div>
     )

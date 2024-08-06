@@ -32,9 +32,7 @@ export default function MemeGrid({ memes }: MemeGridProps) {
                             </Link>
                         </div>
                     )
-                    
                 })
-                    
             }
         </div>
     )

@@ -3,7 +3,7 @@ import {
   ArrowDownTrayIcon,
   UserCircleIcon
 } from "@heroicons/react/24/outline";
-import Searchbar from "@/components/form/Searchbar";
+import RedirectSearchbar from "@/components/search/RedirectSearchbar";
 import MemeGrid from "@/components/grid/MemeGrid";
 import Image from "next/image";
 import { 
@@ -32,21 +32,24 @@ export default async function MemePage({ params }: { params: { memeId: string }}
     authorImageSrc = author.profile_image.base64
   }
 
-  const limit = 10
-  const moreMemes = await getRelatedMemes(mainMeme, limit)
+  const limit = 20
+  const moreMemes = await getRelatedMemes(mainMeme)
   const shortCount = limit - moreMemes.length
   
   if (shortCount > 0) {
     const excludeIds = moreMemes.map(meme => meme.id)
     excludeIds.push(mainMeme.id)
-    const shortMemes = await getMemes(null, undefined, limit, excludeIds)
+    const shortMemes = await getMemes(
+      null, 1, shortCount, undefined, excludeIds
+    )
     moreMemes.push(...shortMemes)
   }
-
+  
   return (
     <main className="flex flex-col gap-8 items-center">
-      <Searchbar 
+      <RedirectSearchbar 
         placeholder="Search for memes"
+        redirectPath="/memes"
       />
       <section className="flex flex-col gap-4">
         <Image

@@ -32,9 +32,16 @@ const config: Config = {
           '0%, 100%': { transform: 'scale(1)' },
           '50%': { transform: 'scale(1.2)' },
         },
+        jump: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-0.5rem)' },
+        },
       },
       animation: {
         bounce: 'bounce 1s ease-in-out',
+        jump1: 'jump 0.6s ease-in-out infinite',
+        jump2: 'jump 0.6s ease-in-out 0.2s infinite',
+        jump3: 'jump 0.6s ease-in-out 0.4s infinite',
       },
     }
   },
