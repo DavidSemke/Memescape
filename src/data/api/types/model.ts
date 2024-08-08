@@ -19,6 +19,11 @@ export type JoinedMeme = PrefixedMeme
     & PrefixedMemeImage
     & PrefixedUserImage
 
+export type MemeImage = Image & {
+    template_id: string,
+    text: string[]
+}
+
 type ProcessedImage = {
     id: string,
     base64: string
