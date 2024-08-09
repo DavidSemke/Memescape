@@ -19,7 +19,7 @@ export default async function NavbarLayout({
                     <Topbar session={session}/>
                     <Sidebar session={session}/>
                 </SidebarProvider>
-                <div className="min-h-screen p-4">
+                <div className="flex flex-col min-h-[calc(100vh-max(var(--h-topbar),var(--min-h-topbar)))] p-4">
                     {children}
                 </div>
             </SearchbarProvider>

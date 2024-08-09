@@ -18,6 +18,7 @@ export default function Sidebar({ session }: SidebarProps) {
     const { showSidebar, setShowSidebar } = useContext(SidebarContext)
     const pathname = usePathname()
     const user = session?.user
+    const profileImageSrc = user?.profile_image?.base64
     const links = {
         userProfile: user ? `/${user.name}` : undefined,
         userMemes: user ? `/${user.name}/memes` : undefined,
@@ -39,9 +40,9 @@ export default function Sidebar({ session }: SidebarProps) {
         )}>
             <section className='flex items-center gap-4 w-full pb-4 border-b-2 border-stress-secondary'>
                 {
-                    user && user.profile_image_base64 ? (
+                    profileImageSrc ? (
                         <Image 
-                            src={user.profile_image_base64}
+                            src={profileImageSrc}
                             width={48}
                             height={48}
                             alt='Your profile picture.'

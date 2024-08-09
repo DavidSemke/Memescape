@@ -53,7 +53,7 @@ export default function DeepMemeGrid({ query }: DeepMemeGridProps) {
         }
     }, [query])
 
-    async function addMemes() {
+    async function addMoreMemes() {
         setIsLoadingMore(true)
         const memesToAdd = await getMemes(query, page+1, pageSize)
         setPage(page => page + 1)
@@ -80,14 +80,14 @@ export default function DeepMemeGrid({ query }: DeepMemeGridProps) {
                             type='button'
                             className="btn-secondary"
                             onClick={() => {
-                                addMemes()
+                                addMoreMemes()
                             }}
                         >
                             More
                         </button>
                     ) : (
                         memes.length > 0 && (
-                            <p className="w-full text-center my-4">End of search results.</p>
+                            <p className="w-full text-center my-4">End of results.</p>
                         )
                     )
                 )

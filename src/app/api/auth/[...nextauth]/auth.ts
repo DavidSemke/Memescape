@@ -36,18 +36,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             return null
           }
 
-          if (!user.profile_image) {
-            return user
-          }
-
-          const image = user.profile_image
-          const base64 = image.data.toString('base64')
-          const profileImageBase64 = `data:${image.mime_type};base64,${base64}`
-          
-          return {
-            ...user,
-            profile_image_base64: profileImageBase64
-          }
+          return user
         }
         catch(error) {
           if (error instanceof ZodError) {
