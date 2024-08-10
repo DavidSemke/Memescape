@@ -18,9 +18,6 @@ export function attrsStyleMerge(
 };
 
 export function formatDate(date: Date) {
-    const year = date.getFullYear()
-    const month = (date.getMonth() + 1).toString().padStart(2, "0")
-    const day = date.getDate().toString().padStart(2, "0")
-  
-    return `${year}-${month}-${day}`
+    const options = { year: 'numeric', month: 'long', day: 'numeric' } as const;
+    return new Intl.DateTimeFormat('en-US', options).format(date);
 }
