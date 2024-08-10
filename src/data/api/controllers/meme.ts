@@ -15,7 +15,7 @@ import {
     isNestedMeme 
 } from '../types/model';
 
-export async function getMemeById(id: string): Promise<NestedMeme | null> {
+export async function getOneMeme(id: string): Promise<NestedMeme | null> {
     const query = preWhereMemeQuery() + ` WHERE m.id = '${id}'`
 
     try {
@@ -180,6 +180,7 @@ export async function getRelatedMemes(
 function nestedMeme(meme: JoinedMeme): NestedMeme {
     const product_image = {
         id: meme.mi_id,
+        mime_type: meme.mi_mime_type,
         base64: base64String(meme.mi_data, meme.mi_mime_type)
     }
     const template = {
@@ -195,6 +196,7 @@ function nestedMeme(meme: JoinedMeme): NestedMeme {
         profile_image_id: meme.ui_id ?? null,
         profile_image: meme.ui_id ? {
             id: meme.ui_id,
+            mime_type: meme.ui_mime_type,
             base64: base64String(meme.ui_data, meme.ui_mime_type)
         } : null
     }

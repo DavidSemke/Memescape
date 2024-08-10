@@ -1,6 +1,15 @@
+import { auth } from "@/app/api/auth/[...nextauth]/auth";
+import { getUserBookmarks } from "@/data/api/controllers/bookmark";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 
-export default function ProfilePage() {
+export default async function ProfilePage() {
+    const session = await auth()
+    const sessionUser = session?.user
+
+    if (!sessionUser) {
+        throw new Error('Anonymous user accessed profile page')
+    }
+
   return (
     <main>
         <h1>Your Profile</h1>

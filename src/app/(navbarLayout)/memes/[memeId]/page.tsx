@@ -6,27 +6,40 @@ import {
 import RedirectSearchbar from "@/components/search/RedirectSearchbar"
 import ShallowMemeGrid from "@/components/grid/ShallowMemeGrid"
 import Image from "next/image"
-import { getMemeById } from "@/data/api/controllers/meme"
+import { getOneMeme } from "@/data/api/controllers/meme"
 import { notFound } from "next/navigation"
 import { formatDate } from '@/components/utils'
+import { auth } from "@/app/api/auth/[...nextauth]/auth"
+import { postBookmark } from "@/data/api/controllers/bookmark"
 
 export default async function MemePage({ params }: { params: { memeId: string }}) {
-  const mainMeme = await getMemeById(params.memeId)
+  const [session, mainMeme] = await Promise.all([
+    auth(),
+    getOneMeme(params.memeId)
+  ])
 
   if (mainMeme === null) {
     notFound()
   }
 
+  const sessionUser = session?.user
   const memeImageSrc = mainMeme.product_image.base64
-  const alt = `${mainMeme.template.name}. ${mainMeme.text.join('. ')}`
+  const alt = [
+    mainMeme.template.name,
+    mainMeme.text.join('. ')
+  ].join('. ')
   const createDate = formatDate(mainMeme.create_date)
-  
   const author = mainMeme.user
   let authorImageSrc = null
 
   if (author.profile_image) {
     authorImageSrc = author.profile_image.base64
   }
+
+  const downloadName = [
+    mainMeme.template.name,
+    mainMeme.product_image.mime_type
+  ].join('.').replaceAll(' ', '-')
   
   return (
     <main className="flex flex-col gap-8 items-center">
@@ -44,7 +57,7 @@ export default async function MemePage({ params }: { params: { memeId: string }}
         />
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
-            <div>Creator: </div>
+            <div className="font-semibold">Creator:</div>
             {
               authorImageSrc ? (
                 <Image
@@ -60,30 +73,40 @@ export default async function MemePage({ params }: { params: { memeId: string }}
             }
             <div>{author.name}</div>
           </div>
-          <div>
-            Created on: <time>{createDate}</time>
+          <div className="flex gap-2">
+            <div className="font-semibold">Created on:</div>
+            <time>{createDate}</time>
           </div>
         </div>
         
         <div className="flex gap-4 w-full">
-          <button
-            type='button'
-            aria-label="Bookmark meme"
-            className="btn-secondary"
-          >
-            <BookmarkIcon 
-                className="w-8 h-8"
-            />
-          </button>
-          <button
-            type='button'
+          {
+            sessionUser && (
+              <form action={postBookmark}>
+                <input type='hidden' name="user_id" value={sessionUser.id} />
+                <input type='hidden' name="meme_id" value={mainMeme.id} /> 
+                <button
+                  type='submit'
+                  aria-label="Bookmark meme"
+                  className="btn-secondary"
+                >
+                  <BookmarkIcon 
+                      className="w-8 h-8"
+                  />
+                </button>
+              </form>
+            )
+          }
+          <a
+            href={memeImageSrc}
+            download={downloadName}
             aria-label="Download meme"
             className="btn-secondary"
           >
             <ArrowDownTrayIcon 
                 className="w-8 h-8"
             />
-          </button>
+          </a>
         </div>
       </section>
       <section className="w-full">

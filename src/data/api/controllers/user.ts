@@ -29,6 +29,7 @@ export async function signInUser(
       return error500Msg
     }
 
+    // Redirect throws an error, so no need to return FormState
     redirect('/')
 }
 
@@ -36,11 +37,13 @@ export async function getUserByName(
   name: string, profile_image=false
 ): Promise<NestedUser | null> {
     const query = preWhereUserQuery(profile_image) 
-      + ` WHERE name ILIKE ${name} LIMIT 1`
+      + ` WHERE name ILIKE $1 LIMIT 1`
     let user = null
 
     try {
-      const users = await prisma.$queryRawUnsafe<JoinedUser[]>(query)
+      const users = await prisma.$queryRawUnsafe<JoinedUser[]>(
+        query, name
+      )
       user = users[0]
     }
     catch (error) {
@@ -69,6 +72,7 @@ export async function getUserByName(
 
     const image = {
       id: user.ui_id,
+      mime_type: user.ui_mime_type,
       base64: base64String(user.ui_data, user.ui_mime_type)
     }
     nestedUser.profile_image = image

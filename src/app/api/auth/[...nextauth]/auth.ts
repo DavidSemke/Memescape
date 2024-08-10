@@ -4,6 +4,8 @@ import bcrypt from 'bcryptjs'
 import { getUserByName } from "@/data/api/controllers/user"
 import { signInUserSchema } from "@/data/api/validation/user"
 import { ZodError } from "zod"
+import { NestedUser } from "@/data/api/types/model"
+import { AdapterUser } from "next-auth/adapters"
  
 export const { handlers, signIn, signOut, auth } = NextAuth({
   pages: {
@@ -12,7 +14,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     authorized: async ({ auth }) => {
       return !!auth
-    }
+    },
+    session: async ({ session, token }) => {
+      session.user = token.user as NestedUser & AdapterUser;
+      return session;
+    },
+    jwt: async ({ token, user }) => {
+      if (user) {
+        token.user = user;
+      }
+      return token;
+    },
   },
   providers: [
     Credentials({
