@@ -55,3 +55,28 @@ export function normalizedNouns(text: string): string[] {
         .out('array')
         .map((noun: string) => noun.replace(/[^0-9a-z]/gi, ''))
 }
+
+export function miscMemePredicates(
+    userId: string | undefined = undefined,
+    excludeIds: string[] | undefined = undefined,
+    includePrivate: boolean = false,
+    alias: string = 'm'
+) {
+    const predicates = []
+
+    if (userId !== undefined) {
+        predicates.push(`${alias}.user_id = '${userId}'`)
+    }
+
+    if (excludeIds !== undefined) {
+        predicates.push(
+            `${alias}.id NOT IN (${excludeIds.map(id => `'${id}'`).join(', ')})`
+        )
+    }
+    
+    if (!includePrivate) {
+        predicates.push(`${alias}.private = FALSE`)
+    }
+
+    return predicates
+}

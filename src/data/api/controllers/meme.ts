@@ -5,8 +5,10 @@ import { preWhereMemeQuery } from '../query/preWhere';
 import { 
     templateSearchPredicates,
     wordRegexes,
-    normalizedNouns 
+    normalizedNouns,
+    miscMemePredicates
 } from '../query/where';
+import { pageClause } from '../query/postWhere';
 import { base64String } from '../utils';
 import { 
     JoinedMeme, 
@@ -41,8 +43,7 @@ export async function getMemes(
     excludeIds: string[] | undefined = undefined,
     includePrivate: boolean = false,
 ): Promise<NestedMeme[]> {
-    let query = preWhereMemeQuery()
-
+    const querySegments = [preWhereMemeQuery()]
     // Predicates of where clause are joined by AND
     const wherePredicates = []
     let regexes: string[] = []
@@ -67,35 +68,20 @@ export async function getMemes(
         }
     }
 
-    if (userId !== undefined) {
-        wherePredicates.push(`m.user_id = '${userId}'`)
-    }
-
-    if (excludeIds !== undefined) {
-        wherePredicates.push(
-            `m.id NOT IN (${excludeIds.map(id => `'${id}'`).join(', ')})`
-        )
-    }
-    
-    if (!includePrivate) {
-        wherePredicates.push('m.private = FALSE')
-    }
+    wherePredicates.push(
+        ...miscMemePredicates(userId, excludeIds, includePrivate)
+    )
 
     // Append where clause if exists
     if (wherePredicates.length) {
-        query += ` WHERE ${wherePredicates.join(' AND ')}`
+        querySegments.push(`WHERE ${wherePredicates.join(' AND ')}`)
     }
 
-    if (page < 1) {
-        throw new Error('Page number cannot be less than 1.')
-    }
-
-    const offset = (page - 1) * pageSize;
-    query += ` LIMIT ${pageSize} OFFSET ${offset}`
+    querySegments.push(pageClause(page, pageSize))
 
     try {
         const memes = await prisma.$queryRawUnsafe<JoinedMeme[]>(
-            query, ...regexes
+            querySegments.join(' '), ...regexes
         )
         return memes.map(nestedMeme)
     }
@@ -114,10 +100,11 @@ export async function getRelatedMemes(
     meme: NestedMeme,
     page: number = 1,
     pageSize: number = 20,
+    userId: string | undefined = undefined, 
+    excludeIds: string[] | undefined = undefined,
     includePrivate: boolean = false,
 ): Promise<NestedMeme[]> {
-    let query = preWhereMemeQuery()
-    
+    const querySegments = [preWhereMemeQuery()]
     // Predicates of where clause are joined by AND
     // First predicate ensures meme being related to is excluded
     const wherePredicates = [
@@ -145,27 +132,22 @@ export async function getRelatedMemes(
         )
     }
 
-    if (!includePrivate) {
-        wherePredicates.push('m.private = FALSE')
-    }
+    wherePredicates.push(
+        ...miscMemePredicates(userId, excludeIds, includePrivate)
+    )
 
     // Append where clause if exists
     if (wherePredicates.length) {
-        query += ` WHERE ${wherePredicates.join(' AND ')}`
+        querySegments.push(`WHERE ${wherePredicates.join(' AND ')}`)
     }
 
-    if (page < 1) {
-        throw new Error('Page number cannot be less than 1.')
-    }
-
-    const offset = (page - 1) * pageSize;
-    query += ` LIMIT ${pageSize} OFFSET ${offset}`
+    querySegments.push(pageClause(page, pageSize))
 
     try {
         // All user input is safely injected via query parameters (e.g. $1)
         // So not unsafe in this case
         const memes = await prisma.$queryRawUnsafe<JoinedMeme[]>(
-            query, ...regexes
+            querySegments.join(' '), ...regexes
         )
 
         return memes.map(nestedMeme)
