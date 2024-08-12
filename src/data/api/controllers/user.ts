@@ -9,7 +9,8 @@ import { FormState } from '@/data/api/types/action'
 import { JoinedUser, NestedUser } from '@/data/api/types/model'
 import { error500Msg } from '../validation/errorMsg'
 import { redirect } from 'next/navigation'
-import { preWhereUserQuery, base64String } from "../utils";
+import { base64String } from "../utils";
+import { preWhereUserQuery } from "../query/preWhere";
 
 export async function signInUser(
   prevState: FormState, formData: FormData

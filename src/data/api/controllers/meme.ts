@@ -1,13 +1,13 @@
 'use server'
 
 import prisma from '../../prisma/client';
+import { preWhereMemeQuery } from '../query/preWhere';
 import { 
-    templateSearchPredicates, 
-    wordRegexes, 
-    normalizedNouns,
-    preWhereMemeQuery,
-    base64String
-} from '../utils';
+    templateSearchPredicates,
+    wordRegexes,
+    normalizedNouns 
+} from '../query/where';
+import { base64String } from '../utils';
 import { 
     JoinedMeme, 
     NestedMeme, 
