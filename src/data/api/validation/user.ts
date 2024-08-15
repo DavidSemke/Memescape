@@ -1,4 +1,4 @@
-import { object, string } from "zod"
+import { object, string, instanceof as z_instanceof } from "zod"
 import { minMaxErrorMap } from "./errorMsg"
 import { getUserByName } from '../controllers/user'
 
@@ -15,8 +15,13 @@ const illegalNames = [
 const passwordLen = { min: 8, max: 32 }
 const passwordSpecialChars = "!@#$%^&*"
 
+const validProfilePicTypes = [
+    'png', 'jpeg', 'webp'
+]
+const maxUploadSize = 1024 * 1024 // 1MB
+
 export const postUserSchema = object({
-    username: validateUsername(),
+    username: validateUsername(null),
     password: string({ 
         errorMap: minMaxErrorMap(passwordLen)
     })
@@ -33,13 +38,32 @@ export const postUserSchema = object({
     )
 })
 
-// export const putUserSchema = object({
-//     username: validateUsername(),
-//     profileImage: 
-// })
+export function createPutUserSchema(currUsername: string) {
+    return object({
+        username: validateUsername(currUsername),
+        profileImage: z_instanceof(File)
+            .optional()
+            .refine((file) => {
+                    return !file || file.size <= maxUploadSize
+                }, 
+                'File size must be at most 1MB.'
+            )
+            .refine(file => {
+                    return (
+                        !file 
+                        || validProfilePicTypes.map(
+                            ext => `image/${ext}`
+                        ).includes(file.type)
+                    )
+                },
+                'File must be a '
+                    + validProfilePicTypes.slice(0, -1).join(', ')
+                    + `, or ${validProfilePicTypes[validProfilePicTypes.length-1]}.`
+            )
+    })
+}
 
-
-function validateUsername() {
+function validateUsername(currUsername: string | null) {
     return string({ 
         errorMap: minMaxErrorMap(usernameLen)
     })
@@ -55,7 +79,13 @@ function validateUsername() {
         { message: "Username already taken." }
     )
     .refine(
-        async (value) => !(await getUserByName(value.toLowerCase())),
+        async (value) => {
+            if (currUsername && currUsername === value) {
+                return true
+            }
+
+            return !(await getUserByName(value.toLowerCase()))
+        },
         { message: "Username already taken." }
     )
 }

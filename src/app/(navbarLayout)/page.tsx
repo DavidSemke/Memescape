@@ -5,10 +5,15 @@ import Link from "next/link";
 import { auth } from "@/app/api/auth/[...nextauth]/auth"
 import { Suspense } from "react";
 import Ellipsis from "@/components/loading/Ellipsis";
+import { getMemes } from "@/data/api/controllers/meme";
 
 export default async function IndexPage() {
   const session = await auth()
   const user = session?.user
+
+  async function shallowGridFetch(page: number, pageSize: number) {
+    return await getMemes(null, page, pageSize)
+  }
 
   return (
     <main className="flex flex-col gap-4 items-center">
@@ -18,7 +23,10 @@ export default async function IndexPage() {
       />
       <h1>Hot Memes</h1>
       <Suspense fallback={<Ellipsis />}>
-        <ShallowMemeGrid />
+        <ShallowMemeGrid 
+          fetchAction={shallowGridFetch}
+          pageSize={20}
+        />
       </Suspense>
       <div className="flex flex-col items-center gap-4 my-4">
         {

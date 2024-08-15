@@ -1,4 +1,4 @@
-import { MemeImage } from "@/data/api/types/model";
+import { MemeImage } from '@/data/api/types/model/types';
 import { v4 as uuidv4 } from 'uuid'
 
 export default async function createMemeImageData(count=100): Promise<MemeImage[]> {

@@ -1,6 +1,6 @@
 'use client'
 
-import { FormState } from "@/data/api/types/action"
+import { FormState } from "@/data/api/types/action/types"
 import { useFormStatus } from "react-dom"
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline"
 

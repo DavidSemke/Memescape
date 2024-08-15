@@ -1,49 +1,10 @@
-import { User, Image, Meme, Template } from '@prisma/client'
-
-export type NestedUser = User
-    & { profile_image: ProcessedImage | null }
-
-export type JoinedUser = PrefixedUser 
-    & PrefixedUserImage
-
-export type NestedMeme = Meme
-    & { 
-        product_image: ProcessedImage,
-        template: Template,
-        user: NestedUser,
-    }
-
-export type JoinedMeme = PrefixedMeme
-    & PrefixedTemplate
-    & PrefixedUser
-    & PrefixedMemeImage
-    & PrefixedUserImage
-
-export type MemeImage = Image & {
-    template_id: string,
-    text: string[]
-}
-
-type ProcessedImage = {
-    id: string,
-    mime_type: string,
-    base64: string
-}
-
-// Utility type; prefix properties of a type
-type PrefixProperties<T, Prefix extends string> = {
-    [K in keyof T as `${Prefix}${K & string}`]: T[K];
-};
-
-// Use prefixes to prevent col name clashes on joins
-type PrefixedUserImage = PrefixProperties<Image, 'ui_'>
-type PrefixedMemeImage = PrefixProperties<Image, 'mi_'>
-type PrefixedUser = PrefixProperties<User, 'u_'>
-type PrefixedTemplate = PrefixProperties<Template, 't_'>
-type PrefixedMeme = PrefixProperties<Meme, 'm_'>
-
-
-/* Type guards */
+import { 
+    ProcessedImage,
+    NestedBookmark,
+    NestedUser,
+    NestedMeme 
+} from "./types";
+import { Template } from "@prisma/client";
 
 function isProcessedImage(value: any): value is ProcessedImage {
     return (
@@ -73,7 +34,11 @@ export function isNestedUser(value: any): value is NestedUser {
         && typeof value.name === 'string'
         && typeof value.password === 'string'
         && (
-            value.profile_image === null
+            value.profile_image_id === null
+            || typeof value.profile_image_id === 'string'
+        )
+        && (
+            value.profile_image === undefined
             || isProcessedImage(value.profile_image)
         )
     );
@@ -92,8 +57,33 @@ export function isNestedMeme(value: any): value is NestedMeme {
         && typeof value.private === 'boolean' 
         && typeof value.product_image_id === 'string' 
         && value.create_date instanceof Date
-        && isProcessedImage(value.product_image) 
-        && isTemplate(value.template) 
-        && isNestedUser(value.user)
+        && (
+            value.product_image === undefined
+            || isProcessedImage(value.product_image)
+        )
+        && (
+            value.template === undefined
+            || isTemplate(value.template)
+        )
+        && (
+            value.user === undefined
+            || isNestedUser(value.user)
+        )
+    );
+}
+
+export function isNestedBookmark(value: any): value is NestedBookmark {
+    return (
+        value 
+        && typeof value.user_id === 'string' 
+        && typeof value.meme_id === 'string'
+        && (
+            value.user === undefined
+            || isNestedUser(value.user)
+        )
+        && (
+            value.meme === undefined
+            || isNestedMeme(value.meme)
+        )
     );
 }

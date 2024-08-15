@@ -9,13 +9,8 @@ import {
     miscMemePredicates
 } from '../query/where';
 import { pageClause } from '../query/postWhere';
-import { base64String } from '../utils';
-import { 
-    JoinedMeme, 
-    NestedMeme, 
-    NestedUser,
-    isNestedMeme 
-} from '../types/model';
+import { JoinedMeme, NestedMeme } from '../types/model/types';
+import { nestMeme } from '../types/model/transforms';
 
 export async function getOneMeme(id: string): Promise<NestedMeme | null> {
     const query = preWhereMemeQuery() + ` WHERE m.id = '${id}'`
@@ -27,7 +22,7 @@ export async function getOneMeme(id: string): Promise<NestedMeme | null> {
             return meme
         }
 
-        return nestedMeme(meme)
+        return nestMeme(meme)
     }
     catch(error) {
         console.error('Database Error:', error);
@@ -53,12 +48,12 @@ export async function getMemes(
 
         if (regexes.length) {
             const searchPredicates = templateSearchPredicates(regexes.length)
-            .map((p, i) => {
-                p = p.slice(0, -1) // Remove closing bracket to add more
-                // Check if word in meme text, a list of multi-word strings
-                return p + ' OR EXISTS'
-                    + ` (SELECT 1 FROM unnest(m.text) AS line WHERE line ILIKE $${i+1}))`
-            })
+                .map((p, i) => {
+                    p = p.slice(0, -1) // Remove closing bracket to add more
+                    // Check if word in meme text, a list of multi-word strings
+                    return p + ' OR EXISTS'
+                        + ` (SELECT 1 FROM unnest(m.text) AS line WHERE line ILIKE $${i+1}))`
+                })
         
             wherePredicates.push(`(${searchPredicates.join(' AND ')})`)
         }
@@ -83,7 +78,7 @@ export async function getMemes(
         const memes = await prisma.$queryRawUnsafe<JoinedMeme[]>(
             querySegments.join(' '), ...regexes
         )
-        return memes.map(nestedMeme)
+        return memes.map(nestMeme)
     }
     catch(error) {
         console.error('Database Error:', error);
@@ -150,57 +145,10 @@ export async function getRelatedMemes(
             querySegments.join(' '), ...regexes
         )
 
-        return memes.map(nestedMeme)
+        return memes.map(nestMeme)
     }
     catch (error) {
         console.error('Database Error:', error);
         throw new Error('Failed to fetch memes.');
     }
-}
-
-// Assumes that all foreign key relations are joined
-function nestedMeme(meme: JoinedMeme): NestedMeme {
-    const product_image = {
-        id: meme.mi_id,
-        mime_type: meme.mi_mime_type,
-        base64: base64String(meme.mi_data, meme.mi_mime_type)
-    }
-    const template = {
-        id: meme.t_id,
-        name: meme.t_name,
-        keywords: meme.t_keywords
-    }
-    // Password is hashed, so including it is safe
-    const user: NestedUser = {
-        id: meme.u_id,
-        name: meme.u_name,
-        password: meme.u_password,
-        profile_image_id: meme.ui_id ?? null,
-        profile_image: meme.ui_id ? {
-            id: meme.ui_id,
-            mime_type: meme.ui_mime_type,
-            base64: base64String(meme.ui_data, meme.ui_mime_type)
-        } : null
-    }
-
-    const nestedMeme: Record<string, any> = {
-        product_image,
-        template,
-        user
-    }
-
-    let key: keyof JoinedMeme
-
-    for (key in meme) {
-        if (key.startsWith('m_')) {
-            const nestedKey = key.slice(2)
-            nestedMeme[nestedKey] = meme[key]
-        }
-    }
-
-    if (isNestedMeme(nestedMeme)) {
-        return nestedMeme
-    }
-
-    throw new TypeError('Value is not of type NestedMeme')
 }

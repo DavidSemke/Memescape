@@ -2,12 +2,12 @@
 
 import prisma from '../../prisma/client';
 import { Template } from '@prisma/client';
-import { templateSearchPredicates, wordRegexes } from '../utils';
+import { templateSearchPredicates, wordRegexes } from '../query/where';
 
 export async function getTemplatesBySearchInput(
     searchInput: string,
     limit: number | undefined
-) {
+): Promise<Template[]> {
     const regexes = wordRegexes(searchInput)
     const predicates = templateSearchPredicates(regexes.length)
     let query = 'SELECT * FROM "Template" as t WHERE ' + predicates.join(' AND ')

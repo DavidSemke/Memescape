@@ -2,15 +2,17 @@
 
 import prisma from "@/data/prisma/client"
 import bcrypt from 'bcryptjs'
-import { signIn } from '@/app/api/auth/[...nextauth]/auth'
+import { auth, signIn } from '@/app/api/auth/[...nextauth]/auth'
 import { postUserSchema } from "@/data/api/validation/user";
 import { AuthError } from 'next-auth'
-import { FormState } from '@/data/api/types/action'
-import { JoinedUser, NestedUser } from '@/data/api/types/model'
+import { FormState } from '@/data/api/types/action/types'
+import { JoinedUser, NestedUser } from '@/data/api/types/model/types'
 import { error500Msg } from '../validation/errorMsg'
 import { redirect } from 'next/navigation'
-import { base64String } from "../utils";
+import { nestUser } from "../types/model/transforms";
 import { preWhereUserQuery } from "../query/preWhere";
+import { createPutUserSchema } from "@/data/api/validation/user";
+// import formidable, {errors as formidableErrors} from 'formidable';
 
 export async function signInUser(
   prevState: FormState, formData: FormData
@@ -56,29 +58,7 @@ export async function getUserByName(
       return user
     }
 
-    const nestedUser: NestedUser = {
-      id: user.u_id,
-      name: user.u_name,
-      password: user.u_password,
-      profile_image_id: user.u_profile_image_id,
-      profile_image: null
-    }
-
-    if (
-      !profile_image
-      || !user.u_profile_image_id
-    ) {
-      return nestedUser
-    }
-
-    const image = {
-      id: user.ui_id,
-      mime_type: user.ui_mime_type,
-      base64: base64String(user.ui_data, user.ui_mime_type)
-    }
-    nestedUser.profile_image = image
-
-    return nestedUser
+    return nestUser(user)
 }
 
 export async function postUser(
@@ -111,4 +91,63 @@ export async function postUser(
   }
 
   return await signInUser(false, formData)
+}
+
+export async function putUser(
+  prevState: FormState, formData: FormData
+): Promise<FormState> {
+  const session = await auth()
+  const sessionUser = session?.user
+
+  if (!sessionUser) {
+    throw new Error('Session user does not exist for user update.')
+  }
+
+  const putUserSchema = createPutUserSchema(sessionUser.name)
+  const parse = await putUserSchema.safeParseAsync({
+      username: formData.get('username'),
+      profileImage: formData.get('profile-pic')
+  })
+
+  if (!parse.success) {
+    return {
+      errors: parse.error.flatten().fieldErrors
+    }
+  }
+
+  const { username, profileImage } = parse.data
+
+  if (profileImage === undefined) {
+    return false
+  }
+
+  console.log('Size: ' + profileImage.size)
+
+  try {
+    let profilePic = null
+    
+    // if (profileImage) {
+    //   profilePic = await prisma.image.create({
+    //     data: {
+          
+    //     }
+    //   })
+    // }
+    
+
+    // await prisma.user.update({
+    //   where: {
+    //     name: username
+    //   },
+    //   data: {
+    //     name: username,
+    //     profile_image_id: profilePic.id
+    //   }
+    // })
+  }
+  catch (error) {
+    return error500Msg
+  }
+
+  return true
 }

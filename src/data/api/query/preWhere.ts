@@ -32,6 +32,13 @@ function imageAliasCols(prefix:'ui'|'mi') {
     )
 }
 
+function bookmarkAliasCols() {
+    return aliasCols(
+        Object.values(Prisma.BookmarkScalarFieldEnum),
+        'b'
+    )
+}
+
 export function preWhereMemeQuery() {
     const colGroups = [
         memeAliasCols(),
@@ -54,13 +61,13 @@ export function preWhereMemeQuery() {
     )
 }
 
-export function preWhereUserQuery(profile_image=false) {
+export function preWhereUserQuery(includeProfileImage=false) {
     const colGroups = [
         userAliasCols(),
     ]
     let profileImageJoin = ''
 
-    if (profile_image) {
+    if (includeProfileImage) {
         colGroups.push(imageAliasCols('ui'))
         profileImageJoin = 'LEFT JOIN "Image" as ui ON u.profile_image_id = ui.id'
     }
@@ -72,6 +79,32 @@ export function preWhereUserQuery(profile_image=false) {
     return (
         `SELECT ${select} FROM "User" as u 
         ${profileImageJoin}
+        `
+    )
+}
+
+// Includes the meme user, not the bookmark user
+export function preWhereBookmarkQuery() {
+    const colGroups = [
+        bookmarkAliasCols(),
+        memeAliasCols(),
+        templateAliasCols(),
+        imageAliasCols('mi'),
+        userAliasCols(), 
+        imageAliasCols('ui')
+    ]
+
+    const select = colGroups.map(
+        colGroup => colGroup.join(', ')
+    ).join(', ')
+
+    return (
+        `SELECT ${select} FROM "Bookmark" as b 
+        JOIN "Meme" as m ON m.id = b.meme_id 
+        JOIN "Image" as mi ON m.product_image_id = mi.id 
+        JOIN "Template" as t ON m.template_id = t.id 
+        JOIN "User" as u ON m.user_id = u.id 
+        LEFT JOIN "Image" as ui ON u.profile_image_id = ui.id
         `
     )
 }

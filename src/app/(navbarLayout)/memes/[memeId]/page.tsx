@@ -6,11 +6,12 @@ import {
 import RedirectSearchbar from "@/components/search/RedirectSearchbar"
 import ShallowMemeGrid from "@/components/grid/ShallowMemeGrid"
 import Image from "next/image"
-import { getOneMeme } from "@/data/api/controllers/meme"
+import { getMemes, getOneMeme, getRelatedMemes } from "@/data/api/controllers/meme"
 import { notFound } from "next/navigation"
 import { formatDate } from '@/components/utils'
 import { auth } from "@/app/api/auth/[...nextauth]/auth"
 import { postBookmark } from "@/data/api/controllers/bookmark"
+import { NestedMeme } from "@/data/api/types/model/types"
 
 export default async function MemePage({ params }: { params: { memeId: string }}) {
   const [session, mainMeme] = await Promise.all([
@@ -20,6 +21,14 @@ export default async function MemePage({ params }: { params: { memeId: string }}
 
   if (mainMeme === null) {
     notFound()
+  }
+
+  if (
+    !mainMeme.product_image
+    || !mainMeme.template
+    || !mainMeme.user
+  ) {
+    throw new Error('Nested meme lacks data.')
   }
 
   const sessionUser = session?.user
@@ -40,6 +49,34 @@ export default async function MemePage({ params }: { params: { memeId: string }}
     mainMeme.template.name,
     mainMeme.product_image.mime_type
   ].join('.').replaceAll(' ', '-')
+
+  async function shallowGridFetch(
+    page: number, pageSize: number
+  ) {
+    if (mainMeme === null) {
+      return await getMemes(null, page, pageSize)
+    }
+
+    let shortCount = pageSize
+    const memes: NestedMeme[] = []
+
+    const relatedMemes = await getRelatedMemes(
+      mainMeme, page, shortCount
+    )
+    memes.push(...relatedMemes)
+    shortCount -= memes.length
+    
+    if (shortCount > 0) {
+      const excludeIds = memes.map(meme => meme.id)
+      excludeIds.push(mainMeme.id)
+      const shortMemes = await getMemes(
+          null, page, shortCount, undefined, excludeIds
+      )
+      memes.push(...shortMemes)
+    }
+
+    return memes
+  }
   
   return (
     <main className="flex flex-col gap-8 items-center">
@@ -112,7 +149,8 @@ export default async function MemePage({ params }: { params: { memeId: string }}
       <section className="w-full">
         <h2 className="pb-2 mb-4 border-b-2 border-stress-secondary">More Memes</h2>
         <ShallowMemeGrid 
-          relationMeme={mainMeme}
+          fetchAction={shallowGridFetch}
+          pageSize={20}
         />
       </section>
     </main>

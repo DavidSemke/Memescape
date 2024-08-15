@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs'
 import { getUserByName } from "@/data/api/controllers/user"
 import { signInUserSchema } from "@/data/api/validation/user"
 import { ZodError } from "zod"
-import { NestedUser } from "@/data/api/types/model"
+import { NestedUser } from "@/data/api/types/model/types"
 import { AdapterUser } from "next-auth/adapters"
  
 export const { handlers, signIn, signOut, auth } = NextAuth({

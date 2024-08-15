@@ -17,22 +17,33 @@ export function Input({ name, errors=[], attrs={} }: InputProps) {
         input: 'bg-input-primary rounded-2xl border-none ring-2 ring-stress-secondary focus:ring-4 focus:ring-stress-primary'
     }
     const styles = attrsStyleMerge(attrs, defaultStyles)
-    const label = name
-        .split('-')
-        .map(word => {
-            return word[0].toUpperCase() + word.slice(1)
-        })
-        .join(' ')
+    const inputIsHidden = attrs.input?.type === 'hidden'
+    let label = null
+
+    if (!inputIsHidden) {
+        label = name
+            .split('-')
+            .map(word => {
+                return word[0].toUpperCase() + word.slice(1)
+            })
+            .join(' ')
+    }
+    
 
     return (
         <div {...attrs.root} className={styles.root}>
-            <label 
-                {...attrs.label} 
-                htmlFor={name} 
-                className={styles.label}
-            >
-                {label}
-            </label>
+            {
+                label && (
+                    <label 
+                        {...attrs.label} 
+                        htmlFor={name} 
+                        className={styles.label}
+                    >
+                        {label}
+                    </label>
+                )
+            }
+            
             <input
                 {...attrs.input}
                 id={name} 

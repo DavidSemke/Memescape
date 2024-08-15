@@ -1,10 +1,12 @@
-import { NestedMeme } from "@/data/api/types/model";
+import { NestedMeme } from "@/data/api/types/model/types";
 import MemeGrid from "./MemeGrid";
-import { getMemes, getRelatedMemes } from "@/data/api/controllers/meme";
 
 type ShallowMemeGridProps = {
-    limit?: number,
-    relationMeme?: NestedMeme | null
+    fetchAction: (
+        page: number, 
+        pageSize: number
+    ) => Promise<NestedMeme[]>
+    pageSize: number
 }
 
 /*
@@ -16,29 +18,9 @@ type ShallowMemeGridProps = {
     Prop relationMeme is a meme that grid memes preferably relate to.
 */
 export default async function ShallowMemeGrid({
-    limit=20, relationMeme=null
+    fetchAction, pageSize
 }: ShallowMemeGridProps) {
-    const memes: NestedMeme[] = []
-
-    if (relationMeme !== null) {
-        const relatedMemes = await getRelatedMemes(relationMeme)
-        memes.push(...relatedMemes)
-
-        const shortCount = limit - memes.length
-
-        if (shortCount > 0) {
-            const excludeIds = memes.map(meme => meme.id)
-            excludeIds.push(relationMeme.id)
-            const shortMemes = await getMemes(
-                null, 1, shortCount, undefined, excludeIds
-            )
-            memes.push(...shortMemes)
-        }
-    }
-    else {
-        const newMemes = await getMemes(null, 1, limit)
-        memes.push(...newMemes)
-    }
+    const memes = await fetchAction(1, pageSize)
 
     return (
         <MemeGrid memes={memes} />
