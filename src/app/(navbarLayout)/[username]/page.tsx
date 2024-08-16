@@ -98,7 +98,7 @@ export default async function ProfilePage({ params }: { params: { username: stri
             </section>
             <section className="flex flex-col gap-4 w-full">
                 <RedirectSearchbar 
-                    placeholder="Search collection"
+                    searchItemName="meme"
                     redirectPath="/memes"
                 />
                 <TabbedMemeGrid 

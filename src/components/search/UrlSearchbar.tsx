@@ -1,16 +1,16 @@
 'use client'
 
 import { useSearchParams, usePathname, useRouter } from 'next/navigation'
-import Searchbar from './Searchbar'
+import TopSearchbar from './TopSearchbar'
 
 type UrlSearchbarProps = {
-    placeholder: string,
+    searchItemName: string,
 }
 
 /*
     Uses the current url to store search state.
 */
-export default function UrlSearchbar({ placeholder }: UrlSearchbarProps) {
+export default function UrlSearchbar({ searchItemName }: UrlSearchbarProps) {
     const searchParams = useSearchParams()
     const pathname = usePathname()
     const { replace } = useRouter()
@@ -30,8 +30,8 @@ export default function UrlSearchbar({ placeholder }: UrlSearchbarProps) {
     const defaultValue = searchParams.get('query')?.toString()
 
     return (
-        <Searchbar 
-            placeholder={placeholder}
+        <TopSearchbar 
+            searchItemName={searchItemName}
             defaultValue={defaultValue}
             onSearch={onSearch}
         />

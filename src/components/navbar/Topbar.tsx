@@ -3,7 +3,7 @@
 import { Bars3Icon, MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import Logo from '../image/Logo'
 import { SidebarContext } from '../context/SidebarContext'
-import { SearchbarContext } from '../context/SearchContext'
+import { TopSearchbarContext } from '../context/TopSearchbarContext'
 import { SignButton } from '../button/SignButton'
 import { useContext } from 'react'
 import Link from 'next/link'
@@ -15,7 +15,10 @@ type TopbarProps = {
 
 export default function Topbar({ session }: TopbarProps) {
     const { setShowSidebar } = useContext(SidebarContext)
-    const { showSearchbarButton, setShowSearchbar } = useContext(SearchbarContext)
+    const { 
+        showTopSearchbarButton, 
+        setShowTopSearchbar 
+    } = useContext(TopSearchbarContext)
     const user = session?.user
 
     return (
@@ -30,12 +33,12 @@ export default function Topbar({ session }: TopbarProps) {
                     }}
                 />
                 {
-                    showSearchbarButton && (
+                    showTopSearchbarButton && (
                         <button
                             type='button'
                             aria-label='Search memes'
                             className='btn-secondary px-3 animate-bounce'
-                            onClick={() => setShowSearchbar(bool => !bool)}
+                            onClick={() => setShowTopSearchbar(bool => !bool)}
                         >
                             <MagnifyingGlassIcon 
                                 className='w-6 h-6'

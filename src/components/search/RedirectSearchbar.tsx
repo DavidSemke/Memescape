@@ -1,15 +1,15 @@
 'use client'
 
 import { useSearchParams, useRouter } from 'next/navigation'
-import Searchbar from './Searchbar'
+import TopSearchbar from './TopSearchbar'
 
 type RedirectSearchbarProps = {
-    placeholder: string,
+    searchItemName: string,
     redirectPath: string
 }
 
 export default function RedirectSearchbar({ 
-    placeholder, redirectPath 
+    searchItemName, redirectPath 
 }: RedirectSearchbarProps) {
     const searchParams = useSearchParams()
     const { push } = useRouter()
@@ -28,8 +28,8 @@ export default function RedirectSearchbar({
     }
 
     return (
-        <Searchbar 
-            placeholder={placeholder}
+        <TopSearchbar 
+            searchItemName={searchItemName}
             onSearch={onSearch}
         />
     )

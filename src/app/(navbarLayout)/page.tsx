@@ -18,7 +18,7 @@ export default async function IndexPage() {
   return (
     <main className="flex flex-col gap-4 items-center">
       <RedirectSearchbar 
-        placeholder="Search memes"
+        searchItemName="meme"
         redirectPath="/memes"
       />
       <h1>Hot Memes</h1>

@@ -25,7 +25,6 @@ export function templateSearchPredicates(
 export function wordRegexes(searchInput: string) {
     return searchInput
         .trim()
-        .toLowerCase()
         .split(' ')
         .filter(word => word !== '')
         .map(word => `%${word}%`)

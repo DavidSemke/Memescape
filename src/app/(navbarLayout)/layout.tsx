@@ -2,7 +2,7 @@ import Sidebar from "@/components/navbar/Sidebar"
 import Topbar from "@/components/navbar/Topbar"
 import Footer from "@/components/navbar/Footer"
 import { SidebarProvider } from "@/components/context/SidebarContext"
-import { SearchbarProvider } from "@/components/context/SearchContext"
+import { TopSearchbarProvider } from "@/components/context/TopSearchbarContext"
 import { auth } from "@/app/api/auth/[...nextauth]/auth"
 
 export default async function NavbarLayout({
@@ -14,7 +14,7 @@ export default async function NavbarLayout({
 
     return (
         <>  
-            <SearchbarProvider>
+            <TopSearchbarProvider>
                 <SidebarProvider>
                     <Topbar session={session}/>
                     <Sidebar session={session}/>
@@ -22,7 +22,7 @@ export default async function NavbarLayout({
                 <div className="flex flex-col min-h-[calc(100vh-max(var(--h-topbar),var(--min-h-topbar)))] p-4">
                     {children}
                 </div>
-            </SearchbarProvider>
+            </TopSearchbarProvider>
             <Footer />
         </>
     )

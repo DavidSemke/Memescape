@@ -84,7 +84,7 @@ function validateUsername(currUsername: string | null) {
                 return true
             }
 
-            return !(await getUserByName(value.toLowerCase()))
+            return !(await getUserByName(value))
         },
         { message: "Username already taken." }
     )

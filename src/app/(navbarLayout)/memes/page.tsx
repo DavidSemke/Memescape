@@ -24,7 +24,7 @@ export default async function MemeSearchPage({ searchParams }: PageProps) {
   return (
     <main className="flex flex-col gap-4 items-center">
       <UrlSearchbar 
-        placeholder="Search for memes"
+        searchItemName="meme"
       />
       <DeepMemeGrid 
         fetchAction={fetchAction}

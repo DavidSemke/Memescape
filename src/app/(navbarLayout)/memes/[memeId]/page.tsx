@@ -81,7 +81,7 @@ export default async function MemePage({ params }: { params: { memeId: string }}
   return (
     <main className="flex flex-col gap-8 items-center">
       <RedirectSearchbar 
-        placeholder="Search for memes"
+        searchItemName="meme"
         redirectPath="/memes"
       />
       <section className="flex flex-col gap-4">
