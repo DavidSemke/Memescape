@@ -1,7 +1,6 @@
 'use client'
 
 import clsx from 'clsx'
-import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { 
     useEffect, 
     useRef, 
@@ -10,6 +9,7 @@ import {
 } from 'react'
 import { TopSearchbarContext } from '../context/TopSearchbarContext'
 import { useDebouncedCallback } from 'use-debounce'
+import Searchbar from './Searchbar'
 
 type TopSearchbarProps = {
     searchItemName: string,
@@ -113,44 +113,24 @@ export default function TopSearchbar({
         }
     }, []);
 
-    const cappedSearchItemName = (
-        searchItemName[0].toUpperCase() + searchItemName.slice(1)
-    )
-    const debouncedSearch = useDebouncedCallback(onSearch, 500)
-
     return (
-        <div
-            role='search'
-            ref={searchbarRef}
-            className={clsx(
-                'sticky top-[calc(max(var(--h-topbar),var(--min-h-topbar))+1rem)]',
-                'flex gap-2 items-center w-full',
-                'rounded-2xl bg-action-secondary border-2 border-stress-secondary',
-                'ease-in-out duration-300',
-                {
-                    'translate-y-0': showTopSearchbar,
-                    '-translate-y-[100vh]': !showTopSearchbar
+        <Searchbar 
+            searchItemName={searchItemName}
+            onSearch={onSearch}
+            defaultValue={defaultValue}
+            searchbarRef={searchbarRef}
+            inputRef={inputRef}
+            attrs={{
+                root: {
+                    className: clsx(
+                        'sticky top-[calc(max(var(--h-topbar),var(--min-h-topbar))+1rem)] ease-in-out duration-300',
+                        {
+                            'translate-y-0': showTopSearchbar,
+                            '-translate-y-[100vh]': !showTopSearchbar
+                        }
+                    )
                 }
-            )}
-        >
-            <MagnifyingGlassIcon 
-                className='w-6 h-6 absolute left-3'
-            />
-            <input 
-                ref={inputRef}
-                aria-label={`${cappedSearchItemName} Searchbar`}
-                type='search'
-                placeholder={`Search for ${searchItemName}`}
-                className={clsx(
-                    'pl-12 bg-gone rounded-2xl border-none w-full focus:outline-none focus:ring-stress-primary',
-                    {
-                        'focus:ring-4': showTopSearchbar,
-                        'focus:ring-0': !showTopSearchbar
-                    }
-                )}
-                onChange={(e) => debouncedSearch(e.target.value)}
-                defaultValue={defaultValue}
-            />
-        </div>
+            }}
+        />
     )
 }
