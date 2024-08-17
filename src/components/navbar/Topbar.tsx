@@ -23,15 +23,15 @@ export default function Topbar({ session }: TopbarProps) {
 
     return (
         <nav className='flex justify-around p-2 bg-primary h-[--h-topbar] min-h-[--min-h-topbar] sticky top-0 z-10 border-b-2 border-stress-tertiary'>
+            <Logo 
+                title={true}
+                attrs={{
+                    title: {
+                        className: 'hidden sm:block'
+                    }
+                }}
+            />
             <div className='flex items-center gap-4'>
-                <Logo 
-                    title={true}
-                    attrs={{
-                        title: {
-                            className: 'hidden sm:block'
-                        }
-                    }}
-                />
                 {
                     showTopSearchbarButton && (
                         <button
@@ -46,18 +46,10 @@ export default function Topbar({ session }: TopbarProps) {
                         </button>
                     )
                 }
-                
-            </div>
-            <div className='flex items-center gap-4'>
                 {
-                    user ? (
-                        <Link 
-                            href={`/${user.name}/memes/create`} 
-                            className='btn-primary'
-                        >
-                            Create
-                        </Link>
-                    ) : <SignButton type='in'/> 
+                    !user && (
+                        <SignButton type='in'/>
+                    ) 
                 }
                 <button 
                     type='button' 

@@ -105,7 +105,7 @@ export default async function MemePage({ params }: { params: { memeId: string }}
                   className="rounded-full"
                 />
               ) : (
-                <UserCircleIcon className="w-8 h-8" />
+                <UserCircleIcon className="w-6 h-6" />
               )
             }
             <div>{author.name}</div>
@@ -128,7 +128,7 @@ export default async function MemePage({ params }: { params: { memeId: string }}
                   className="btn-secondary"
                 >
                   <BookmarkIcon 
-                      className="w-8 h-8"
+                      className="w-6 h-6"
                   />
                 </button>
               </form>
@@ -141,7 +141,7 @@ export default async function MemePage({ params }: { params: { memeId: string }}
             className="btn-secondary"
           >
             <ArrowDownTrayIcon 
-                className="w-8 h-8"
+                className="w-6 h-6"
             />
           </a>
         </div>

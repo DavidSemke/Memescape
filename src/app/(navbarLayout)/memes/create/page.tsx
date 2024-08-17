@@ -1,5 +1,4 @@
 // import Searchbar from "@/components/form/Searchbar";
-import MemeGrid from "@/components/grid/MemeGrid";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 export default function CreateMemePage() {
@@ -20,7 +19,7 @@ export default function CreateMemePage() {
           aria-label="Search for a template."
         >
           <MagnifyingGlassIcon 
-            className="w-8 h-8"
+            className="w-6 h-6"
           />
         </button>
         <label htmlFor='template'>Upload</label>

@@ -21,9 +21,9 @@ export default function Sidebar({ session }: SidebarProps) {
     const profileImageSrc = user?.profile_image?.base64
     const links = {
         userProfile: user ? `/${user.name}` : undefined,
-        userMemes: user ? `/${user.name}/memes` : undefined,
+        userMemes: user ? `/memes?user-id=${user.id}` : undefined,
         findMemes: '/memes',
-        createMeme: user ? `/${user.name}/memes/create` : undefined
+        createMeme: '/memes/create'
     }
 
     useEffect(() => {
@@ -80,7 +80,7 @@ export default function Sidebar({ session }: SidebarProps) {
                 ) : (
                     <section className='flex flex-col gap-4 items-center w-full'>
                         <p className="text-center">
-                            Start creating memes today!
+                            Do you want meme storage or for others to see your memes?
                         </p>
                         <Link 
                             href='/sign-up'
