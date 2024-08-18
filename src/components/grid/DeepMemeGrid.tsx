@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import MemeGrid from "./MemeGrid"
 import Ellipsis from "../loading/Ellipsis"
 import { NestedMeme } from "@/data/api/types/model/types"
@@ -20,37 +20,48 @@ export type DeepMemeGridProps = {
     Scrolling to the bottom and pressing button reveals more memes.
     Memes are chosen using URL query.
     <Suspense> is not necessary for this component.
-    // Param relationUser is an object that contains a user id and a boolean, showBookmarks.
-    // If showBookmarks is true, memes fetched will be bookmarked by user.
-    // If showBookmarks is false, memes fetched will be created by user.
-    // For no restrictions on fetched memes, omit relationUser.
 */
-export default function DeepMemeGrid({ fetchAction, query=null, pageSize=20 }: DeepMemeGridProps) {
+export default function DeepMemeGrid({ 
+    fetchAction, query=null, pageSize=20 
+}: DeepMemeGridProps) {
+    const pageRef = useRef<number>(1)
     const [memes, setMemes] = useState<NestedMeme[]>([])
     const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false)
     // If more memes could exist on the next page, moreExist is true
     const [moreExist, setMoreExist] = useState<boolean>(false)
-    const [page, setPage] = useState<number>(1)
-    const [prevProps, setPrevProps] = useState<DeepMemeGridProps>({ fetchAction, query, pageSize })
+    // Query is always trimmed if able
+    query = query !== null ? query.trim() : null 
+    const [prevProps, setPrevProps] = useState<DeepMemeGridProps>(
+        { fetchAction, query, pageSize }
+    )
+
+    if (query === '' && query !== prevProps.query) {
+        pageRef.current = 1
+        setMoreExist(false)
+        setMemes([])
+        setPrevProps({ fetchAction, query, pageSize })
+    }
 
     useEffect(() => {
         let isMounted = true
-
-        if (query === null || query.trim() !== '') {
+        
+        if (query !== '') {
             addMemes()
         }
-
+        
         async function addMemes() {
             setIsLoadingMore(true)
-            const memesToAdd = await fetchAction(query, 1, pageSize)
+            pageRef.current = 1
+            const memesToStart = await fetchAction(
+                query, pageRef.current, pageSize
+            )
 
             if (!isMounted) {
                 return
             }
 
-            setPage(1)
-            setMoreExist(memesToAdd.length === pageSize)
-            setMemes(memesToAdd)
+            setMoreExist(memesToStart.length === pageSize)
+            setMemes(memesToStart)
             setIsLoadingMore(false)
             setPrevProps({ fetchAction, query, pageSize })
         }
@@ -62,8 +73,10 @@ export default function DeepMemeGrid({ fetchAction, query=null, pageSize=20 }: D
 
     async function addMoreMemes() {
         setIsLoadingMore(true)
-        const memesToAdd = await fetchAction(query, page+1, pageSize)
-        setPage(page => page + 1)
+        pageRef.current += 1
+        const memesToAdd = await fetchAction(
+            query, pageRef.current, pageSize
+        )
         setMoreExist(memesToAdd.length === pageSize)
         setMemes(memes => [...memes, ...memesToAdd])
         setIsLoadingMore(false)

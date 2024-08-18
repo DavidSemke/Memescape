@@ -11,6 +11,9 @@ import {
 import { pageClause } from '../query/postWhere';
 import { JoinedMeme, NestedMeme } from '../types/model/types';
 import { nestMeme } from '../types/model/transforms';
+import { FormState } from '../types/action/types';
+import { postMemeSchema } from '../validation/meme';
+import { error500Msg } from '../validation/errorMsg';
 
 export async function getOneMeme(id: string): Promise<NestedMeme | null> {
     const query = preWhereMemeQuery() + ` WHERE m.id = '${id}'`
@@ -151,4 +154,34 @@ export async function getRelatedMemes(
         console.error('Database Error:', error);
         throw new Error('Failed to fetch memes.');
     }
+}
+
+export async function postMeme(
+    prevState: FormState, formData: FormData
+  ): Promise<FormState> {
+      const parse = await postMemeSchema.safeParseAsync({
+        template_id: formData.get('template-id'),
+        user_id: formData.get('user-id'),
+        product_image_id: formData.get('product-image-id'),
+        text: formData.get('text'),
+        private: formData.get('private'),
+        create_date: formData.get('create-date'),
+    })
+
+    if (!parse.success) {
+        return {
+            errors: parse.error.flatten().fieldErrors
+        }
+    }
+
+    try {
+        await prisma.meme.create({
+            data: parse.data
+        })
+    }
+    catch (error) {
+        return error500Msg
+    }
+
+    return true
 }
