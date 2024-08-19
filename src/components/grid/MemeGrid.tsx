@@ -16,7 +16,7 @@ export default function MemeGrid({ memeGroups }: MemeGridProps) {
                 return (
                     <div 
                         key={group[index].id}
-                        className='columns-2 gap-4 w-full pb-4 mt-4 first:mt-0 border-b-2 border-stress-secondary sm:columns-4 md:columns-5 lg:columns-6'
+                        className='columns-2 gap-4 w-full pb-4 last:pb-0 mt-4 first:mt-0 border-b-2 border-stress-secondary last:border-none sm:columns-4 md:columns-5 lg:columns-6'
                     >
                         {group.map((meme) => {
                             if (!meme.product_image || !meme.template) {

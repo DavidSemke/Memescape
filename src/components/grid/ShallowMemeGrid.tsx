@@ -23,6 +23,6 @@ export default async function ShallowMemeGrid({
     const memes = await fetchAction(1, pageSize)
 
     return (
-        <MemeGrid memes={memes} />
+        <MemeGrid memeGroups={[memes]} />
     )
 }

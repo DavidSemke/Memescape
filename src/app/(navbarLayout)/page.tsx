@@ -23,7 +23,7 @@ export default async function IndexPage() {
           pageSize={20}
         />
       </Suspense>
-      <div className="flex flex-col items-center gap-4 my-4">
+      <div className="flex flex-col items-center gap-4 mb-4">
         <p className="text-center">
           Have an idea for a meme?
         </p>
