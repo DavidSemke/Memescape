@@ -2,7 +2,7 @@ import Logo from "../image/Logo"
 
 export default function Footer() {
     return (
-        <footer className='p-4 bg-primary flex flex-col items-center border-t-2 border-stress-tertiary'>
+        <footer className='p-4 bg-primary flex flex-col items-center z-20 border-t-2 border-stress-tertiary'>
             <Logo
                 title={true}
                 slogan={true}

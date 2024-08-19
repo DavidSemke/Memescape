@@ -6,7 +6,6 @@ import { SidebarContext } from '../context/SidebarContext'
 import { TopSearchbarContext } from '../context/TopSearchbarContext'
 import { SignButton } from '../button/SignButton'
 import { useContext } from 'react'
-import Link from 'next/link'
 import { Session } from 'next-auth'
 
 type TopbarProps = {
@@ -22,7 +21,7 @@ export default function Topbar({ session }: TopbarProps) {
     const user = session?.user
 
     return (
-        <nav className='flex justify-around p-2 bg-primary h-[--h-topbar] min-h-[--min-h-topbar] sticky top-0 z-10 border-b-2 border-stress-tertiary'>
+        <nav className='flex justify-around p-2 bg-primary h-[--h-topbar] min-h-[--min-h-topbar] sticky top-0 z-20 border-b-2 border-stress-tertiary'>
             <Logo 
                 title={true}
                 attrs={{
