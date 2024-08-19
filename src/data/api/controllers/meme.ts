@@ -75,7 +75,10 @@ export async function getMemes(
         querySegments.push(`WHERE ${wherePredicates.join(' AND ')}`)
     }
 
-    querySegments.push(pageClause(page, pageSize))
+    querySegments.push(
+        'ORDER BY m.create_date DESC',
+        pageClause(page, pageSize)
+    )
 
     try {
         const memes = await prisma.$queryRawUnsafe<JoinedMeme[]>(
@@ -139,11 +142,12 @@ export async function getRelatedMemes(
         querySegments.push(`WHERE ${wherePredicates.join(' AND ')}`)
     }
 
-    querySegments.push(pageClause(page, pageSize))
+    querySegments.push(
+        'ORDER BY m.create_date DESC',
+        pageClause(page, pageSize)
+    )
 
     try {
-        // All user input is safely injected via query parameters (e.g. $1)
-        // So not unsafe in this case
         const memes = await prisma.$queryRawUnsafe<JoinedMeme[]>(
             querySegments.join(' '), ...regexes
         )

@@ -25,7 +25,7 @@ export default function DeepMemeGrid({
     fetchAction, query=null, pageSize=20 
 }: DeepMemeGridProps) {
     const pageRef = useRef<number>(1)
-    const [memes, setMemes] = useState<NestedMeme[]>([])
+    const [memeGroups, setMemeGroups] = useState<NestedMeme[][]>([])
     const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false)
     // If more memes could exist on the next page, moreExist is true
     const [moreExist, setMoreExist] = useState<boolean>(false)
@@ -38,7 +38,7 @@ export default function DeepMemeGrid({
     if (query === '' && query !== prevProps.query) {
         pageRef.current = 1
         setMoreExist(false)
-        setMemes([])
+        setMemeGroups([])
         setPrevProps({ fetchAction, query, pageSize })
     }
 
@@ -61,7 +61,7 @@ export default function DeepMemeGrid({
             }
 
             setMoreExist(memesToStart.length === pageSize)
-            setMemes(memesToStart)
+            setMemeGroups([memesToStart])
             setIsLoadingMore(false)
             setPrevProps({ fetchAction, query, pageSize })
         }
@@ -78,7 +78,7 @@ export default function DeepMemeGrid({
             query, pageRef.current, pageSize
         )
         setMoreExist(memesToAdd.length === pageSize)
-        setMemes(memes => [...memes, ...memesToAdd])
+        setMemeGroups(groups => [...groups, memesToAdd])
         setIsLoadingMore(false)
     }
 
@@ -91,7 +91,7 @@ export default function DeepMemeGrid({
                     && prevProps.pageSize === pageSize
                 ) && (
                     <MemeGrid 
-                        memes={memes}
+                        memeGroups={memeGroups}
                     />
                 )
             }
@@ -110,7 +110,9 @@ export default function DeepMemeGrid({
                             More
                         </button>
                     ) : (
-                        memes.length > 0 && (
+                        memeGroups.length > 0 
+                        && memeGroups[0].length > 0 
+                        && (
                             <p className="w-full text-center my-4">End of results.</p>
                         )
                     )

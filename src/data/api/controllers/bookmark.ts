@@ -71,7 +71,10 @@ export async function getBookmarks(
         querySegments.push(`WHERE ${wherePredicates.join(' AND ')}`)
     }
 
-    querySegments.push(pageClause(page, pageSize))
+    querySegments.push(
+        'ORDER BY m.create_date DESC',
+        pageClause(page, pageSize)
+    )
 
     try {
         const bookmarks = await prisma.$queryRawUnsafe<JoinedBookmark[]>(

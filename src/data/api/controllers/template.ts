@@ -3,24 +3,25 @@
 import prisma from '../../prisma/client';
 import { Template } from '@prisma/client';
 import { templateSearchPredicates, wordRegexes } from '../query/where';
+import { pageClause } from '../query/postWhere';
 
-export async function getTemplatesBySearchInput(
+export async function getTemplates(
     searchInput: string,
-    limit: number | undefined
+    page: number = 1,
+    pageSize: number = 20,
 ): Promise<Template[]> {
     const regexes = wordRegexes(searchInput)
     const predicates = templateSearchPredicates(regexes.length)
-    let query = 'SELECT * FROM "Template" as t WHERE ' + predicates.join(' AND ')
-    
-    if (limit !== undefined) {
-        query += ` LIMIT ${limit}`
-    }
+    const querySegments = [
+        'SELECT * FROM "Template" as t',
+        `WHERE ${predicates.join(' AND ')}`,
+        'ORDER BY t.name',
+        pageClause(page, pageSize)
+    ]
 
     try {
-        // All user input is safely injected via query parameters (e.g. $1)
-        // So not unsafe in this case
         return await prisma.$queryRawUnsafe<Template[]>(
-            query, ...regexes
+            querySegments.join(' '), ...regexes
         )
     }
     catch (error) {
