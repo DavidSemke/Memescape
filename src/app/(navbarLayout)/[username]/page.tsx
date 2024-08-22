@@ -32,7 +32,7 @@ export default async function ProfilePage({ params }: { params: { username: stri
     }
     else {
         profileUser = await getOneUser(
-            params.username, undefined, true
+            undefined, params.username, true
         )
 
         if (profileUser === null) {

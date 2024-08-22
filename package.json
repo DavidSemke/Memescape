@@ -23,7 +23,6 @@
     "clsx": "^2.1.1",
     "compromise": "^14.13.0",
     "dotenv": "^16.4.5",
-    "formidable": "^3.5.1",
     "next": "^14.2.5",
     "next-auth": "^5.0.0-beta.19",
     "react": "^18",
@@ -34,7 +33,6 @@
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.7",
     "@types/bcryptjs": "^2.4.6",
-    "@types/formidable": "^3.4.5",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

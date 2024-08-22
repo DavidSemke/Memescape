@@ -12,6 +12,7 @@ import { redirect } from 'next/navigation'
 import { nestUser } from "../types/model/transforms";
 import { preWhereUserQuery } from "../query/preWhere";
 import { createPutUserSchema } from "@/data/api/validation/user";
+import { revalidatePath } from "next/cache";
 
 export async function signInUser(
   prevState: FormState, formData: FormData
@@ -149,19 +150,25 @@ export async function putUser(
     
     // Update/Create profile image
     if (profileImage) {
-      profilePic = await prisma.image.upsert({
-        where: {
-          id: fullSessionUser.profile_image_id ?? ''
-        },
-        update: {
-          mime_type: profileImage.type,
-          data: Buffer.from(await profileImage.arrayBuffer())
-        },
-        create: {
-          mime_type: profileImage.type,
-          data: Buffer.from(await profileImage.arrayBuffer())
-        }
-      })
+      if (fullSessionUser.profile_image_id) {
+        profilePic = await prisma.image.update({
+          where: {
+            id: fullSessionUser.profile_image_id
+          },
+          data: {
+            mime_type: profileImage.type,
+            data: Buffer.from(await profileImage.arrayBuffer())
+          },
+        })
+      }
+      else {
+        profilePic = await prisma.image.create({
+          data: {
+            mime_type: profileImage.type,
+            data: Buffer.from(await profileImage.arrayBuffer())
+          }
+        })
+      }
     }
     
     // Update user
@@ -179,5 +186,11 @@ export async function putUser(
     return error500Msg
   }
 
-  redirect(`/${username}`)
+  if (username !== fullSessionUser.name) {
+    redirect(`/${username}`)
+  }
+  
+  revalidatePath(`/${username}`)
+  
+  return true
 }

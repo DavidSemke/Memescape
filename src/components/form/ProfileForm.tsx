@@ -5,7 +5,7 @@ import { Input } from "./Input"
 import { putUser } from "@/data/api/controllers/user"
 import { FormState } from "@/data/api/types/action/types"
 import { NestedUser } from "@/data/api/types/model/types"
-import { ReactNode, useState } from "react"
+import { ReactNode, useEffect, useState } from "react"
 import { PencilIcon } from "@heroicons/react/24/outline"
 import { FormStateView } from "./FormStateView"
 
@@ -16,7 +16,22 @@ type ProfileFormProps = {
 
 export default function ProfileForm({ user, profileView }: ProfileFormProps) {
     const [isGone, setIsGone] = useState<boolean>(true)
+    const [showStateView, setShowStateView] = useState<boolean>(true)
+    const [pending, setPending] = useState<boolean>(false)
     const [state, action] = useFormState<FormState, FormData>(putUser, false)
+
+    useEffect(() => {
+        if (state !== true || pending) {
+            return
+        }
+
+        const timeoutId = setTimeout(() => {
+            setIsGone(true)
+            setShowStateView(false)
+        }, 2000);
+
+        return () => clearTimeout(timeoutId);
+    }, [state, pending])
 
     if (isGone) {
         return (
@@ -41,6 +56,7 @@ export default function ProfileForm({ user, profileView }: ProfileFormProps) {
         <form 
             action={action}
             className='flex flex-col gap-4 mb-4'
+            onSubmit={() => setShowStateView(true)}
         >
             <Input 
                 name='profile-image'
@@ -75,7 +91,14 @@ export default function ProfileForm({ user, profileView }: ProfileFormProps) {
                     Cancel
                 </button> 
             </div>
-            <FormStateView state={state}/>
+            {
+                showStateView && (
+                    <FormStateView 
+                        state={state}
+                        setOuterPending={setPending}
+                    />
+                )
+            }
         </form>
     )
 }

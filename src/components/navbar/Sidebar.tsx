@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { SidebarContext } from '../context/SidebarContext'
 import { SignButton } from '../button/SignButton'
-import { useContext, useEffect } from 'react'
+import { useContext, useState } from 'react'
 import clsx from 'clsx'
 import { usePathname } from 'next/navigation'
 import { NestedUser } from '@/data/api/types/model/types'
@@ -16,7 +16,14 @@ type SidebarProps = {
 
 export default function Sidebar({ sessionUser }: SidebarProps) {
     const { showSidebar, setShowSidebar } = useContext(SidebarContext)
+    const [prevPathname, setPrevPathname] = useState<string | null>(null)
     const pathname = usePathname()
+
+    if (prevPathname !== pathname) {
+        setShowSidebar(false)
+        setPrevPathname(pathname)
+    }
+
     const profileImageSrc = sessionUser?.profile_image?.base64
     const links = {
         userProfile: sessionUser ? `/${sessionUser.name}` : undefined,
@@ -24,10 +31,6 @@ export default function Sidebar({ sessionUser }: SidebarProps) {
         findMemes: '/memes',
         createMeme: '/memes/create'
     }
-
-    useEffect(() => {
-        setShowSidebar(false)
-    }, [pathname])
 
     return (
         <nav className={clsx(
