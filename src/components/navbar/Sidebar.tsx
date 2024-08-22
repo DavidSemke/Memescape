@@ -48,6 +48,7 @@ export default function Sidebar({ sessionUser }: SidebarProps) {
                             width={48}
                             height={48}
                             alt='Your profile picture.'
+                            className='rounded-full'
                         />
                     ) : (
                         <UserCircleIcon 
