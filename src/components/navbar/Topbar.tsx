@@ -6,19 +6,18 @@ import { SidebarContext } from '../context/SidebarContext'
 import { TopSearchbarContext } from '../context/TopSearchbarContext'
 import { SignButton } from '../button/SignButton'
 import { useContext } from 'react'
-import { Session } from 'next-auth'
+import { NestedUser } from '@/data/api/types/model/types'
 
 type TopbarProps = {
-    session: Session | null
+    sessionUser: NestedUser | null
 }
 
-export default function Topbar({ session }: TopbarProps) {
+export default function Topbar({ sessionUser }: TopbarProps) {
     const { setShowSidebar } = useContext(SidebarContext)
     const { 
         showTopSearchbarButton, 
         setShowTopSearchbar 
     } = useContext(TopSearchbarContext)
-    const user = session?.user
 
     return (
         <nav className='flex justify-around p-2 bg-primary h-[--h-topbar] min-h-[--min-h-topbar] sticky top-0 z-20 border-b-2 border-stress-tertiary'>
@@ -46,7 +45,7 @@ export default function Topbar({ session }: TopbarProps) {
                     )
                 }
                 {
-                    !user && (
+                    sessionUser === null && (
                         <SignButton type='in'/>
                     ) 
                 }

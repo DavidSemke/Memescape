@@ -13,7 +13,7 @@ type InputProps = {
 export function Input({ name, errors=[], attrs={} }: InputProps) {
     const defaultStyles = {
         root: 'flex flex-col gap-2',
-        label: 'font-bold',
+        label: 'font-semibold',
         input: 'bg-input-primary rounded-2xl border-none ring-2 ring-stress-secondary focus:ring-4 focus:ring-stress-primary'
     }
     const styles = attrsStyleMerge(attrs, defaultStyles)

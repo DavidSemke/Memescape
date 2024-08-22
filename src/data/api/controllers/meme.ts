@@ -16,10 +16,12 @@ import { postMemeSchema } from '../validation/meme';
 import { error500Msg } from '../validation/errorMsg';
 
 export async function getOneMeme(id: string): Promise<NestedMeme | null> {
-    const query = preWhereMemeQuery() + ` WHERE m.id = '${id}'`
+    const query = preWhereMemeQuery() + ' WHERE m.id = $1::uuid'
 
     try {
-        const [meme=null] = await prisma.$queryRawUnsafe<JoinedMeme[]>(query)
+        const [meme=null] = await prisma.$queryRawUnsafe<JoinedMeme[]>(
+            query, id
+        )
 
         if (!meme) {
             return meme

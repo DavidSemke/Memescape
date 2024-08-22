@@ -41,6 +41,12 @@ export default async function createMemeImageData(count=100): Promise<MemeImage[
                 reject(error);
             }
         }))
+
+        // Adjust ms to avoid overwhelming server.
+        // Might get 503 response if not used.
+        await new Promise((resolve) => {
+            setTimeout(resolve, 100)
+        })
     }
 
     const buffers = await Promise.all(requests)

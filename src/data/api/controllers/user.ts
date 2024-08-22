@@ -12,7 +12,6 @@ import { redirect } from 'next/navigation'
 import { nestUser } from "../types/model/transforms";
 import { preWhereUserQuery } from "../query/preWhere";
 import { createPutUserSchema } from "@/data/api/validation/user";
-// import formidable, {errors as formidableErrors} from 'formidable';
 
 export async function signInUser(
   prevState: FormState, formData: FormData
@@ -36,29 +35,47 @@ export async function signInUser(
     redirect('/')
 }
 
-export async function getUserByName(
-  name: string, profile_image=false
+export async function getOneUser(
+  id: string | undefined = undefined, 
+  name: string | undefined = undefined, 
+  profile_image=false
 ): Promise<NestedUser | null> {
-    const query = preWhereUserQuery(profile_image) 
-      + ` WHERE name ILIKE $1 LIMIT 1`
-    let user = null
+    const querySegments = [preWhereUserQuery(profile_image)]
+    const wherePredicates = []
+    const tokens = []
+    let tokenIndex = 1
+
+    if (id !== undefined) {
+      wherePredicates.push(`u.id = $${tokenIndex++}::uuid`)
+      tokens.push(id)
+    }
+
+    if (name !== undefined) {
+      wherePredicates.push(`u.name ILIKE $${tokenIndex++}`)
+      tokens.push(name)
+    }
+
+    if (wherePredicates.length) {
+      querySegments.push(`WHERE ${wherePredicates.join(' AND ')}`)
+    }
+
+    querySegments.push('LIMIT 1')
 
     try {
-      const users = await prisma.$queryRawUnsafe<JoinedUser[]>(
-        query, name
+      const [user=null] = await prisma.$queryRawUnsafe<JoinedUser[]>(
+        querySegments.join(' '), ...tokens
       )
-      user = users[0]
+      
+      if (!user) {
+        return user
+      }
+  
+      return nestUser(user)
     }
     catch (error) {
       console.error('Database Error:', error);
       throw new Error('Failed to fetch user.');
     }
-
-    if (!user) {
-      return user
-    }
-
-    return nestUser(user)
 }
 
 export async function postUser(
@@ -98,56 +115,69 @@ export async function putUser(
 ): Promise<FormState> {
   const session = await auth()
   const sessionUser = session?.user
+  const sessionUser404 = 'Session user does not exist for user update.'
 
   if (!sessionUser) {
-    throw new Error('Session user does not exist for user update.')
+    throw new Error(sessionUser404)
   }
 
-  const putUserSchema = createPutUserSchema(sessionUser.name)
+  const fullSessionUser = await getOneUser(
+    sessionUser.id,
+    undefined,
+    false
+  )
+
+  if (!fullSessionUser) {
+    throw new Error(sessionUser404)
+  }
+
+  const putUserSchema = createPutUserSchema(fullSessionUser.name)
   const parse = await putUserSchema.safeParseAsync({
       username: formData.get('username'),
-      profileImage: formData.get('profile-pic')
+      profileImage: formData.get('profile-image')
   })
 
   if (!parse.success) {
-    return {
-      errors: parse.error.flatten().fieldErrors
-    }
+    const errors = parse.error.flatten().fieldErrors
+    return { errors }
   }
 
   const { username, profileImage } = parse.data
 
-  if (profileImage === undefined) {
-    return false
-  }
-
-  console.log('Size: ' + profileImage.size)
-
   try {
     let profilePic = null
     
-    // if (profileImage) {
-    //   profilePic = await prisma.image.create({
-    //     data: {
-          
-    //     }
-    //   })
-    // }
+    // Update/Create profile image
+    if (profileImage) {
+      profilePic = await prisma.image.upsert({
+        where: {
+          id: fullSessionUser.profile_image_id ?? ''
+        },
+        update: {
+          mime_type: profileImage.type,
+          data: Buffer.from(await profileImage.arrayBuffer())
+        },
+        create: {
+          mime_type: profileImage.type,
+          data: Buffer.from(await profileImage.arrayBuffer())
+        }
+      })
+    }
     
-
-    // await prisma.user.update({
-    //   where: {
-    //     name: username
-    //   },
-    //   data: {
-    //     name: username,
-    //     profile_image_id: profilePic.id
-    //   }
-    // })
+    // Update user
+    await prisma.user.update({
+      where: {
+        id: sessionUser.id
+      },
+      data: {
+        name: username,
+        profile_image_id: profilePic?.id
+      }
+    })
   }
   catch (error) {
     return error500Msg
   }
 
-  return true
+  redirect(`/${username}`)
 }

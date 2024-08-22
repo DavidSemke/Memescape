@@ -1,6 +1,6 @@
 import { object, string, instanceof as z_instanceof } from "zod"
 import { minMaxErrorMap } from "./errorMsg"
-import { getUserByName } from '../controllers/user'
+import { getOneUser } from '../controllers/user'
 
 const usernameLen = { min: 6, max: 20 }
 const usernameRegex = /^[-\dA-Za-z]*$/
@@ -42,7 +42,13 @@ export function createPutUserSchema(currUsername: string) {
     return object({
         username: validateUsername(currUsername),
         profileImage: z_instanceof(File)
-            .optional()
+            .transform(file => {
+                if (file.size === 0) {
+                    return null
+                }
+
+                return file
+            })
             .refine((file) => {
                     return !file || file.size <= maxUploadSize
                 }, 
@@ -51,9 +57,9 @@ export function createPutUserSchema(currUsername: string) {
             .refine(file => {
                     return (
                         !file 
-                        || validProfilePicTypes.map(
-                            ext => `image/${ext}`
-                        ).includes(file.type)
+                        || validProfilePicTypes
+                            .map(type => `image/${type}`)
+                            .includes(file.type)
                     )
                 },
                 'File must be a '
@@ -84,7 +90,7 @@ function validateUsername(currUsername: string | null) {
                 return true
             }
 
-            return !(await getUserByName(value))
+            return !(await getOneUser(undefined, value))
         },
         { message: "Username already taken." }
     )

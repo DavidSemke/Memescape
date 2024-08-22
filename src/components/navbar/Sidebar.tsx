@@ -8,20 +8,19 @@ import { SignButton } from '../button/SignButton'
 import { useContext, useEffect } from 'react'
 import clsx from 'clsx'
 import { usePathname } from 'next/navigation'
-import { Session } from 'next-auth'
+import { NestedUser } from '@/data/api/types/model/types'
 
 type SidebarProps = {
-    session: Session | null
+    sessionUser: NestedUser | null
 }
 
-export default function Sidebar({ session }: SidebarProps) {
+export default function Sidebar({ sessionUser }: SidebarProps) {
     const { showSidebar, setShowSidebar } = useContext(SidebarContext)
     const pathname = usePathname()
-    const user = session?.user
-    const profileImageSrc = user?.profile_image?.base64
+    const profileImageSrc = sessionUser?.profile_image?.base64
     const links = {
-        userProfile: user ? `/${user.name}` : undefined,
-        userMemes: user ? `/memes?user-id=${user.id}` : undefined,
+        userProfile: sessionUser ? `/${sessionUser.name}` : undefined,
+        userMemes: sessionUser ? `/memes?user-id=${sessionUser.id}` : undefined,
         findMemes: '/memes',
         createMeme: '/memes/create'
     }
@@ -54,7 +53,7 @@ export default function Sidebar({ session }: SidebarProps) {
                     )
                 }
                 <div className='text-lg'>
-                    { user ? user.name : 'Anonymous' }
+                    { sessionUser ? sessionUser.name : 'Anonymous' }
                 </div>
             </section>
             {
@@ -78,7 +77,7 @@ export default function Sidebar({ session }: SidebarProps) {
                         </Link>
                     </section>
                 ) : (
-                    <section className='flex flex-col gap-4 items-center w-full'>
+                    <section className='flex flex-col gap-4 items-center w-full pb-4 border-b-2 border-stress-secondary'>
                         <p className="text-center">
                             Do you want meme storage or for others to see your memes?
                         </p>
@@ -114,7 +113,7 @@ export default function Sidebar({ session }: SidebarProps) {
                 )
             }
             {
-                user && (
+                sessionUser && (
                     <SignButton type='out'/>
                 ) 
             }

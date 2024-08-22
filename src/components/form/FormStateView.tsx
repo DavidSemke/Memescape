@@ -17,7 +17,7 @@ export function FormStateView({ state }: FormStateViewProps) {
     const { pending } = useFormStatus()
     
     if (pending) {
-        return <p className="text-pending">Pending...</p>
+        return <p className="text-pending text-center">Pending...</p>
     }
 
     if (state === false) {
@@ -41,7 +41,7 @@ export function FormStateView({ state }: FormStateViewProps) {
     }
 
     return (
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2 items-center justify-center">
             <Icon className={`w-6 h-6 ${msgColor}`} />
             <p className={`${msgColor}`}>{msg}</p>
         </div>

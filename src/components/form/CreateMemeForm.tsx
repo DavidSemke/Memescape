@@ -76,18 +76,3 @@ export default function CreateMemeForm() {
         </form>
     )
 }
-
-/* <label htmlFor='bottom-black'>Black</label>
-<input  
-id='bottom-black'
-name='bottom-color'
-type='radio'
-value='Black'
-/>
-<label htmlFor='bottom-white'>White</label>
-<input  
-id='bottom-white'
-name='bottom-color'
-type='radio'
-value='White'
-/> */

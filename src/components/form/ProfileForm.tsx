@@ -6,6 +6,8 @@ import { putUser } from "@/data/api/controllers/user"
 import { FormState } from "@/data/api/types/action/types"
 import { NestedUser } from "@/data/api/types/model/types"
 import { ReactNode, useState } from "react"
+import { PencilIcon } from "@heroicons/react/24/outline"
+import { FormStateView } from "./FormStateView"
 
 type ProfileFormProps = {
     user: NestedUser,
@@ -18,14 +20,16 @@ export default function ProfileForm({ user, profileView }: ProfileFormProps) {
 
     if (isGone) {
         return (
-            <div className="flex items-center gap-4 mb-4">
+            <div className="flex items-stretch gap-4 mb-4">
                 {profileView}
                 <button
                     type="button"
-                    className="btn-secondary"
+                    className="btn-secondary items-center"
                     onClick={() => setIsGone(false)}
                 >
-                    Edit
+                    <PencilIcon 
+                        className="w-6 h-6"
+                    />
                 </button>
             </div>
         )
@@ -39,12 +43,9 @@ export default function ProfileForm({ user, profileView }: ProfileFormProps) {
             className='flex flex-col gap-4 mb-4'
         >
             <Input 
-                name='profile-pic'
-                errors={errors?.profilePic}
+                name='profile-image'
+                errors={errors?.profileImage}
                 attrs={{
-                    label: {
-                        className: 'font-semibold'
-                    },
                     input: {
                         type: 'file'
                     }
@@ -54,20 +55,8 @@ export default function ProfileForm({ user, profileView }: ProfileFormProps) {
                 name='username'
                 errors={errors?.username}
                 attrs={{
-                    label: {
-                        className: 'font-semibold'
-                    },
                     input: {
                         defaultValue: user.name
-                    }
-                }}
-            />
-            <Input 
-                name='id'
-                attrs={{
-                    input: {
-                        type: 'hidden',
-                        defaultValue: user.id
                     }
                 }}
             />
@@ -86,6 +75,7 @@ export default function ProfileForm({ user, profileView }: ProfileFormProps) {
                     Cancel
                 </button> 
             </div>
+            <FormStateView state={state}/>
         </form>
     )
 }

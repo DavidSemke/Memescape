@@ -102,7 +102,7 @@ export default function DeepMemeGrid({
                     moreExist ? (
                         <button
                             type='button'
-                            className="btn-secondary"
+                            className="btn-secondary w-full justify-center"
                             onClick={() => {
                                 addMoreMemes()
                             }}

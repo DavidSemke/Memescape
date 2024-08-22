@@ -1,6 +1,6 @@
 import { auth } from "@/app/api/auth/[...nextauth]/auth";
 import ProfileForm from "@/components/form/ProfileForm";
-import { getUserByName } from "@/data/api/controllers/user";
+import { getOneUser } from "@/data/api/controllers/user";
 import { NestedUser } from "@/data/api/types/model/types";
 import { notFound } from "next/navigation";
 import { getBookmarks } from "@/data/api/controllers/bookmark";
@@ -13,28 +13,38 @@ import RedirectSearchbar from "@/components/search/RedirectSearchbar";
 export default async function ProfilePage({ params }: { params: { username: string }}) {
     const session = await auth()
     const sessionUser = session?.user
+    let fullSessionUser = null
+
+    if (sessionUser) {
+        fullSessionUser = await getOneUser(
+            sessionUser.id, undefined, true
+        )
+    }
+
     let isSelfProfile = false
-    let user: NestedUser | null = null
+    let profileUser: NestedUser | null = null
     let possessive: string | null = null
 
-    if (sessionUser && sessionUser.name === params.username) {
-        user = sessionUser
+    if (fullSessionUser && fullSessionUser.name === params.username) {
+        profileUser = fullSessionUser
         isSelfProfile = true
         possessive = 'Your'
     }
     else {
-        user = await getUserByName(params.username, true)
+        profileUser = await getOneUser(
+            params.username, undefined, true
+        )
 
-        if (user === null) {
+        if (profileUser === null) {
             notFound()
         }
 
-        possessive = `${user.name}'s`
+        possessive = `${profileUser.name}'s`
     }
     
     const profileView = (
         <ProfileView 
-            user={user} 
+            user={profileUser} 
             profileAlt={`${possessive} profile picture`}
         />
     )
@@ -45,7 +55,7 @@ export default async function ProfilePage({ params }: { params: { username: stri
                 <DeepMemeGrid 
                     fetchAction={async (query, page, pageSize) => {
                         'use server'
-                        return await getMemes(query, page, pageSize, user.id)
+                        return await getMemes(query, page, pageSize, profileUser.id)
                     }}
                     query={null}
                     pageSize={10}
@@ -62,7 +72,7 @@ export default async function ProfilePage({ params }: { params: { username: stri
                     <DeepMemeGrid 
                         fetchAction={async (query, page, pageSize) => {
                             'use server'
-                            const bookmarks = await getBookmarks(query, page, pageSize, user.id)
+                            const bookmarks = await getBookmarks(query, page, pageSize, profileUser.id)
                             return bookmarks.map(b => {
                                 const nestedMeme = b.meme
 
@@ -88,7 +98,7 @@ export default async function ProfilePage({ params }: { params: { username: stri
                 {
                     isSelfProfile? (
                         <ProfileForm 
-                            user={user}
+                            user={profileUser}
                             profileView={profileView}
                         /> 
                     ) : (

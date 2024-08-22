@@ -1,10 +1,9 @@
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import bcrypt from 'bcryptjs'
-import { getUserByName } from "@/data/api/controllers/user"
+import { getOneUser } from "@/data/api/controllers/user"
 import { signInUserSchema } from "@/data/api/validation/user"
 import { ZodError } from "zod"
-import { NestedUser } from "@/data/api/types/model/types"
 import { AdapterUser } from "next-auth/adapters"
  
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -16,13 +15,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return !!auth
     },
     session: async ({ session, token }) => {
-      session.user = token.user as NestedUser & AdapterUser;
+      session.user = token.user as { id: string } & AdapterUser;
       return session;
     },
     jwt: async ({ token, user }) => {
       if (user) {
         token.user = user;
       }
+
       return token;
     },
   },
@@ -35,8 +35,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       authorize: async (credentials) => {
         try {
           const {username, password} = await signInUserSchema.parseAsync(credentials)
-
-          const user = await getUserByName(username, true)
+          const user = await getOneUser(undefined, username, false)
 
           if (!user) {
             return null
@@ -48,7 +47,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             return null
           }
 
-          return user
+          // Using just the user id is better because:
+          // 1 - There is no need to update the session on user update
+          // 2 - There is no risk of oversaturating cookie with data
+          return { id: user.id }
         }
         catch(error) {
           if (error instanceof ZodError) {

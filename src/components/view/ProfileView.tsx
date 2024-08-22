@@ -19,7 +19,7 @@ export default function ProfileView({ user, profileAlt }: ProfileViewProps) {
                         alt={profileAlt}
                         className='rounded-full'
                     />
-                ): (
+                ) : (
                     <UserCircleIcon 
                         className="w-32 h-32"
                         title={profileAlt}
