@@ -7,7 +7,7 @@ import { getBookmarks } from "@/data/api/controllers/bookmark";
 import { getMemes } from "@/data/api/controllers/meme";
 import ProfileView from "@/components/view/ProfileView";
 import TabbedMemeGrid from "@/components/grid/TabbedGrid";
-import DeepMemeGrid from "@/components/grid/DeepMemeGrid";
+import DeepMemeGrid, { DeepMemeGridFetchAction } from "@/components/grid/DeepMemeGrid";
 import RedirectSearchbar from "@/components/search/RedirectSearchbar";
 
 export default async function ProfilePage({ params }: { params: { username: string }}) {
@@ -48,48 +48,53 @@ export default async function ProfilePage({ params }: { params: { username: stri
             profileAlt={`${possessive} profile picture`}
         />
     )
-    const tabs = [
-        {
-            title: 'Memes',
-            grid: (
-                <DeepMemeGrid 
-                    fetchAction={async (query, page, pageSize) => {
-                        'use server'
-                        return await getMemes(query, page, pageSize, profileUser.id)
-                    }}
-                    query={null}
-                    pageSize={10}
-                />
-            )
-        },
+
+    const tabPageSize = 10
+    const fetchActions: DeepMemeGridFetchAction[] = [
+        async (query, page, pageSize) => {
+            'use server'
+            return await getMemes(query, page, pageSize, profileUser.id)
+        }
+    ]
+    const initMemesPromises = [
+        fetchActions[fetchActions.length-1](null, 1, tabPageSize)
     ]
 
     if (isSelfProfile) {
-        tabs.push(
-            {
-                title: 'Bookmarks',
-                grid: (
-                    <DeepMemeGrid 
-                        fetchAction={async (query, page, pageSize) => {
-                            'use server'
-                            const bookmarks = await getBookmarks(query, page, pageSize, profileUser.id)
-                            return bookmarks.map(b => {
-                                const nestedMeme = b.meme
+        fetchActions.push(async (query, page, pageSize) => {
+            'use server'
+            const bookmarks = await getBookmarks(
+                query, page, pageSize, profileUser.id
+            )
+            return bookmarks.map(b => {
+                const nestedMeme = b.meme
 
-                                if (!nestedMeme) {
-                                    throw new Error('Nested bookmark lacks data.')
-                                }
+                if (!nestedMeme) {
+                    throw new Error('Nested bookmark lacks data.')
+                }
 
-                                return nestedMeme
-                            })
-                        }}
-                        query={null}
-                        pageSize={10}
-                    />
-                )
-            }
+                return nestedMeme
+            })
+        })
+        initMemesPromises.push(
+            fetchActions[fetchActions.length-1](null, 1, tabPageSize)
         )
     }
+
+    const initMemes = await Promise.all(initMemesPromises)
+    const tabs = ['Memes', 'Bookmarks'].map((title, index) => {
+        return {
+            title,
+            grid: (
+                <DeepMemeGrid 
+                    fetchAction={fetchActions[index]}
+                    query={null}
+                    pageSize={tabPageSize}
+                    initMemes={initMemes[index]}
+                />
+            )
+        }
+    })
 
     return (
         <main className="flex flex-col items-center gap-4">

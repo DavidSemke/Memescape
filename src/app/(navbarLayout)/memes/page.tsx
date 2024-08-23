@@ -20,6 +20,8 @@ export default async function MemeSearchPage({ searchParams }: PageProps) {
     'use server'
     return await getMemes(query, page, pageSize)
   }
+
+  const initMemes = await fetchAction(query, 1, pageSize)
   
   return (
     <main className="flex flex-col gap-4 items-center">
@@ -30,6 +32,7 @@ export default async function MemeSearchPage({ searchParams }: PageProps) {
         fetchAction={fetchAction}
         query={query}
         pageSize={pageSize}
+        initMemes={initMemes}
       />
     </main>
   )
