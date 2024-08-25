@@ -12,6 +12,7 @@ function isProcessedImage(value: any): value is ProcessedImage {
         && typeof value.id === 'string'
         && typeof value.mime_type === 'string'
         && typeof value.base64 === 'string'
+        && typeof value.alt === 'string'
     );
 }
 

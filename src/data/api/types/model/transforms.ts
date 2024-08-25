@@ -5,12 +5,15 @@ import {
     JoinedBookmark,
     NestedBookmark,
     JoinedUser,
-    NestedUser
+    NestedUser,
+    NestedTemplate
 } from './types';
 import { isNestedMeme, isNestedUser } from './guards';
 import { isNestedBookmark } from './guards';
-import { Image } from '@prisma/client';
+import { Image, Template } from '@prisma/client';
 import { base64String, isPlainObject } from '../../utils';
+
+const TEMPLATE_FACTORY = 'https://api.memegen.link/templates'
 
 export function nestBookmark(bookmark: JoinedBookmark) {
     const nestedMeme = nestMeme(bookmark)
@@ -78,13 +81,25 @@ export function nestMeme(
             delete nestedMeme[key]
         }
         else if (key === 'product_image') {
-            product_image = processImage(product_image as Image)
+            product_image = processImageNoAlt(product_image as Image)
+
+            if (!nestedMeme.template) {
+                throw new Error(
+                    'Nested meme lacks template data for product image alt.'
+                )
+            }
+
+            product_image.alt = [
+                nestedMeme.template.name, 
+                nestedMeme.text.join('. ')
+            ].join('. ')
             nestedMeme[key] = product_image
         }
         else if (key === 'user' && profile_image.id !== null) {
             // User is part of join
             // User should be nested with processed profile image
-            profile_image = processImage(profile_image as Image)
+            profile_image = processImageNoAlt(profile_image as Image)
+            profile_image.alt = `${user.u_name}'s profile picture.`
             nestedMeme[key].profile_image = profile_image
         }
     }
@@ -101,18 +116,18 @@ export function nestUser(user: JoinedUser): NestedUser {
         id: user.u_id,
         name: user.u_name,
         password: user.u_password,
-        profile_image_id: user.u_profile_image_id,
-        profile_image: undefined
+        profile_image_id: user.u_profile_image_id
       }
   
       // If ui_id field is null, profile image does not exist
       if (user.ui_id) {
-        const image = processImage({
+        const image: Record<string, unknown> = processImageNoAlt({
             id: user.ui_id,
             data: user.ui_data,
             mime_type: user.ui_mime_type
         } as Image)
 
+        image.alt = `${user.u_name}'s profile picture.`
         nestedUser.profile_image = image
       }
   
@@ -123,7 +138,45 @@ export function nestUser(user: JoinedUser): NestedUser {
       throw new TypeError('Value is not of type NestedUser')
 }
 
-export function processImage(image: Image): ProcessedImage {
+export async function nestTemplate(template: Template ): Promise<NestedTemplate> {
+    const factoryRes = await fetch(
+        `${TEMPLATE_FACTORY}/${template.id}`
+    )
+
+    if (!factoryRes.ok) {
+        throw new Error(`Response status: ${factoryRes.status}`);
+    }
+
+    const factoryTemplate = await factoryRes.json()
+    const imageUrl = factoryTemplate.blank
+    const imageRes = await fetch(imageUrl)
+    const buffer = Buffer.from(await imageRes.arrayBuffer())
+    
+    const split = imageUrl.split('.')
+    let ext = split[split.length-1]
+
+    if (ext === 'jpg') {
+        ext = 'jpeg'
+    }
+
+    const mime_type = `image/${ext}`
+
+    return {
+        ...template,
+        image: {
+            ...processImageNoAlt({ 
+                id: template.id,
+                data: buffer,
+                mime_type 
+            } as Image),
+            alt: template.name
+        }
+    }
+}
+
+// Optional alt omitted because it depends on greater context,
+// where greater context is meme, template, user, ...
+function processImageNoAlt(image: Image): Omit<ProcessedImage, 'alt'> {
     return {
         id: image.id,
         mime_type: image.mime_type,

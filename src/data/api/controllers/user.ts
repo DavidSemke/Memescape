@@ -39,9 +39,9 @@ export async function signInUser(
 export async function getOneUser(
   id: string | undefined = undefined, 
   name: string | undefined = undefined, 
-  profile_image=false
+  includeProfileImage=false
 ): Promise<NestedUser | null> {
-    const querySegments = [preWhereUserQuery(profile_image)]
+    const querySegments = [preWhereUserQuery(includeProfileImage)]
     const wherePredicates = []
     const tokens = []
     let tokenIndex = 1

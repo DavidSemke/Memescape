@@ -1,6 +1,8 @@
 import UrlSearchbar from "@/components/search/UrlSearchbar";
-import DeepMemeGrid from "@/components/grid/DeepMemeGrid";
+import DeepImageGrid from "@/components/grid/DeepImageGrid";
 import { getMemes } from "@/data/api/controllers/meme";
+// import { Suspense } from "react";
+// import Ellipsis from "@/components/loading/Ellipsis";
 
 type PageProps = {
   searchParams?: {
@@ -18,22 +20,36 @@ export default async function MemeSearchPage({ searchParams }: PageProps) {
     pageSize: number
   ) {
     'use server'
-    return await getMemes(query, page, pageSize)
+            
+    const memes = await getMemes(
+        query, page, pageSize
+    )
+
+    return memes.map(meme => { 
+      if (!meme.product_image) {
+          throw new Error('Meme lacks image data.')
+      }
+
+      return meme.product_image 
+  })
   }
 
-  const initMemes = await fetchAction(query, 1, pageSize)
+  const initImages = await fetchAction(query, 1, pageSize)
   
   return (
     <main className="flex flex-col gap-4 items-center">
       <UrlSearchbar 
         searchItemName="meme"
       />
-      <DeepMemeGrid 
+      
+      <DeepImageGrid 
+        initImages={initImages}
         fetchAction={fetchAction}
         query={query}
         pageSize={pageSize}
-        initMemes={initMemes}
       />
+      
+      
     </main>
   )
 }

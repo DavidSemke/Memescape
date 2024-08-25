@@ -7,18 +7,26 @@ import { useFormState } from "react-dom";
 import { FormStateView } from "./FormStateView"
 import { FormState } from "@/data/api/types/action/types"
 import { postMeme } from "@/data/api/controllers/meme";
-import DeepMemeGrid from "../grid/DeepMemeGrid";
+import DeepImageGrid from "../grid/DeepImageGrid";
+import { getTemplates } from "@/data/api/controllers/template";
+import { useState } from "react";
+import { ProcessedImage } from "@/data/api/types/model/types";
 
 
 export default function CreateMemeForm() {
+    const [query, setQuery] = useState<string>('')
+    const [template, setTemplate] = useState<ProcessedImage | null>(null)
     const [state, action] = useFormState<FormState, FormData>(postMeme, false)
     const errors = typeof state === "object" && "errors" in state ? state.errors : null
 
     return (
         <form action={action}>
             <section className="flex flex-col gap-4 w-full">
+                <h2>Template</h2>
                 <div className="flex items-center gap-4">
-                    <h2>Template</h2>
+                    <div className='flex items-center w-32 h-32 border-2 border-stress-secondary italic text-center'>
+                        Template Appears Here
+                    </div>
                     <button 
                         type='button' 
                         className="btn-secondary"
@@ -29,21 +37,34 @@ export default function CreateMemeForm() {
                         />
                     </button>
                 </div>
-                <div className="flex justify-center gap-4">
-                    <div className='flex items-center w-32 h-32 border-2 border-stress-secondary italic text-center'>
-                        Template Appears Here
-                    </div>
-                    <div>
-                        File upload area
-                    </div>
-                </div>
                 <div>
                     <Searchbar 
                         searchItemName="template"
                         onSearch={() => {}}
                     />
-                    <DeepMemeGrid 
-                    
+                    <DeepImageGrid
+                        initImages={[]}
+                        fetchAction={async (query, page, pageSize) => {
+                            'use server'
+                            
+                            const templates = await getTemplates(
+                                query ?? '', page, pageSize, true
+                            )
+
+                            return templates.map(template => { 
+                                if (!template.image) {
+                                    throw new Error('Template lacks image data.')
+                                }
+
+                                return template.image 
+                            })
+                            
+                        }}
+                        query={query}
+                        pageSize={10}
+                        onImageClick={(image) => {
+                            setTemplate(image)
+                        }}
                     />
                 </div>
             </section>

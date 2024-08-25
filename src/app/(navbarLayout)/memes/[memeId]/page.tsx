@@ -4,7 +4,7 @@ import {
   UserCircleIcon
 } from "@heroicons/react/24/outline"
 import RedirectSearchbar from "@/components/search/RedirectSearchbar"
-import ShallowMemeGrid from "@/components/grid/ShallowMemeGrid"
+import ShallowImageGrid from "@/components/grid/ShallowImageGrid"
 import Image from "next/image"
 import { getMemes, getOneMeme, getRelatedMemes } from "@/data/api/controllers/meme"
 import { notFound } from "next/navigation"
@@ -32,29 +32,22 @@ export default async function MemePage({ params }: { params: { memeId: string }}
   }
 
   const sessionUser = session?.user
-  const memeImageSrc = mainMeme.product_image.base64
-  const alt = [
-    mainMeme.template.name,
-    mainMeme.text.join('. ')
-  ].join('. ')
+  const mainMemeImage = mainMeme.product_image
   const createDate = formatDate(mainMeme.create_date)
   const author = mainMeme.user
-  let authorImageSrc = null
-
-  if (author.profile_image) {
-    authorImageSrc = author.profile_image.base64
-  }
+  const authorImage = author.profile_image
 
   const downloadName = [
     mainMeme.template.name,
-    mainMeme.product_image.mime_type
+    mainMemeImage.mime_type
   ].join('.').replaceAll(' ', '-')
 
   async function shallowGridFetch(
     page: number, pageSize: number
   ) {
     if (mainMeme === null) {
-      return await getMemes(null, page, pageSize)
+      const memes = await getMemes(null, page, pageSize)
+      return memes.map(meme => meme.product_image!)
     }
 
     let shortCount = pageSize
@@ -75,7 +68,7 @@ export default async function MemePage({ params }: { params: { memeId: string }}
       memes.push(...shortMemes)
     }
 
-    return memes
+    return memes.map(meme => meme.product_image!)
   }
   
   return (
@@ -86,22 +79,22 @@ export default async function MemePage({ params }: { params: { memeId: string }}
       />
       <section className="flex flex-col gap-4">
         <Image
-          src={memeImageSrc}
+          src={mainMemeImage.base64}
           width={0}
           height={0}
-          alt={alt}
+          alt={mainMemeImage.alt}
           className="w-full border-2 border-stress-secondary"
         />
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <div className="font-semibold">Creator:</div>
             {
-              authorImageSrc ? (
+              authorImage ? (
                 <Image
-                  src={authorImageSrc}
+                  src={authorImage.base64}
                   width={32}
                   height={32}
-                  alt={`${author.name}'s profile picture.`}
+                  alt={authorImage.alt}
                   className="rounded-full"
                 />
               ) : (
@@ -135,7 +128,7 @@ export default async function MemePage({ params }: { params: { memeId: string }}
             )
           }
           <a
-            href={memeImageSrc}
+            href={mainMemeImage.base64}
             download={downloadName}
             aria-label="Download meme"
             className="btn-secondary"
@@ -148,9 +141,10 @@ export default async function MemePage({ params }: { params: { memeId: string }}
       </section>
       <section className="w-full">
         <h2 className="pb-2 mb-4 border-b-2 border-stress-secondary">More Memes</h2>
-        <ShallowMemeGrid 
+        <ShallowImageGrid 
           fetchAction={shallowGridFetch}
           pageSize={20}
+          linkRoot="/memes"
         />
       </section>
     </main>

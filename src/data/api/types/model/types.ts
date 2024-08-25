@@ -1,5 +1,10 @@
 import { User, Image, Meme, Template, Bookmark } from '@prisma/client'
 
+export type NestedTemplate = Template
+    & Partial<{
+        image: ProcessedImage
+    }>
+
 export type NestedBookmark = Bookmark
     & Partial<{ 
         meme: NestedMeme,
@@ -40,7 +45,8 @@ export type MemeImage = Image & {
 export type ProcessedImage = {
     id: string,
     mime_type: string,
-    base64: string
+    base64: string,
+    alt: string
 }
 
 // Utility type; prefix properties of a type

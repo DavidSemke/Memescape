@@ -6,8 +6,8 @@ import { notFound } from "next/navigation";
 import { getBookmarks } from "@/data/api/controllers/bookmark";
 import { getMemes } from "@/data/api/controllers/meme";
 import ProfileView from "@/components/view/ProfileView";
-import TabbedMemeGrid from "@/components/grid/TabbedGrid";
-import DeepMemeGrid, { DeepMemeGridFetchAction } from "@/components/grid/DeepMemeGrid";
+import TabbedView from "@/components/view/TabbedView";
+import DeepImageGrid, { DeepImageGridFetchAction } from "@/components/grid/DeepImageGrid";
 import RedirectSearchbar from "@/components/search/RedirectSearchbar";
 
 export default async function ProfilePage({ params }: { params: { username: string }}) {
@@ -50,47 +50,55 @@ export default async function ProfilePage({ params }: { params: { username: stri
     )
 
     const tabPageSize = 10
-    const fetchActions: DeepMemeGridFetchAction[] = [
+    const fetchActions: DeepImageGridFetchAction[] = [
         async (query, page, pageSize) => {
             'use server'
-            return await getMemes(query, page, pageSize, profileUser.id)
+            
+            const memes = await getMemes(
+                query, page, pageSize, profileUser.id
+            )
+
+            return memes.map(meme => { 
+                if (!meme.product_image) {
+                    throw new Error('Meme lacks image data.')
+                }
+
+                return meme.product_image 
+            })
         }
-    ]
-    const initMemesPromises = [
-        fetchActions[fetchActions.length-1](null, 1, tabPageSize)
     ]
 
     if (isSelfProfile) {
         fetchActions.push(async (query, page, pageSize) => {
             'use server'
+
             const bookmarks = await getBookmarks(
                 query, page, pageSize, profileUser.id
             )
-            return bookmarks.map(b => {
-                const nestedMeme = b.meme
 
-                if (!nestedMeme) {
-                    throw new Error('Nested bookmark lacks data.')
+            return bookmarks.map(bookmark => { 
+                if (!bookmark.meme?.product_image) {
+                    throw new Error('Bookmark lacks image data.')
                 }
 
-                return nestedMeme
+                return bookmark.meme.product_image 
             })
         })
-        initMemesPromises.push(
-            fetchActions[fetchActions.length-1](null, 1, tabPageSize)
-        )
     }
 
-    const initMemes = await Promise.all(initMemesPromises)
+    const initImages = await Promise.all(
+        fetchActions.map(action => action(null, 1, tabPageSize))
+    )
     const tabs = ['Memes', 'Bookmarks'].map((title, index) => {
         return {
             title,
-            grid: (
-                <DeepMemeGrid 
+            view: (
+                <DeepImageGrid 
+                    initImages={initImages[index]}
                     fetchAction={fetchActions[index]}
                     query={null}
                     pageSize={tabPageSize}
-                    initMemes={initMemes[index]}
+                    linkRoot='/memes'
                 />
             )
         }
@@ -116,7 +124,7 @@ export default async function ProfilePage({ params }: { params: { username: stri
                     searchItemName="meme"
                     redirectPath="/memes"
                 />
-                <TabbedMemeGrid 
+                <TabbedView 
                     tabs={tabs}
                 />
             </section>

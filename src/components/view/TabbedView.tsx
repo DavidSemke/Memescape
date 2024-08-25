@@ -3,16 +3,11 @@
 import { useState } from "react";
 import clsx from "clsx";
 
-type TabbedMemeGridProps = {
-    tabs: { title: string, grid: JSX.Element }[],
-    limit?: number,
-    userId?: string | undefined
+type TabbedViewProps = {
+    tabs: { title: string, view: JSX.Element }[]
 }
 
-/*
-    Shows up to one page's worth of memes in a grid for each tab initially.
-*/
-export default function TabbedMemeGrid({ tabs }: TabbedMemeGridProps) {
+export default function TabbedView({ tabs }: TabbedViewProps) {
     const [openTab, setOpenTab] = useState<string>(tabs[0].title)
     
     return (
@@ -44,7 +39,7 @@ export default function TabbedMemeGrid({ tabs }: TabbedMemeGridProps) {
                                 }
                             )}
                         >
-                            {tab.grid}
+                            {tab.view}
                         </div>
                     )
                 })

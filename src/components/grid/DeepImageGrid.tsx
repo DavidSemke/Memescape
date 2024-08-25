@@ -1,45 +1,50 @@
 'use client'
 
 import { useState, useEffect, useRef } from "react"
-import MemeGrid from "./MemeGrid"
+import ImageGrid from "./ImageGrid"
 import Ellipsis from "../loading/Ellipsis"
-import { NestedMeme } from "@/data/api/types/model/types"
+import { ProcessedImage } from "@/data/api/types/model/types"
 
-export type DeepMemeGridFetchAction = (
+export type DeepImageGridFetchAction = (
     query: string | null, 
     page: number, 
     pageSize: number
-) => Promise<NestedMeme[]>
+) => Promise<ProcessedImage[]>
 
 type FetchProps = {
-    fetchAction: DeepMemeGridFetchAction,
+    fetchAction: DeepImageGridFetchAction,
     query: string | null,
     pageSize: number,
 }
 
-type DeepMemeGridProps = FetchProps & {
-    initMemes: NestedMeme[]
+type DeepImageGridProps = FetchProps & {
+    initImages: ProcessedImage[],
+    linkRoot?: string,
+    onImageClick?: (image: ProcessedImage) => void
 }
 
 /*
-    Shows up to one page's worth of memes in a grid initially.
-    Scrolling to the bottom and pressing button reveals more memes.
-    Memes are chosen using URL query.
-    <Suspense> is not necessary for this component.
+    Shows up to one page's worth of images in a grid initially.
+    Scrolling to the bottom and pressing button reveals more images.
 */
-export default function DeepMemeGrid({ 
-    fetchAction, query=null, pageSize=20, initMemes
-}: DeepMemeGridProps) {
+export default function DeepImageGrid({ 
+    initImages,
+    fetchAction, 
+    query=null, 
+    pageSize=20, 
+    linkRoot=undefined,
+    onImageClick=undefined
+}: DeepImageGridProps) {
     const initRenderRef = useRef<boolean>(true)
     const pageRef = useRef<number>(1)
-    const [memeGroups, setMemeGroups] = useState<NestedMeme[][]>([initMemes])
+    const [imageGroups, setImageGroups] = useState<ProcessedImage[][]>([initImages])
     const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false)
-    // If more memes could exist on the next page, moreExist is true
+    // If more images could exist on the next page, moreExist is true
     const [moreExist, setMoreExist] = useState<boolean>(
-        initMemes.length === pageSize
+        initImages.length === pageSize
     )
     // Query is always trimmed if able
-    query = query !== null ? query.trim() : null 
+    query &&= query.trim()
     const [prevFetchProps, setPrevFetchProps] = useState<FetchProps>(
         { fetchAction, query, pageSize }
     )
@@ -47,22 +52,28 @@ export default function DeepMemeGrid({
     if (query === '' && query !== prevFetchProps.query) {
         pageRef.current = 1
         setMoreExist(false)
-        setMemeGroups([])
+        setImageGroups([])
         setPrevFetchProps({ fetchAction, query, pageSize })
     }
 
     useEffect(() => {
+        // Init memes are provided, so skip first activation
+        if (initRenderRef.current) {
+            initRenderRef.current = false
+            return
+        }
+
         let isMounted = true
         
-        if (query !== '' && !initRenderRef.current) {
+        if (query !== '') {
             initRenderRef.current = false
-            addMemes()
+            addImages()
         }
         
-        async function addMemes() {
+        async function addImages() {
             setIsLoadingMore(true)
             pageRef.current = 1
-            const memesToStart = await fetchAction(
+            const imagesToStart = await fetchAction(
                 query, pageRef.current, pageSize
             )
 
@@ -70,8 +81,8 @@ export default function DeepMemeGrid({
                 return
             }
 
-            setMoreExist(memesToStart.length === pageSize)
-            setMemeGroups([memesToStart])
+            setMoreExist(imagesToStart.length === pageSize)
+            setImageGroups([imagesToStart])
             setIsLoadingMore(false)
             setPrevFetchProps({ fetchAction, query, pageSize })
         }
@@ -81,14 +92,14 @@ export default function DeepMemeGrid({
         }
     }, [fetchAction, query, pageSize])
 
-    async function addMoreMemes() {
+    async function addMoreImages() {
         setIsLoadingMore(true)
         pageRef.current += 1
-        const memesToAdd = await fetchAction(
+        const imagesToAdd = await fetchAction(
             query, pageRef.current, pageSize
         )
-        setMoreExist(memesToAdd.length === pageSize)
-        setMemeGroups(groups => [...groups, memesToAdd])
+        setMoreExist(imagesToAdd.length === pageSize)
+        setImageGroups(groups => [...groups, imagesToAdd])
         setIsLoadingMore(false)
     }
 
@@ -100,8 +111,10 @@ export default function DeepMemeGrid({
                     && prevFetchProps.query === query
                     && prevFetchProps.pageSize === pageSize
                 ) && (
-                    <MemeGrid 
-                        memeGroups={memeGroups}
+                    <ImageGrid 
+                        imageGroups={imageGroups}
+                        linkRoot={linkRoot}
+                        onImageClick={onImageClick}
                     />
                 )
             }
@@ -114,14 +127,14 @@ export default function DeepMemeGrid({
                             type='button'
                             className="btn-secondary w-full justify-center"
                             onClick={() => {
-                                addMoreMemes()
+                                addMoreImages()
                             }}
                         >
                             More
                         </button>
                     ) : (
-                        memeGroups.length > 0 
-                        && memeGroups[0].length > 0 
+                        imageGroups.length !== 0 
+                        && imageGroups[0].length !== 0 
                         && (
                             <p className="w-full text-center my-4">End of results.</p>
                         )
