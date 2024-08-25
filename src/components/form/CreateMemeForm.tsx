@@ -51,14 +51,7 @@ export default function CreateMemeForm() {
                                 query ?? '', page, pageSize, true
                             )
 
-                            return templates.map(template => { 
-                                if (!template.image) {
-                                    throw new Error('Template lacks image data.')
-                                }
-
-                                return template.image 
-                            })
-                            
+                            return templates.map(template => template.image!)
                         }}
                         query={query}
                         pageSize={10}

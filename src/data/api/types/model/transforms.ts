@@ -82,15 +82,8 @@ export function nestMeme(
         }
         else if (key === 'product_image') {
             product_image = processImageNoAlt(product_image as Image)
-
-            if (!nestedMeme.template) {
-                throw new Error(
-                    'Nested meme lacks template data for product image alt.'
-                )
-            }
-
             product_image.alt = [
-                nestedMeme.template.name, 
+                nestedMeme.template!.name, 
                 nestedMeme.text.join('. ')
             ].join('. ')
             nestedMeme[key] = product_image

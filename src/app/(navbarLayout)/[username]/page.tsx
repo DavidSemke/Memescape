@@ -58,13 +58,7 @@ export default async function ProfilePage({ params }: { params: { username: stri
                 query, page, pageSize, profileUser.id
             )
 
-            return memes.map(meme => { 
-                if (!meme.product_image) {
-                    throw new Error('Meme lacks image data.')
-                }
-
-                return meme.product_image 
-            })
+            return memes.map(meme => meme.product_image!)
         }
     ]
 
@@ -76,13 +70,7 @@ export default async function ProfilePage({ params }: { params: { username: stri
                 query, page, pageSize, profileUser.id
             )
 
-            return bookmarks.map(bookmark => { 
-                if (!bookmark.meme?.product_image) {
-                    throw new Error('Bookmark lacks image data.')
-                }
-
-                return bookmark.meme.product_image 
-            })
+            return bookmarks.map(bookmark => bookmark.meme!.product_image!)
         })
     }
 

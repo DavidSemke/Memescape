@@ -23,22 +23,14 @@ export default async function MemePage({ params }: { params: { memeId: string }}
     notFound()
   }
 
-  if (
-    !mainMeme.product_image
-    || !mainMeme.template
-    || !mainMeme.user
-  ) {
-    throw new Error('Nested meme lacks data.')
-  }
-
   const sessionUser = session?.user
-  const mainMemeImage = mainMeme.product_image
+  const mainMemeImage = mainMeme.product_image!
   const createDate = formatDate(mainMeme.create_date)
-  const author = mainMeme.user
+  const author = mainMeme.user!
   const authorImage = author.profile_image
 
   const downloadName = [
-    mainMeme.template.name,
+    mainMeme.template!.name,
     mainMemeImage.mime_type
   ].join('.').replaceAll(' ', '-')
 

@@ -25,13 +25,7 @@ export default async function MemeSearchPage({ searchParams }: PageProps) {
         query, page, pageSize
     )
 
-    return memes.map(meme => { 
-      if (!meme.product_image) {
-          throw new Error('Meme lacks image data.')
-      }
-
-      return meme.product_image 
-  })
+    return memes.map(meme => meme.product_image!)
   }
 
   const initImages = await fetchAction(query, 1, pageSize)
