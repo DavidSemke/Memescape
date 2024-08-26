@@ -7,6 +7,28 @@ import { templateSearchPredicates, wordRegexes } from '../query/where';
 import { pageClause } from '../query/postWhere';
 import { nestTemplate } from '../types/model/transforms';
 
+export async function getOneTemplate(
+    id: string, includeImage = false
+): Promise<NestedTemplate | null> {
+    const query = 'SELECT * FROM "Template" as t WHERE t.id = $1'
+
+    try {
+        const [template=null] = await prisma.$queryRawUnsafe<Template[]>(
+            query, id
+        )
+
+        if (!template || !includeImage) {
+            return template
+        }
+
+        return await nestTemplate(template)
+    }
+    catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch templates.');
+    }
+}
+
 export async function getTemplates(
     searchInput: string,
     page: number = 1,

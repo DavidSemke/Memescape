@@ -33,6 +33,7 @@ model Template {
   id       String   @id @db.VarChar(50)
   name     String   @db.VarChar(100)
   keywords String[] @default([]) @db.VarChar(100)
+  lines    Int      @default(1) @db.SmallInt
   Meme     Meme[]
 }
 

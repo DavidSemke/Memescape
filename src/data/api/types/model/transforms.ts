@@ -13,8 +13,6 @@ import { isNestedBookmark } from './guards';
 import { Image, Template } from '@prisma/client';
 import { base64String, isPlainObject } from '../../utils';
 
-const TEMPLATE_FACTORY = 'https://api.memegen.link/templates'
-
 export function nestBookmark(bookmark: JoinedBookmark) {
     const nestedMeme = nestMeme(bookmark)
     const nestedBookmark: NestedBookmark = {
@@ -131,9 +129,9 @@ export function nestUser(user: JoinedUser): NestedUser {
       throw new TypeError('Value is not of type NestedUser')
 }
 
-export async function nestTemplate(template: Template ): Promise<NestedTemplate> {
+export async function nestTemplate(template: Template): Promise<NestedTemplate> {
     const factoryRes = await fetch(
-        `${TEMPLATE_FACTORY}/${template.id}`
+        `https://api.memegen.link/templates/${template.id}`
     )
 
     if (!factoryRes.ok) {
@@ -156,6 +154,7 @@ export async function nestTemplate(template: Template ): Promise<NestedTemplate>
 
     return {
         ...template,
+        lines: factoryTemplate.lines,
         image: {
             ...processImageNoAlt({ 
                 id: template.id,

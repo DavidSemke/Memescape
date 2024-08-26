@@ -25,6 +25,7 @@ function isTemplate(value: any): value is Template {
         && value.keywords.every(
             (item: unknown) => typeof item === "string"
         )
+        && typeof value.lines === 'number'
     );
 }
 
