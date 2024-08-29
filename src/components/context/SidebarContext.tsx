@@ -1,5 +1,6 @@
 'use client'
  
+import { usePathname } from 'next/navigation'
 import { createContext, SetStateAction } from 'react'
 import { useState } from 'react'
 
@@ -14,6 +15,13 @@ export function SidebarProvider({
   children: React.ReactNode
 }) {
     const [showSidebar, setShowSidebar] = useState<boolean>(false)
+    const [prevPathname, setPrevPathname] = useState<string | null>(null)
+    const pathname = usePathname()
+
+    if (prevPathname !== pathname) {
+        setShowSidebar(false)
+        setPrevPathname(pathname)
+    }
 
     return (
         <SidebarContext.Provider value={{ 
