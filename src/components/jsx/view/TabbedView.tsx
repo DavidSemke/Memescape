@@ -1,14 +1,14 @@
 'use client'
 
-import { useState } from "react";
+import { ReactElement, useState } from "react";
 import clsx from "clsx";
 
 type TabbedViewProps = {
-    tabs: { title: string, view: JSX.Element }[]
+    tabs: { label: string, view: ReactElement }[]
 }
 
 export default function TabbedView({ tabs }: TabbedViewProps) {
-    const [openTab, setOpenTab] = useState<string>(tabs[0].title)
+    const [openTab, setOpenTab] = useState<string>(tabs[0].label)
     
     return (
         <div className="w-full">
@@ -17,12 +17,12 @@ export default function TabbedView({ tabs }: TabbedViewProps) {
                     tabs.map(tab => {
                         return (
                             <button
-                                key={tab.title}
+                                key={tab.label}
                                 type='button'
                                 className="btn-secondary rounded-b-none"
-                                onClick={() => setOpenTab(tab.title)}
+                                onClick={() => setOpenTab(tab.label)}
                             >
-                                {tab.title}
+                                {tab.label}
                             </button>
                         )
                     })
@@ -32,10 +32,10 @@ export default function TabbedView({ tabs }: TabbedViewProps) {
                 tabs.map(tab => {
                     return (
                         <div 
-                            key={tab.title} 
+                            key={tab.label} 
                             className={clsx(
                                 {
-                                    'hidden': tab.title === openTab
+                                    'hidden': tab.label === openTab
                                 }
                             )}
                         >

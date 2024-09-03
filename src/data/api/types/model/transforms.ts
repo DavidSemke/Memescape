@@ -11,7 +11,7 @@ import {
 import { isNestedMeme, isNestedUser } from './guards';
 import { isNestedBookmark } from './guards';
 import { Image, Template } from '@prisma/client';
-import { base64String, isPlainObject } from '../../utils';
+import { base64String, bufferFromBase64, isPlainObject } from '../../utils';
 
 export function nestBookmark(bookmark: JoinedBookmark) {
     const nestedMeme = nestMeme(bookmark)
@@ -80,10 +80,14 @@ export function nestMeme(
         }
         else if (key === 'product_image') {
             product_image = processImageNoAlt(product_image as Image)
-            product_image.alt = [
+            product_image.alt = memeAlt(
                 nestedMeme.template!.name, 
-                nestedMeme.text.join('. ')
-            ].join('. ')
+                nestedMeme.text
+            )
+            product_image.downloadName = memeDownloadName(
+                template.name as string,
+                product_image.mime_type as string
+            )
             nestedMeme[key] = product_image
         }
         else if (key === 'user' && profile_image.id !== null) {
@@ -160,15 +164,17 @@ export async function nestTemplate(template: Template): Promise<NestedTemplate> 
                 id: template.id,
                 data: buffer,
                 mime_type 
-            } as Image),
+            }),
             alt: template.name
         }
     }
 }
 
-// Optional alt omitted because it depends on greater context,
-// where greater context is meme, template, user, ...
-function processImageNoAlt(image: Image): Omit<ProcessedImage, 'alt'> {
+// Alt omitted because it depends on greater context, where greater context 
+// is meme, template, user, ...
+// Property downloadName is optional and omitted since it only applies to 
+// certain images (e.g. meme images).
+export function processImageNoAlt(image: Image): Omit<ProcessedImage, 'alt'> {
     return {
         id: image.id,
         mime_type: image.mime_type,
@@ -177,4 +183,32 @@ function processImageNoAlt(image: Image): Omit<ProcessedImage, 'alt'> {
             image.mime_type
         )
     }
+}
+
+export function unprocessImage(image: ProcessedImage): Image {
+    return {
+        id: image.id,
+        mime_type: image.mime_type,
+        data: bufferFromBase64(image.base64)
+    }
+}
+
+export function memeDownloadName(
+    templateName: string,
+    mime_type: string
+) {
+    return [
+        templateName,
+        mime_type
+    ].join('.').replaceAll(' ', '-')
+}
+
+export function memeAlt(
+    templateName: string,
+    memeText: string[]
+) {
+    return [
+        templateName, 
+        memeText.join('. ')
+    ].join('. ')
 }

@@ -41,7 +41,7 @@ export default function SignForm({ signingUp=false }: SignFormProps) {
             </header>
             <Input 
                 name='username' 
-                errors={errors?.username} 
+                errors={errors?.username}
             />
             <Input 
                 name='password'

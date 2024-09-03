@@ -2,6 +2,7 @@
 
 import { FormState } from "@/data/api/types/action/types"
 import { useFormStatus } from "react-dom"
+import { useEffect } from "react"
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline"
 import { Dispatch, SetStateAction } from "react"
 
@@ -14,40 +15,43 @@ type FormStateViewProps = {
     Show the state of the form submission process. If state is a string,
     then it is a message that relates to the entire form instead of 
     individual fields.
+    Param setOuterPending is necessary since useFormStatus hook must be called 
+    from a component within the form (cannot lift pending state up).
 */
 export function FormStateView({ state, setOuterPending=undefined }: FormStateViewProps) {
     const { pending } = useFormStatus()
+
+    useEffect(() => {
+        if (setOuterPending) {
+            setOuterPending(pending)
+        }
+    }, [pending])
     
     if (pending) {
-        if (setOuterPending) {
-            setOuterPending(true)
-        }
-
         return <p className="text-pending text-center">Pending...</p>
-    }
-
-    if (setOuterPending) {
-        setOuterPending(false)
     }
     
     if (state === false) {
         // Typically only true when form has not yet been submitted
         return null
     }
- 
-    let Icon = CheckCircleIcon
-    let msg = 'Submission accepted!'
-    let msgColor = 'text-success'
+
+    // By default, it is assumed that state is an object with 
+    // errors listed by field.
+    // These errors are shown outside of this component.
+    let Icon = XCircleIcon
+    let msg = 'Submission rejected.'
+    let msgColor = 'text-error'
     
     if (typeof state === 'string') {
+        // State is an error string.
+        // Error targets form as a whole, not individual fields.
         msg = state
     }
-    else if (state !== true) {
-        // State is an object with errors listed by field.
-        // These errors are shown outside of this component.
-        Icon = XCircleIcon
-        msg = 'Submission rejected.'
-        msgColor = 'text-error'
+    else if (state === true) {
+        Icon = CheckCircleIcon
+        msg = 'Submission accepted!'
+        msgColor = 'text-success'
     }
 
     return (

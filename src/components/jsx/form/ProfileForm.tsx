@@ -5,13 +5,13 @@ import { Input } from "./Input"
 import { putUser } from "@/data/api/controllers/user"
 import { FormState } from "@/data/api/types/action/types"
 import { NestedUser } from "@/data/api/types/model/types"
-import { ReactNode, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { PencilIcon } from "@heroicons/react/24/outline"
 import { FormStateView } from "./FormStateView"
 
 type ProfileFormProps = {
     user: NestedUser,
-    profileView: ReactNode
+    profileView: React.ReactNode
 }
 
 export default function ProfileForm({ user, profileView }: ProfileFormProps) {

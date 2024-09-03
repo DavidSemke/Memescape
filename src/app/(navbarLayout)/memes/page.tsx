@@ -1,5 +1,5 @@
-import UrlSearchbar from "@/components/search/UrlSearchbar";
-import DeepImageGrid from "@/components/grid/DeepImageGrid";
+import UrlSearchbar from "@/components/jsx/search/UrlSearchbar";
+import DeepImageGrid from "@/components/jsx/grid/DeepImageGrid";
 import { getMemes } from "@/data/api/controllers/meme";
 // import { Suspense } from "react";
 // import Ellipsis from "@/components/loading/Ellipsis";

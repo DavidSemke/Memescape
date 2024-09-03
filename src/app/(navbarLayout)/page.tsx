@@ -1,9 +1,9 @@
-import RedirectSearchbar from "@/components/search/RedirectSearchbar";
+import RedirectSearchbar from "@/components/jsx/search/RedirectSearchbar";
 import Link from "next/link";
 import { Suspense } from "react";
-import Ellipsis from "@/components/loading/Ellipsis";
+import Ellipsis from "@/components/jsx/loading/Ellipsis"
 import { getMemes } from "@/data/api/controllers/meme";
-import ShallowImageGrid from "@/components/grid/ShallowImageGrid";
+import ShallowImageGrid from "@/components/jsx/grid/ShallowImageGrid";
 
 export default async function IndexPage() {
   async function shallowGridFetch(page: number, pageSize: number) {

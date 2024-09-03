@@ -23,7 +23,7 @@ const maxUploadSize = 1024 * 1024 // 1MB
 export const postUserSchema = object({
     username: validateUsername(null),
     password: string({ 
-        errorMap: minMaxErrorMap(passwordLen)
+        errorMap: minMaxErrorMap('password', passwordLen)
     })
     .trim()
     .min(passwordLen.min)
@@ -71,7 +71,7 @@ export function createPutUserSchema(currUsername: string) {
 
 function validateUsername(currUsername: string | null) {
     return string({ 
-        errorMap: minMaxErrorMap(usernameLen)
+        errorMap: minMaxErrorMap('username', usernameLen)
     })
     .trim()
     .min(usernameLen.min)

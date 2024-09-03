@@ -13,6 +13,10 @@ function isProcessedImage(value: any): value is ProcessedImage {
         && typeof value.mime_type === 'string'
         && typeof value.base64 === 'string'
         && typeof value.alt === 'string'
+        && (
+            value.downloadName === undefined
+            || typeof value.downloadName === 'string'
+        )
     );
 }
 

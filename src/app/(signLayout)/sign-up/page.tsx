@@ -1,4 +1,4 @@
-import SignForm from '@/components/form/SignForm'
+import SignForm from '@/components/jsx/form/SignForm'
 
 export default function SignUpPage() {
     return (

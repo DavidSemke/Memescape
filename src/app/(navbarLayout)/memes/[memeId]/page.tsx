@@ -3,8 +3,8 @@ import {
   ArrowDownTrayIcon,
   UserCircleIcon
 } from "@heroicons/react/24/outline"
-import RedirectSearchbar from "@/components/search/RedirectSearchbar"
-import ShallowImageGrid from "@/components/grid/ShallowImageGrid"
+import RedirectSearchbar from "@/components/jsx/search/RedirectSearchbar"
+import ShallowImageGrid from "@/components/jsx/grid/ShallowImageGrid"
 import Image from "next/image"
 import { getMemes, getOneMeme, getRelatedMemes } from "@/data/api/controllers/meme"
 import { notFound } from "next/navigation"
@@ -28,11 +28,6 @@ export default async function MemePage({ params }: { params: { memeId: string }}
   const createDate = formatDate(mainMeme.create_date)
   const author = mainMeme.user!
   const authorImage = author.profile_image
-
-  const downloadName = [
-    mainMeme.template!.name,
-    mainMemeImage.mime_type
-  ].join('.').replaceAll(' ', '-')
 
   async function shallowGridFetch(
     page: number, pageSize: number
@@ -121,7 +116,7 @@ export default async function MemePage({ params }: { params: { memeId: string }}
           }
           <a
             href={mainMemeImage.base64}
-            download={downloadName}
+            download={mainMemeImage.downloadName}
             aria-label="Download meme"
             className="btn-secondary"
           >

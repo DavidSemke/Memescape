@@ -9,11 +9,14 @@ import {
     miscMemePredicates
 } from '../query/where';
 import { pageClause } from '../query/postWhere';
-import { JoinedMeme, NestedMeme } from '../types/model/types';
-import { nestMeme } from '../types/model/transforms';
+import { JoinedMeme, NestedMeme, ProcessedImage } from '../types/model/types';
+import { nestMeme, processImageNoAlt, unprocessImage } from '../types/model/transforms';
 import { FormState } from '../types/action/types';
-import { postMemeSchema } from '../validation/meme';
+import { createMemeSchema } from '../validation/meme';
 import { error500Msg } from '../validation/errorMsg';
+import { getOneTemplate } from './template';
+import { redirect } from 'next/navigation';
+import { memeDownloadName, memeAlt } from '../types/model/transforms';
 
 export async function getOneMeme(id: string): Promise<NestedMeme | null> {
     const query = preWhereMemeQuery() + ' WHERE m.id = $1::uuid'
@@ -163,16 +166,29 @@ export async function getRelatedMemes(
 }
 
 export async function postMeme(
-    prevState: FormState, formData: FormData
+    lineCount: number | null, prevState: FormState, formData: FormData
   ): Promise<FormState> {
-      const parse = await postMemeSchema.safeParseAsync({
+    if (!lineCount || lineCount < 1) {
+        throw new Error('Line count must be non-null and greater than 0.')
+    }
+    
+    const parseObject: Record<
+        string, 
+        FormDataEntryValue | null
+    > = {
         template_id: formData.get('template-id'),
         user_id: formData.get('user-id'),
-        product_image_id: formData.get('product-image-id'),
-        text: formData.get('text'),
         private: formData.get('private'),
-        create_date: formData.get('create-date'),
-    })
+    }
+
+    for (let i=1; i<lineCount+1; i++) {
+        const name = `line${i}`
+        parseObject[name] = formData.get(name)
+    }
+
+    const parse = await createMemeSchema(
+        lineCount, true
+    ).safeParseAsync(parseObject)
 
     if (!parse.success) {
         return {
@@ -180,14 +196,101 @@ export async function postMeme(
         }
     }
 
+    let meme = null
+    const text: string[] = []
+
+    for (let i=1; i<lineCount+1; i++) {
+        const name = `line${i}`
+        text.push(parse.data[name])
+    }
+
     try {
-        await prisma.meme.create({
-            data: parse.data
+        const processedImage = await generateMemeImage(
+            formData.get('template-id') as string,
+            text
+        )
+
+        const unprocessedImage = unprocessImage(processedImage)
+        const createdImage = await prisma.image.create({
+            data: {
+                mime_type: unprocessedImage.mime_type,
+                data: unprocessedImage.data
+            }
         })
+
+        const data = {
+            product_image_id: createdImage.id,
+            template_id: parse.data.template_id,
+            user_id: parse.data.user_id,
+            private: parse.data.private,
+            text
+        }
+
+        meme = await prisma.meme.create({ data })
     }
     catch (error) {
         return error500Msg
     }
 
-    return true
+    redirect(`/memes/${meme.id}`)
+}
+
+export async function generateMemeImage(
+    templateId: string,
+    text: string[]
+): Promise<ProcessedImage> {
+    const processedText = text.map(text => {
+        if (text === '') {
+            return '_'
+        }
+
+        return text
+            .replaceAll('-', '--')
+            .replaceAll('_', '__')
+            .replaceAll(' ', '-')
+            .replaceAll('?', '~q')
+            .replaceAll('&', '~a')
+            .replaceAll('%', '~p')
+            .replaceAll('#', '~h')
+            .replaceAll('/', '~s')
+            .replaceAll('\\', '~b')
+            .replaceAll('<', '~l')
+            .replaceAll('>', '~g')
+            .replaceAll('"', '\'\'')
+    }
+    )
+    const ext = 'jpeg'
+    const [factoryRes, template] = await Promise.all([
+        fetch(
+            `https://api.memegen.link/images/${templateId}/`
+            + processedText.join('/')
+            + `.${ext}`
+        ),
+        getOneTemplate(templateId)
+    ])
+    
+    if (!factoryRes.ok) {
+        throw new Error(`Response status: ${factoryRes.status}`);
+    }
+
+    if (!template) {
+        throw new Error(`Template with given id does not exist.`);
+    }
+
+    const buffer = Buffer.from(await factoryRes.arrayBuffer())
+    const mime_type = `image/${ext}`
+
+    return {
+        ...processImageNoAlt({ 
+            id: templateId,
+            data: buffer,
+            mime_type 
+        }),
+        alt: memeAlt(
+            template.name, text
+        ),
+        downloadName: memeDownloadName(
+            template.name, mime_type
+        )
+    }
 }

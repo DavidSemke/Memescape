@@ -1,13 +1,13 @@
-import Sidebar from "@/components/navbar/Sidebar"
-import Topbar from "@/components/navbar/Topbar"
-import Footer from "@/components/navbar/Footer"
-import { SidebarProvider } from "@/components/context/SidebarContext"
-import { TopSearchbarProvider } from "@/components/context/TopSearchbarContext"
+import Sidebar from "@/components/jsx/navbar/Sidebar"
+import Topbar from "@/components/jsx/navbar/Topbar"
+import Footer from "@/components/jsx/navbar/Footer"
+import { SidebarProvider } from "@/components/jsx/context/SidebarContext"
+import { TopSearchbarProvider } from "@/components/jsx/context/TopSearchbarContext"
 import { auth } from "@/app/api/auth/[...nextauth]/auth"
 import { getOneUser } from "@/data/api/controllers/user"
 
 export default async function NavbarLayout({
-    children,
+    children
 }: {
     children: React.ReactNode
 }) {

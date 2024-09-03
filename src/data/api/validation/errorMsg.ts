@@ -1,11 +1,9 @@
 import { ZodIssueOptionalMessage, ErrorMapCtx } from "zod"
 
-type Constraints = {
-    min?: number,
-    max?: number
-}
-
-export function minMaxErrorMap(constraints: Constraints) {
+export function minMaxErrorMap(
+  fieldName: string, 
+  constraints: { min?: number, max?: number }
+) {
   const { min, max } = constraints
 
   if (!min && !max) {
@@ -14,11 +12,11 @@ export function minMaxErrorMap(constraints: Constraints) {
 
   return (issue: ZodIssueOptionalMessage, ctx: ErrorMapCtx) => {
     if (min && issue.code === 'too_small') {
-        return { message: invalidStrLen('username', ctx.data, { min }) }
+        return { message: invalidStrLen(fieldName, ctx.data, { min }) }
     }
 
     if (max && issue.code === 'too_big') {
-      return { message: invalidStrLen('username', ctx.data, { max }) }
+      return { message: invalidStrLen(fieldName, ctx.data, { max }) }
     }
   
     return { message: ctx.defaultError };

@@ -8,12 +8,12 @@ export default async function createTemplateData(): Promise<Template[]> {
         throw new Error(`Response status: ${response.status}`);
     }
 
-    const JsonTemplates: Template[] = await response.json();
+    const jsonTemplates: Template[] = await response.json();
     const idSet = new Set()
     const templates = []
 
-    for (const JsonTemplate of JsonTemplates) {
-        let { id, name, keywords } = JsonTemplate
+    for (const jsonTemplate of jsonTemplates) {
+        let { id, name, keywords, lines } = jsonTemplate
         
         if (idSet.has(id)) {
             continue
@@ -22,7 +22,7 @@ export default async function createTemplateData(): Promise<Template[]> {
         idSet.add(id)
         name = name.toLowerCase()
         keywords = keywords.map(word => word.toLowerCase())
-        templates.push({ id, name, keywords })
+        templates.push({ id, name, keywords, lines })
     }
 
     return templates

@@ -1,4 +1,4 @@
-import NotFoundView from "@/components/error/NotFoundView";
+import NotFoundView from "@/components/jsx/error/NotFoundView";
  
 export default function NotFound() {
   return (

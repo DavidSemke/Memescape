@@ -1,4 +1,3 @@
-import { NestedBookmark, NestedMeme } from "@/data/api/types/model/types";
 import clsx from "clsx";
 
 export function attrsStyleMerge(

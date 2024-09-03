@@ -8,4 +8,4 @@ export type Action = (
 // If object, form field errors occurred.
 export type FormState = boolean
  | string
- | { errors: Record<string, string[]> }
+ | { errors: Record<string, string[] | undefined> }

@@ -3,7 +3,7 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline"
 import { MutableRefObject } from "react"
 import { useDebouncedCallback } from "use-debounce"
-import { attrsStyleMerge } from "../utils"
+import { attrsStyleMerge } from "@/components/utils"
 
 type SearchbarProps = {
     searchItemName: string,
@@ -22,7 +22,7 @@ export default function Searchbar({
     searchItemName, onSearch, defaultValue, searchbarRef, inputRef, attrs={}
 }: SearchbarProps) {
     const defaultStyles = {
-        root: 'flex gap-2 items-center w-full z-10 rounded-2xl bg-action-secondary border-2 border-stress-secondary',
+        root: 'flex gap-2 items-center relative w-full z-10 rounded-2xl bg-action-secondary border-2 border-stress-secondary',
         icon: 'w-6 h-6 absolute left-3',
         input: 'pl-12 bg-gone rounded-2xl border-none w-full focus:outline-none focus:ring-stress-primary focus:ring-4'
     }

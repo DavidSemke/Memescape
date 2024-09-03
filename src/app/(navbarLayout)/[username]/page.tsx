@@ -1,14 +1,14 @@
 import { auth } from "@/app/api/auth/[...nextauth]/auth";
-import ProfileForm from "@/components/form/ProfileForm";
+import ProfileForm from "@/components/jsx/form/ProfileForm";
 import { getOneUser } from "@/data/api/controllers/user";
 import { NestedUser } from "@/data/api/types/model/types";
 import { notFound } from "next/navigation";
 import { getBookmarks } from "@/data/api/controllers/bookmark";
 import { getMemes } from "@/data/api/controllers/meme";
-import ProfileView from "@/components/view/ProfileView";
-import TabbedView from "@/components/view/TabbedView";
-import DeepImageGrid, { DeepImageGridFetchAction } from "@/components/grid/DeepImageGrid";
-import RedirectSearchbar from "@/components/search/RedirectSearchbar";
+import ProfileView from "@/components/jsx/view/ProfileView";
+import TabbedView from "@/components/jsx/view/TabbedView";
+import DeepImageGrid, { DeepImageGridFetchAction } from "@/components/jsx/grid/DeepImageGrid";
+import RedirectSearchbar from "@/components/jsx/search/RedirectSearchbar";
 
 export default async function ProfilePage({ params }: { params: { username: string }}) {
     const session = await auth()
@@ -77,9 +77,9 @@ export default async function ProfilePage({ params }: { params: { username: stri
     const initImages = await Promise.all(
         fetchActions.map(action => action(null, 1, tabPageSize))
     )
-    const tabs = ['Memes', 'Bookmarks'].map((title, index) => {
+    const tabs = ['Memes', 'Bookmarks'].map((label, index) => {
         return {
-            title,
+            label,
             view: (
                 <DeepImageGrid 
                     initImages={initImages[index]}

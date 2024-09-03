@@ -13,50 +13,28 @@
 */
 
 :root {
-  --color: black;
-  --primary: #0000b4;
-  --secondary: #E4FCFF;
-  --tertiary: #E4FCFF;
-  --action-primary: #FC7A03;
-  --action-primary-hover: #FF9738;
-  --action-secondary: #00D1FF;
-  --action-secondary-hover: #47DEFF;
-  --action-tertiary: #6b6bff;
-  --action-tertiary-hover: #afafff;
+  --color: white;
+  --primary: #000030;
+  --secondary: #000050;
+  --tertiary: #000070;
+  --action-primary: #6e3500;
+  --action-primary-hover: #8b4300;
+  --action-secondary: #00414d;
+  --action-secondary-hover: #005464;
+  --action-tertiary: #A3A3FF;
+  --action-tertiary-hover: #dadaff;
   --error: red;
-  --input-primary: #0000b4;
-  --input-secondary: #E4FCFF;
+  --input-primary: #000000;
+  --input-secondary: #222222;
   --pending: #ffff00;
-  --stress-primary: #D96800;
-  --stress-secondary: #00b3db;
-  --stress-tertiary: #000050;
+  --stress-primary: #d16500;
+  --stress-secondary: #0093ad;
+  --stress-tertiary: #4f4fff;
   --success: #04ff00;
+  --overlay: rgba(0, 0, 0, 0.7);
 
   --min-h-topbar: 4rem;
   --h-topbar: 8vh;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color: white;
-    --primary: #000030;
-    --secondary: #000050;
-    --tertiary: #000070;
-    --action-primary: #6e3500;
-    --action-primary-hover: #8b4300;
-    --action-secondary: #00414d;
-    --action-secondary-hover: #005464;
-    --action-tertiary: #A3A3FF;
-    --action-tertiary-hover: #dadaff;
-    --error: red;
-    --input-primary: #000000;
-    --input-secondary: #222222;
-    --pending: #ffff00;
-    --stress-primary: #d16500;
-    --stress-secondary: #0093ad;
-    --stress-tertiary: #4f4fff;
-    --success: #04ff00;
-  }
 }
 
 @layer base {
@@ -71,22 +49,6 @@
   input::placeholder {
     color: #dbdbdb;
   }
-
-  /* input[type="file"] {
-    @apply relative;
-  }
-
-  input[type="file"]::before {
-    @apply absolute pointer-events-none
-  }
-
-  input[type="file"]::after {
-
-  }
-
-  input[type="file"]::file-selector-button {
-    @apply px-4 py-1 rounded-xl border-2 bg-action-secondary hover:bg-action-secondary-hover border-stress-secondary text-color;
-  } */
 
   h1 {
     @apply text-2xl font-bold;

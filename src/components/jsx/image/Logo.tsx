@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { attrsStyleMerge } from '../utils'
+import { attrsStyleMerge } from '@/components/utils'
 
 type LogoProps = {
     title?: boolean,

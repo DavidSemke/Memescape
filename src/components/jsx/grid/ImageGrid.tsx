@@ -1,6 +1,10 @@
+'use client'
+
 import { ProcessedImage } from "@/data/api/types/model/types"
+import clsx from "clsx"
 import Image from "next/image"
 import Link from "next/link"
+import { useState } from "react"
 
 type ImageGridProps = {
     imageGroups: ProcessedImage[][],
@@ -13,6 +17,7 @@ export default function ImageGrid({
     linkRoot=undefined, 
     onImageClick=undefined 
 }: ImageGridProps) {
+    const [selectedId, setSelectedId] = useState<string | null>(null)
     imageGroups = imageGroups.filter(group => group.length !== 0)
     
     return (
@@ -29,7 +34,13 @@ export default function ImageGrid({
                                 width={0}
                                 height={0}
                                 alt={image.alt}
-                                className="w-full border-2 border-stress-secondary"
+                                className={clsx(
+                                    "w-full",
+                                    {
+                                        'border-4 border-stress-primary': image.id === selectedId,
+                                        'border-2 border-stress-secondary': image.id !== selectedId
+                                    }
+                                )}
                             />
                         )
 
@@ -37,7 +48,13 @@ export default function ImageGrid({
                             <div 
                                 key={image.id} 
                                 className="mb-4"
-                                onClick={onImageClick && (() => onImageClick(image))}
+                                onClick={() => {
+                                    setSelectedId(image.id)
+
+                                    if (onImageClick) {
+                                        onImageClick(image)
+                                    }
+                                }}
                             >
                                 {
                                     linkRoot ? (
