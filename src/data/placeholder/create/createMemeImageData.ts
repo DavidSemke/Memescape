@@ -2,8 +2,8 @@ import { MemeImage } from '@/data/api/types/model/types';
 import { v4 as uuidv4 } from 'uuid'
 
 export default async function createMemeImageData(count=100): Promise<MemeImage[]> {
-    const url = "https://api.memegen.link/templates/";
-    const response = await fetch(url);
+    const factoryUrl = "https://api.memegen.link/templates/";
+    const response = await fetch(factoryUrl);
 
     if (!response.ok) {
         throw new Error(`Response status: ${response.status}`);
@@ -17,14 +17,16 @@ export default async function createMemeImageData(count=100): Promise<MemeImage[
 
     for (let i=0; i<templates.length && i<count; i++) {
         const { id: template_id, example } = templates[i]
-        const { url, text } = example
 
         if (idSet.has(template_id)) {
             continue
         }
 
         idSet.add(template_id)
-        reqContext.push({ url, template_id, text })
+
+        const url = example.url.split('.').slice(0, -1).join('.') + '.jpeg'
+        reqContext.push({ url, template_id, text: example.text })
+
         // Push promise to download example meme and convert to Buffer type
         requests.push(new Promise<Buffer>(async (resolve, reject) => {
             try {
@@ -60,14 +62,14 @@ export default async function createMemeImageData(count=100): Promise<MemeImage[
         if (ext === 'jpg') {
             ext = 'jpeg'
         }
-        else if (!['png', 'webp', 'gif'].includes(ext)) {
+        else if (!['jpeg', 'png', 'webp', 'gif'].includes(ext)) {
             throw new Error(`Image extension "${ext}" is not jpg/jpeg/png/webp/gif.`)
         }
 
         memeImages.push({
             id: uuidv4(),
             data: buffer,
-            mime_type: 'image/png',
+            mime_type: `image/${ext}`,
             template_id,
             text
         })
