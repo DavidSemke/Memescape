@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate & next build",
     "seed-db": "tsx src/data/seed",
     "prisma-migrate": "prisma format & prisma generate & prisma migrate deploy & next build",
     "prisma-push": "prisma format & prisma db push",
