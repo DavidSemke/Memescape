@@ -1,8 +1,13 @@
 import { ZodIssueOptionalMessage, ErrorMapCtx } from "zod"
 
+type LenConstraints = {
+  min?: number, 
+  max?: number
+}
+
 export function minMaxErrorMap(
   fieldName: string, 
-  constraints: { min?: number, max?: number }
+  constraints: LenConstraints
 ) {
   const { min, max } = constraints
 
@@ -23,9 +28,13 @@ export function minMaxErrorMap(
   } 
 }
 
-export function invalidStrLen(field: string, value: string, constraints: Constraints) {
+export function invalidStrLen(
+  fieldName: string, 
+  value: string, 
+  constraints: LenConstraints
+) {
   const { min, max } = constraints
-  const cappedField = field[0].toUpperCase() + field.slice(1)
+  const cappedField = fieldName[0].toUpperCase() + fieldName.slice(1)
   const trunk = `${cappedField} length (${value.length}) must be`
 
   if (min && max) {
@@ -36,7 +45,7 @@ export function invalidStrLen(field: string, value: string, constraints: Constra
     return `${trunk} at least ${min} characters.`
   } else {
     throw new Error(
-      `Neither max nor min length is defined for field '${field}'.`,
+      `Neither max nor min length is defined for field '${fieldName}'.`,
     )
   }
 }

@@ -45,7 +45,7 @@ export default async function createMemeImageData(count=100): Promise<MemeImage[
         // Adjust ms to avoid overwhelming server.
         // Might get 503 response if not used.
         await new Promise((resolve) => {
-            setTimeout(resolve, 100)
+            setTimeout(resolve, 200)
         })
     }
 
