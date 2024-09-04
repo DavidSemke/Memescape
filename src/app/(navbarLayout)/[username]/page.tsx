@@ -55,7 +55,12 @@ export default async function ProfilePage({ params }: { params: { username: stri
             'use server'
             
             const memes = await getMemes(
-                query, page, pageSize, profileUser.id
+                query, 
+                page, 
+                pageSize, 
+                profileUser.id,
+                undefined,
+                isSelfProfile
             )
 
             return memes.map(meme => meme.product_image!)
@@ -79,6 +84,7 @@ export default async function ProfilePage({ params }: { params: { username: stri
     const initImages = await Promise.all(
         fetchActions.map(action => action(null, 1, tabPageSize))
     )
+    
     const tabs = tabLabels.map((label, index) => {
         return {
             label,

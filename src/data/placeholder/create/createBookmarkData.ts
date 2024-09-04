@@ -4,6 +4,8 @@ import { User, Meme, Bookmark } from "@prisma/client";
     Users are given ${bookmarksPerUser} bookmarks until a user gets leftovers. 
     Leftovers can be more ore less than the value of bookmarksPerUser.
     If bookmarksPerUser is null, bookmarks are split evenly.
+    Private memes are not bookmarked.
+    Users can bookmark their own memes.
 */
 export default function createBookmarkData(
     users: User[], 
@@ -12,6 +14,9 @@ export default function createBookmarkData(
     bookmarksPerUser: number | null = null, 
     bookmarklessUser=true
 ): Bookmark[] {
+    // Prevent bookmark of private meme
+    memes = memes.filter(meme => !meme.private)
+
     if (count < 1) {
         throw new Error('Need at least one bookmark.')
     }
@@ -45,7 +50,11 @@ export default function createBookmarkData(
     
     for(let i=0; i<count; i++, memeIndex = (memeIndex+1) % memes.length) {
         // Remaining bookmarks after distribution go to last user
-        if (i % bookmarksPerUser === 0 && userIndex < users.length-1) {
+        if (
+            i !== 0 &&
+            i % bookmarksPerUser === 0 
+            && userIndex < users.length-1
+        ) {
             userIndex += 1
         }
 

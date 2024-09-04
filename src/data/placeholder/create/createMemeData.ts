@@ -69,7 +69,11 @@ export default function createMemeData(
     // Create public memes
     for(let i=0; i < memeImages.length; i++) {
         // Remaining memes after distribution go to last user
-        if (i % memesPerUser === 0 && userIndex < users.length-1) {
+        if (
+            i !== 0 
+            && i % memesPerUser === 0 
+            && userIndex < users.length-1
+        ) {
             userIndex += 1
         }
 

@@ -22,9 +22,9 @@ export default function ImageGrid({
     
     return (
         <div>
-            { imageGroups.map((group: ProcessedImage[], index) => (
+            { imageGroups.map((group: ProcessedImage[]) => (
                 <div 
-                    key={group[index].id}
+                    key={group[0].id}
                     className='columns-2 gap-4 w-full pb-4 last:pb-0 mt-4 first:mt-0 border-b-2 border-stress-secondary last:border-none sm:columns-4 md:columns-5 lg:columns-6'
                 >
                     { group.map((image) => {

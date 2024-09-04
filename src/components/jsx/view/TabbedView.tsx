@@ -19,7 +19,12 @@ export default function TabbedView({ tabs }: TabbedViewProps) {
                             <button
                                 key={tab.label}
                                 type='button'
-                                className="btn-secondary rounded-b-none"
+                                className={clsx(
+                                    "btn-secondary rounded-b-none",
+                                    {
+                                        'font-semibold': tab.label === openTab
+                                    }
+                                )}
                                 onClick={() => setOpenTab(tab.label)}
                             >
                                 {tab.label}
@@ -35,7 +40,7 @@ export default function TabbedView({ tabs }: TabbedViewProps) {
                             key={tab.label} 
                             className={clsx(
                                 {
-                                    'hidden': tab.label === openTab
+                                    'hidden': tab.label !== openTab
                                 }
                             )}
                         >
