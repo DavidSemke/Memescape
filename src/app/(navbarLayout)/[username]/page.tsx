@@ -61,6 +61,7 @@ export default async function ProfilePage({ params }: { params: { username: stri
             return memes.map(meme => meme.product_image!)
         }
     ]
+    const tabLabels = ['Memes']
 
     if (isSelfProfile) {
         fetchActions.push(async (query, page, pageSize) => {
@@ -72,12 +73,13 @@ export default async function ProfilePage({ params }: { params: { username: stri
 
             return bookmarks.map(bookmark => bookmark.meme!.product_image!)
         })
+        tabLabels.push('Bookmarks')
     }
 
     const initImages = await Promise.all(
         fetchActions.map(action => action(null, 1, tabPageSize))
     )
-    const tabs = ['Memes', 'Bookmarks'].map((label, index) => {
+    const tabs = tabLabels.map((label, index) => {
         return {
             label,
             view: (
