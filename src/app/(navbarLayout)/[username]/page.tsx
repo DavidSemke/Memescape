@@ -3,12 +3,9 @@ import ProfileForm from "@/components/jsx/form/ProfileForm";
 import { getOneUser } from "@/data/api/controllers/user";
 import { NestedUser } from "@/data/api/types/model/types";
 import { notFound } from "next/navigation";
-import { getBookmarks } from "@/data/api/controllers/bookmark";
-import { getMemes } from "@/data/api/controllers/meme";
 import ProfileView from "@/components/jsx/view/ProfileView";
-import TabbedView from "@/components/jsx/view/TabbedView";
-import DeepImageGrid, { DeepImageGridFetchAction } from "@/components/jsx/grid/DeepImageGrid";
 import RedirectSearchbar from "@/components/jsx/search/RedirectSearchbar";
+import TabbedUserMemeView from "@/components/jsx/view/TabbedUserMemeView";
 
 export default async function ProfilePage({ params }: { params: { username: string }}) {
     const session = await auth()
@@ -48,58 +45,7 @@ export default async function ProfilePage({ params }: { params: { username: stri
             profileAlt={`${possessive} profile picture`}
         />
     )
-
-    const tabPageSize = 10
-    const fetchActions: DeepImageGridFetchAction[] = [
-        async (query, page, pageSize) => {
-            'use server'
-            
-            const memes = await getMemes(
-                query, 
-                page, 
-                pageSize, 
-                profileUser.id,
-                undefined,
-                isSelfProfile
-            )
-
-            return memes.map(meme => meme.product_image!)
-        }
-    ]
-    const tabLabels = ['Memes']
-
-    if (isSelfProfile) {
-        fetchActions.push(async (query, page, pageSize) => {
-            'use server'
-
-            const bookmarks = await getBookmarks(
-                query, page, pageSize, profileUser.id
-            )
-
-            return bookmarks.map(bookmark => bookmark.meme!.product_image!)
-        })
-        tabLabels.push('Bookmarks')
-    }
-
-    const initImages = await Promise.all(
-        fetchActions.map(action => action(null, 1, tabPageSize))
-    )
     
-    const tabs = tabLabels.map((label, index) => {
-        return {
-            label,
-            view: (
-                <DeepImageGrid 
-                    initImages={initImages[index]}
-                    fetchAction={fetchActions[index]}
-                    query={null}
-                    pageSize={tabPageSize}
-                    linkRoot='/memes'
-                />
-            )
-        }
-    })
-
     return (
         <main className="flex flex-col items-center gap-4">
             <h1>{`${possessive} Profile`}</h1>
@@ -119,9 +65,12 @@ export default async function ProfilePage({ params }: { params: { username: stri
                 <RedirectSearchbar 
                     searchItemName="meme"
                     redirectPath="/memes"
+                    moreSearchParams={{ 'user-id': profileUser.id }}
                 />
-                <TabbedView 
-                    tabs={tabs}
+                <TabbedUserMemeView 
+                    userId={profileUser.id}
+                    query={null}
+                    includePrivateMemes={isSelfProfile}
                 />
             </section>
         </main>

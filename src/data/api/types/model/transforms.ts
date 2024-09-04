@@ -88,6 +88,7 @@ export function nestMeme(
                 template.name as string,
                 product_image.mime_type as string
             )
+            product_image.linkId = nestedMeme.id
             nestedMeme[key] = product_image
         }
         else if (key === 'user' && profile_image.id !== null) {
@@ -199,7 +200,7 @@ export function memeDownloadName(
 ) {
     return [
         templateName,
-        mime_type
+        mime_type.split('/')[1]
     ].join('.').replaceAll(' ', '-')
 }
 

@@ -18,12 +18,18 @@ export default async function MemePage({ params }: { params: { memeId: string }}
     auth(),
     getOneMeme(params.memeId)
   ])
+  const sessionUserId = session?.user?.id
 
-  if (mainMeme === null) {
+  if (
+    mainMeme === null 
+    || (
+      mainMeme.private 
+      && sessionUserId !== mainMeme.user!.id
+    )
+  ) {
     notFound()
   }
 
-  const sessionUser = session?.user
   const mainMemeImage = mainMeme.product_image!
   const createDate = formatDate(mainMeme.create_date)
   const author = mainMeme.user!
@@ -98,9 +104,9 @@ export default async function MemePage({ params }: { params: { memeId: string }}
         
         <div className="flex gap-4 w-full">
           {
-            sessionUser && (
+            sessionUserId && (
               <form action={postBookmark}>
-                <input type='hidden' name="user_id" value={sessionUser.id} />
+                <input type='hidden' name="user_id" value={sessionUserId} />
                 <input type='hidden' name="meme_id" value={mainMeme.id} /> 
                 <button
                   type='submit'

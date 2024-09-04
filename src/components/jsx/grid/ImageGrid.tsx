@@ -57,9 +57,9 @@ export default function ImageGrid({
                                 }}
                             >
                                 {
-                                    linkRoot ? (
+                                    linkRoot !== undefined && image.linkId !== undefined ? (
                                         <Link 
-                                            href={`${linkRoot}/${image.id}`}
+                                            href={`${linkRoot}/${image.linkId}`}
                                         >
                                             {renderedImage}
                                         </Link>

@@ -47,7 +47,8 @@ export type ProcessedImage = {
     mime_type: string,
     base64: string,
     alt: string,
-    downloadName?: string
+    downloadName?: string,
+    linkId?: string
 }
 
 // Utility type; prefix properties of a type

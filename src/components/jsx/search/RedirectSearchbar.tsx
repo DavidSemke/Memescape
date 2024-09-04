@@ -5,11 +5,14 @@ import TopSearchbar from './TopSearchbar'
 
 type RedirectSearchbarProps = {
     searchItemName: string,
-    redirectPath: string
+    redirectPath: string,
+    moreSearchParams?: Record<string, string>
 }
 
 export default function RedirectSearchbar({ 
-    searchItemName, redirectPath 
+    searchItemName, 
+    redirectPath, 
+    moreSearchParams
 }: RedirectSearchbarProps) {
     const searchParams = useSearchParams()
     const { push } = useRouter()
@@ -22,6 +25,12 @@ export default function RedirectSearchbar({
         }
         else {
             params.delete('query')
+        }
+
+        if (moreSearchParams) {
+            for (const param in moreSearchParams) {
+                params.set(param, moreSearchParams[param])
+            }
         }
 
         push(`${redirectPath}?${params.toString()}`)

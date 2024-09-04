@@ -17,6 +17,10 @@ function isProcessedImage(value: any): value is ProcessedImage {
             value.downloadName === undefined
             || typeof value.downloadName === 'string'
         )
+        && (
+            value.linkId === undefined
+            || typeof value.linkId === 'string'
+        )
     );
 }
 
