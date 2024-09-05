@@ -15,12 +15,22 @@ export default function useContainerHeight(
     ] = useState<number | null>(null);
     
     const onResize = useDebouncedCallback(() => {
-        updateHeight()
+        if (!containerRef.current) {
+            return
+        }
+
+        setContainerHeight(null)
     }, 1000)
     
     useLayoutEffect(() => {
-        updateHeight()
-    }, [])
+        if (!containerRef.current) {
+            return
+        }
+
+        setContainerHeight(
+            containerRef.current.offsetHeight
+        )
+    }, [containerHeight])
 
     useEffect(() => {
         window.addEventListener('resize', onResize)
@@ -29,16 +39,6 @@ export default function useContainerHeight(
           window.removeEventListener('resize', onResize)
         }
     }, []);
-
-    function updateHeight() {
-        if (!containerRef.current) {
-            return
-        }
-
-        setContainerHeight(
-            containerRef.current.offsetHeight
-        )
-    }
 
     return containerHeight
 }
