@@ -17,8 +17,15 @@ import { error500Msg } from '../validation/errorMsg';
 import { getOneTemplate } from './template';
 import { redirect } from 'next/navigation';
 import { memeDownloadName, memeAlt } from '../types/model/transforms';
+import { string } from 'zod';
 
 export async function getOneMeme(id: string): Promise<NestedMeme | null> {
+    const parse = await string().uuid().safeParseAsync(id)
+
+    if (!parse.success) {
+        return null
+    }
+
     const query = preWhereMemeQuery() + ' WHERE m.id = $1::uuid'
 
     try {
