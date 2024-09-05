@@ -1,13 +1,13 @@
 export default function SignLayout({
-    children,
+  children,
 }: {
-    children: React.ReactNode
+  children: React.ReactNode
 }) {
-    return (
-        <div className="flex justify-center items-center min-h-screen w-full">
-            <div className="column-view flex mb-12 p-4 border border-stress-tertiary">
-                {children}
-            </div>
-        </div>
-    )
+  return (
+    <div className="flex min-h-screen w-full items-center justify-center">
+      <div className="column-view mb-12 flex border border-stress-tertiary p-4">
+        {children}
+      </div>
+    </div>
+  )
 }

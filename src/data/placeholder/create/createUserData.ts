@@ -1,49 +1,51 @@
-import { v4 as uuidv4 } from 'uuid'
-import { Image, User } from '@prisma/client';
-import bcrypt from 'bcryptjs'
+import { v4 as uuidv4 } from "uuid"
+import { Image, User } from "@prisma/client"
+import bcrypt from "bcryptjs"
 
-const usernames = ['Alexus', 'Barney', 'Carrie']
-const password = '123456'
+const usernames = ["Alexus", "Barney", "Carrie"]
+const password = "123456"
 
 function generateUsername() {
-    return Math.random().toString(36).slice(2, 8);
+  return Math.random().toString(36).slice(2, 8)
 }
 
-export default async function createUserData(profileImages: Image[], count=3): Promise<User[]> {
-    const minCount = profileImages.length
+export default async function createUserData(
+  profileImages: Image[],
+  count = 3,
+): Promise<User[]> {
+  const minCount = profileImages.length
 
-    if (minCount > count) {
-        throw new Error('Count cannot be less than the number of profile images.')
-    }
-    
-    const users: User[] = []
-    const nameSet = new Set(usernames)
+  if (minCount > count) {
+    throw new Error("Count cannot be less than the number of profile images.")
+  }
 
-    for (let i=0; i<count; i++) {
-        let name: string | null = null
+  const users: User[] = []
+  const nameSet = new Set(usernames)
 
-        // If count exceeds num of given usernames, generate username
-        if (i < usernames.length) {
-            name = usernames[i]
-        }
-        else {
-            name = generateUsername()
+  for (let i = 0; i < count; i++) {
+    let name: string | null = null
 
-            while (nameSet.has(name)) {
-                name = generateUsername()
-            }
+    // If count exceeds num of given usernames, generate username
+    if (i < usernames.length) {
+      name = usernames[i]
+    } else {
+      name = generateUsername()
 
-            nameSet.add(name)
-        }
+      while (nameSet.has(name)) {
+        name = generateUsername()
+      }
 
-        const hashedPassword = await bcrypt.hash(password, 10)
-        users.push({
-            id: uuidv4(),
-            name,
-            password: hashedPassword,
-            profile_image_id: profileImages[i]?.id ?? null
-        })
+      nameSet.add(name)
     }
 
-    return users
+    const hashedPassword = await bcrypt.hash(password, 10)
+    users.push({
+      id: uuidv4(),
+      name,
+      password: hashedPassword,
+      profile_image_id: profileImages[i]?.id ?? null,
+    })
+  }
+
+  return users
 }

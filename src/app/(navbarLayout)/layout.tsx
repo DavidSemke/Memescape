@@ -7,34 +7,30 @@ import { auth } from "@/app/api/auth/[...nextauth]/auth"
 import { getOneUser } from "@/data/api/controllers/user"
 
 export default async function NavbarLayout({
-    children
+  children,
 }: {
-    children: React.ReactNode
+  children: React.ReactNode
 }) {
-    const session = await auth()
-    const sessionUser = session?.user
-    let fullSessionUser = null
+  const session = await auth()
+  const sessionUser = session?.user
+  let fullSessionUser = null
 
-    if (sessionUser) {
-        fullSessionUser = await getOneUser(
-            sessionUser.id,
-            undefined,
-            true
-        )
-    }
+  if (sessionUser) {
+    fullSessionUser = await getOneUser(sessionUser.id, undefined, true)
+  }
 
-    return (
-        <>  
-            <TopSearchbarProvider>
-                <SidebarProvider>
-                    <Topbar sessionUser={fullSessionUser}/>
-                    <Sidebar sessionUser={fullSessionUser}/>
-                </SidebarProvider>
-                <div className="column-view flex flex-col min-h-[calc(100vh-max(var(--h-topbar),var(--min-h-topbar)))] p-4">
-                    {children}
-                </div>
-            </TopSearchbarProvider>
-            <Footer />
-        </>
-    )
+  return (
+    <>
+      <TopSearchbarProvider>
+        <SidebarProvider>
+          <Topbar sessionUser={fullSessionUser} />
+          <Sidebar sessionUser={fullSessionUser} />
+        </SidebarProvider>
+        <div className="column-view flex min-h-[calc(100vh-max(var(--h-topbar),var(--min-h-topbar)))] flex-col p-4">
+          {children}
+        </div>
+      </TopSearchbarProvider>
+      <Footer />
+    </>
+  )
 }

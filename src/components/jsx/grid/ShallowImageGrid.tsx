@@ -1,15 +1,12 @@
-import { ProcessedImage } from "@/data/api/types/model/types";
-import ImageGrid from "./ImageGrid";
+import { ProcessedImage } from "@/data/api/types/model/types"
+import ImageGrid from "./ImageGrid"
 
 type ShallowImageGridProps = {
-    fetchAction: (
-        page: number, 
-        pageSize: number
-    ) => Promise<ProcessedImage[]>,
-    pageSize: number,
-    linkRoot?: string,
-    onImageClick?: (image: ProcessedImage) => void,
-    maxColumnCount?: 2 | 3 | 4
+  fetchAction: (page: number, pageSize: number) => Promise<ProcessedImage[]>
+  pageSize: number
+  linkRoot?: string
+  onImageClick?: (image: ProcessedImage) => void
+  maxColumnCount?: 2 | 3 | 4
 }
 
 /*
@@ -19,20 +16,20 @@ type ShallowImageGridProps = {
     because of its involvement with the DeepImageGrid.
 */
 export default async function ShallowImageGrid({
-    fetchAction, 
-    pageSize,
-    linkRoot,
-    onImageClick,
-    maxColumnCount=4
+  fetchAction,
+  pageSize,
+  linkRoot,
+  onImageClick,
+  maxColumnCount = 4,
 }: ShallowImageGridProps) {
-    const images = await fetchAction(1, pageSize)
+  const images = await fetchAction(1, pageSize)
 
-    return (
-        <ImageGrid 
-            imageGroups={[images]}
-            linkRoot={linkRoot}
-            onImageClick={onImageClick}
-            maxColumnCount={maxColumnCount}
-        />
-    )
+  return (
+    <ImageGrid
+      imageGroups={[images]}
+      linkRoot={linkRoot}
+      onImageClick={onImageClick}
+      maxColumnCount={maxColumnCount}
+    />
+  )
 }

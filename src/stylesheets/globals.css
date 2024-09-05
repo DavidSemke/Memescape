@@ -21,7 +21,7 @@
   --action-primary-hover: #8b4300;
   --action-secondary: #00414d;
   --action-secondary-hover: #005464;
-  --action-tertiary: #A3A3FF;
+  --action-tertiary: #a3a3ff;
   --action-tertiary-hover: #dadaff;
   --error: red;
   --input-primary: #000000;
@@ -41,7 +41,7 @@
   a {
     color: var(--action-tertiary);
   }
-  
+
   a:hover {
     color: var(--action-tertiary-hover);
   }
@@ -57,19 +57,19 @@
   h2 {
     @apply text-xl font-semibold;
   }
-  
+
   main {
     @apply w-full;
   }
 }
 
-@layer components { 
+@layer components {
   .btn-primary {
-    @apply flex gap-2 justify-center px-3 py-2 rounded-xl border-2 bg-action-primary hover:bg-action-primary-hover border-stress-primary text-color hover:text-color;
+    @apply flex justify-center gap-2 rounded-xl border-2 border-stress-primary bg-action-primary px-3 py-2 text-color hover:bg-action-primary-hover hover:text-color;
   }
 
   .btn-secondary {
-    @apply flex gap-2 justify-center px-3 py-2 rounded-xl border-2 bg-action-secondary hover:bg-action-secondary-hover border-stress-secondary text-color hover:text-color;
+    @apply flex justify-center gap-2 rounded-xl border-2 border-stress-secondary bg-action-secondary px-3 py-2 text-color hover:bg-action-secondary-hover hover:text-color;
   }
 
   .column-view {

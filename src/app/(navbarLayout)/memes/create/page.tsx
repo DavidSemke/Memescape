@@ -8,19 +8,19 @@ export default async function CreateMemePage() {
   const sessionUser = session?.user
 
   const templateGridFetchAction: DeepImageGridFetchAction = async (
-    query, page, pageSize
+    query,
+    page,
+    pageSize,
   ) => {
-    'use server'
-    
-    const templates = await getTemplates(
-        query ?? '', page, pageSize, true
-    )
+    "use server"
 
-    return templates.map(template => template.image!)
+    const templates = await getTemplates(query ?? "", page, pageSize, true)
+
+    return templates.map((template) => template.image!)
   }
 
   return (
-    <main className="flex flex-col gap-8 items-center">
+    <main className="flex flex-col items-center gap-8">
       <h1>Create Meme</h1>
       <CreateMemeForm
         sessionUserId={sessionUser?.id ?? null}

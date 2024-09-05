@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import ErrorView from "@/components/jsx/error/ErrorView"
 
@@ -9,8 +9,5 @@ export default function Error({
   error: Error & { digest?: string }
   reset: () => void
 }) {
- 
-  return (
-    <ErrorView error={error} reset={reset}/>
-  )
+  return <ErrorView error={error} reset={reset} />
 }

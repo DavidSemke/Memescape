@@ -1,7 +1,5 @@
-import NotFoundView from "@/components/jsx/error/NotFoundView";
- 
+import NotFoundView from "@/components/jsx/error/NotFoundView"
+
 export default function NotFound() {
-  return (
-    <NotFoundView resourceName="user" />
-  );
+  return <NotFoundView resourceName="user" />
 }

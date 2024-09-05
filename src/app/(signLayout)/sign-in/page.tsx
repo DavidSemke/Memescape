@@ -1,9 +1,9 @@
-import SignForm from '@/components/jsx/form/SignForm'
+import SignForm from "@/components/jsx/form/SignForm"
 
 export default function SignInPage() {
-    return (
-        <main>
-            <SignForm />
-        </main>
-    )
+  return (
+    <main>
+      <SignForm />
+    </main>
+  )
 }

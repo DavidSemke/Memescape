@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import Image from "next/image"
 import { useEffect, useState } from "react"
@@ -11,11 +11,11 @@ import CheckButton from "../button/CheckButton"
 import XButton from "../button/XButton"
 
 type CreateMemeModalProps = {
-    lineCount: number,
-    formData: FormData,
-    onCancel: () => void,
-    onConfirm: () => void,
-    download?: boolean
+  lineCount: number
+  formData: FormData
+  onCancel: () => void
+  onConfirm: () => void
+  download?: boolean
 }
 
 /*
@@ -24,113 +24,90 @@ type CreateMemeModalProps = {
     Form fields names use this number, so it is not included as form input.
 */
 export function CreateMemeModal({
-    lineCount,
-    formData,
-    onCancel,
-    onConfirm,
-    download=false
+  lineCount,
+  formData,
+  onCancel,
+  onConfirm,
+  download = false,
 }: CreateMemeModalProps) {
-    const [memeImage, setMemeImage] = useState<ProcessedImage | null>(null)
+  const [memeImage, setMemeImage] = useState<ProcessedImage | null>(null)
 
-    useEffect(() => {
-        let isMounted = true
-        loadData()
-        
-        async function loadData() {
-            const text: string[] = []
+  useEffect(() => {
+    let isMounted = true
+    loadData()
 
-            for (let i=1; i<lineCount+1; i++) {
-                text.push(formData.get(`line${i}`) as string)
-            }
+    async function loadData() {
+      const text: string[] = []
 
-            const image = await generateMemeImage(
-                formData.get('template-id') as string,
-                text
-            )
+      for (let i = 1; i < lineCount + 1; i++) {
+        text.push(formData.get(`line${i}`) as string)
+      }
 
-            if (!isMounted) {
-                return
-            }
+      const image = await generateMemeImage(
+        formData.get("template-id") as string,
+        text,
+      )
 
-            setMemeImage(image)
-        }
-    
-        return () => {
-          isMounted = false
-        }
-    }, [])
+      if (!isMounted) {
+        return
+      }
 
-    // Some form inputs like 'private' which decides whether
-    // a meme is visible to others are only options if user
-    // is signed in. 
-    // If 'user-id' is null, user is not signed in.
-    const userId = formData.get('user-id')
-
-    const title = `${download ? 'Download' : 'Create'} this Meme?`
-    const buttons = [
-        <XButton 
-            key='cancel'
-            onClick={onCancel} 
-        />
-    ]
-
-    if (download) {
-        buttons.push(
-            <a
-                key='download'
-                href={memeImage?.base64}
-                download={memeImage?.downloadName}
-                className="btn-primary"
-                aria-labelledby="download-button-label"
-                onClick={onConfirm}
-            >
-                <ArrowDownTrayIcon 
-                    className="w-6 h-6"
-                />
-                <div id='download-button-label'>Download</div>
-          </a>
-        )
-    }
-    else {
-        buttons.push(
-            <CheckButton 
-                key='confirm'
-                onClick={onConfirm}
-            />
-        )
+      setMemeImage(image)
     }
 
-    return (
-        <ScrollModal
-            title={title}
-            buttons={buttons}
-            prefixedChildren={null}
-        >
-            <div className="flex flex-col items-center gap-4 w-full">
-                {
-                    memeImage ? (
-                        <Image
-                            src={memeImage.base64}
-                            width={0}
-                            height={0}
-                            alt={memeImage.alt}
-                            className="w-full border-2 border-stress-secondary"
-                        />
-                    ) : (
-                        <Ellipsis />
-                    )
-                }
-                {
-                    userId !== null && (
-                        <div className="flex items-center gap-2 w-full pl-4">
-                            <div className="font-semibold">Private:</div>
-                            <div>
-                                { formData.get('private') === 'private' ? 'Yes' : 'No' }
-                            </div>
-                        </div>
-                    )
-                }
-            </div>
-        </ScrollModal>
+    return () => {
+      isMounted = false
+    }
+  }, [])
+
+  // Some form inputs like 'private' which decides whether
+  // a meme is visible to others are only options if user
+  // is signed in.
+  // If 'user-id' is null, user is not signed in.
+  const userId = formData.get("user-id")
+
+  const title = `${download ? "Download" : "Create"} this Meme?`
+  const buttons = [<XButton key="cancel" onClick={onCancel} />]
+
+  if (download) {
+    buttons.push(
+      <a
+        key="download"
+        href={memeImage?.base64}
+        download={memeImage?.downloadName}
+        className="btn-primary"
+        aria-labelledby="download-button-label"
+        onClick={onConfirm}
+      >
+        <ArrowDownTrayIcon className="h-6 w-6" />
+        <div id="download-button-label">Download</div>
+      </a>,
     )
-} 
+  } else {
+    buttons.push(<CheckButton key="confirm" onClick={onConfirm} />)
+  }
+
+  return (
+    <ScrollModal title={title} buttons={buttons} prefixedChildren={null}>
+      <div className="flex w-full flex-col items-center gap-4">
+        {memeImage ? (
+          <Image
+            src={memeImage.base64}
+            width={0}
+            height={0}
+            alt={memeImage.alt}
+            className="w-full border-2 border-stress-secondary"
+          />
+        ) : (
+          <Ellipsis />
+        )}
+        {userId !== null && (
+          <div className="flex w-full items-center gap-2 pl-4">
+            <div className="font-semibold">Private:</div>
+            <div>{formData.get("private") === "private" ? "Yes" : "No"}</div>
+          </div>
+        )}
+      </div>
+    </ScrollModal>
+  )
+}
