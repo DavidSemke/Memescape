@@ -20,3 +20,5 @@ Technologies used include:
 - NextAuth
 - Tailwind
 - TypeScript
+
+Meme generation is handled using a third-party service, [Memegen.link](https://memegen.link/).
