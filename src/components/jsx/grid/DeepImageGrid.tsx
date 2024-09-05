@@ -21,6 +21,7 @@ type DeepImageGridProps = FetchProps & {
     initImages: ProcessedImage[],
     linkRoot?: string,
     onImageClick?: (image: ProcessedImage) => void
+    maxColumnCount?: 2 | 3 | 4
 }
 
 /*
@@ -32,8 +33,9 @@ export default function DeepImageGrid({
     fetchAction, 
     query=null, 
     pageSize=20, 
-    linkRoot=undefined,
-    onImageClick=undefined
+    linkRoot,
+    onImageClick,
+    maxColumnCount=4
 }: DeepImageGridProps) {
     const initRenderRef = useRef<boolean>(true)
     const pageRef = useRef<number>(1)
@@ -115,6 +117,7 @@ export default function DeepImageGrid({
                         imageGroups={imageGroups}
                         linkRoot={linkRoot}
                         onImageClick={onImageClick}
+                        maxColumnCount={maxColumnCount}
                     />
                 )
             }
@@ -125,7 +128,7 @@ export default function DeepImageGrid({
                     moreExist ? (
                         <button
                             type='button'
-                            className="btn-secondary w-full justify-center"
+                            className="btn-secondary w-1/2 my-4"
                             onClick={() => {
                                 addMoreImages()
                             }}

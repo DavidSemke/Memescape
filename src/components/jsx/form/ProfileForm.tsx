@@ -35,7 +35,7 @@ export default function ProfileForm({ user, profileView }: ProfileFormProps) {
 
     if (isGone) {
         return (
-            <div className="flex items-stretch gap-4 mb-4">
+            <div className="flex items-stretch gap-4">
                 {profileView}
                 <button
                     type="button"
@@ -55,7 +55,7 @@ export default function ProfileForm({ user, profileView }: ProfileFormProps) {
     return (
         <form 
             action={action}
-            className='flex flex-col gap-4 mb-4'
+            className='flex flex-col gap-4'
             onSubmit={() => setShowStateView(true)}
         >
             <Input 

@@ -27,18 +27,20 @@ export function ScrollModal({
     title, buttons, prefixedChildren, children
 }: ScrollModalProps) {
     const scrollContainerRef = useRef<HTMLDivElement | null>(null)
-    const scrollContainerHeight = useContainerHeight(scrollContainerRef)
+    const buttonContainerRef = useRef<HTMLDivElement | null>(null)
+    const scrollContainerHeight = useContainerHeight(scrollContainerRef, buttonContainerRef)
 
     return (
         <Modal
             title={title}
             buttons={buttons}
-        >
+            buttonContainerRef={buttonContainerRef}
+        >   
             {prefixedChildren}
             <div
                 ref={scrollContainerRef}
                 className={clsx(
-                    'w-full overflow-auto',
+                    'overflow-y-auto w-full border-2 border-stress-secondary',
                     {
                         'grow': scrollContainerHeight === null
                     }

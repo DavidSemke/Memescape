@@ -8,29 +8,34 @@ import { useDebouncedCallback } from 'use-debounce';
 
 export default function useContainerHeight(
     containerRef: MutableRefObject<HTMLElement | null>,
+    bottomElementRef: MutableRefObject<HTMLElement | null>
 ): number | null {
     const [
         containerHeight, 
         setContainerHeight
     ] = useState<number | null>(null);
-    
-    const onResize = useDebouncedCallback(() => {
-        if (!containerRef.current) {
-            return
-        }
 
-        setContainerHeight(null)
-    }, 1000)
-    
-    useLayoutEffect(() => {
-        if (!containerRef.current) {
+    function updateHeight() {
+        const container = containerRef.current
+        const bottomElement = bottomElementRef.current
+
+        if (!container || !bottomElement) {
             return
         }
 
         setContainerHeight(
-            containerRef.current.offsetHeight
+            bottomElement.getBoundingClientRect().top 
+            - container.getBoundingClientRect().top
         )
-    }, [containerHeight])
+    }
+    
+    const onResize = useDebouncedCallback(() => {
+        updateHeight()
+    }, 500)
+    
+    useLayoutEffect(() => {
+        updateHeight()
+    }, [])
 
     useEffect(() => {
         window.addEventListener('resize', onResize)

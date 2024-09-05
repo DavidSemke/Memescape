@@ -27,7 +27,7 @@ export default function Sidebar({ sessionUser }: SidebarProps) {
 
     return (
         <nav className={clsx(
-            'flex flex-col items-center gap-4 p-4 fixed z-20 bg-primary w-full h-full ease-in-out duration-300',
+            'flex flex-col items-center gap-4 p-4 fixed z-20 top-[max(var(--h-topbar),var(--min-h-topbar))] right-0 bg-primary w-full sm:w-1/2 md:w-2/5 lg:w-1/3 xl:w-1/4 h-full ease-in-out duration-300',
             {
                 'translate-x-0': showSidebar,
                 'translate-x-full': !showSidebar

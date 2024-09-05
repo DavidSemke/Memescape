@@ -20,7 +20,7 @@ export default function Topbar({ sessionUser }: TopbarProps) {
     } = useContext(TopSearchbarContext)
 
     return (
-        <nav className='flex justify-around p-2 bg-primary h-[--h-topbar] min-h-[--min-h-topbar] sticky top-0 z-20 border-b-2 border-stress-tertiary'>
+        <nav className='flex justify-around p-2 bg-primary h-[--h-topbar] min-h-[--min-h-topbar] w-full sticky top-0 z-20 border-b-2 border-stress-tertiary'>
             <Logo 
                 title={true}
                 attrs={{

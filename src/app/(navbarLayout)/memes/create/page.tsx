@@ -20,7 +20,7 @@ export default async function CreateMemePage() {
   }
 
   return (
-    <main className="flex flex-col gap-4 items-center">
+    <main className="flex flex-col gap-8 items-center">
       <h1>Create Meme</h1>
       <CreateMemeForm
         sessionUserId={sessionUser?.id ?? null}

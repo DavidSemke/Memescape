@@ -45,6 +45,7 @@ export function SelectTemplateModal({
                 query={query}
                 pageSize={10}
                 onImageClick={onTemplateSelect}
+                maxColumnCount={3}
             />
         </ScrollModal>
     )

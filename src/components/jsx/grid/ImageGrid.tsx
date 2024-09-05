@@ -7,15 +7,17 @@ import Link from "next/link"
 import { useState } from "react"
 
 type ImageGridProps = {
-    imageGroups: ProcessedImage[][],
-    linkRoot?: string,
+    imageGroups: ProcessedImage[][]
+    linkRoot?: string
     onImageClick?: (image: ProcessedImage) => void
+    maxColumnCount?: 2 | 3 | 4
 }
 
 export default function ImageGrid({ 
     imageGroups, 
     linkRoot=undefined, 
-    onImageClick=undefined 
+    onImageClick=undefined,
+    maxColumnCount=4
 }: ImageGridProps) {
     const [selectedId, setSelectedId] = useState<string | null>(null)
     imageGroups = imageGroups.filter(group => group.length !== 0)
@@ -25,7 +27,14 @@ export default function ImageGrid({
             { imageGroups.map((group: ProcessedImage[]) => (
                 <div 
                     key={group[0].id}
-                    className='columns-2 gap-4 w-full pb-4 last:pb-0 mt-4 first:mt-0 border-b-2 border-stress-secondary last:border-none sm:columns-4 md:columns-5 lg:columns-6'
+                    className={clsx(
+                        'gap-4 w-full pb-4 last:pb-0 mt-4 first:mt-0 border-b-2 border-stress-secondary last:border-none',
+                        {
+                            'columns-2': maxColumnCount === 2,
+                            'multi-column-view-3': maxColumnCount === 3,
+                            'multi-column-view-4': maxColumnCount === 4
+                        }
+                    )}
                 >
                     { group.map((image) => {
                         const renderedImage = (

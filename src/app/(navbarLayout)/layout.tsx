@@ -30,7 +30,7 @@ export default async function NavbarLayout({
                     <Topbar sessionUser={fullSessionUser}/>
                     <Sidebar sessionUser={fullSessionUser}/>
                 </SidebarProvider>
-                <div className="flex flex-col min-h-[calc(100vh-max(var(--h-topbar),var(--min-h-topbar)))] p-4">
+                <div className="column-view flex flex-col min-h-[calc(100vh-max(var(--h-topbar),var(--min-h-topbar)))] p-4">
                     {children}
                 </div>
             </TopSearchbarProvider>

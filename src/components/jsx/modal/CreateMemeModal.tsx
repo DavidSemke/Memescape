@@ -122,7 +122,7 @@ export function CreateMemeModal({
                 }
                 {
                     userId !== null && (
-                        <div className="flex items-center gap-2 w-full">
+                        <div className="flex items-center gap-2 w-full pl-4">
                             <div className="font-semibold">Private:</div>
                             <div>
                                 { formData.get('private') === 'private' ? 'Yes' : 'No' }

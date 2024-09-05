@@ -12,7 +12,7 @@ export default async function IndexPage() {
   }
 
   return (
-    <main className="flex flex-col gap-4 items-center">
+    <main className="flex flex-col gap-8 items-center">
       <RedirectSearchbar 
         searchItemName="meme"
         redirectPath="/memes"

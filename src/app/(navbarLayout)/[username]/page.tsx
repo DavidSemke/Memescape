@@ -47,7 +47,7 @@ export default async function ProfilePage({ params }: { params: { username: stri
     )
     
     return (
-        <main className="flex flex-col items-center gap-4">
+        <main className="flex flex-col items-center gap-8">
             <h1>{`${possessive} Profile`}</h1>
             <section>
                 {
@@ -57,7 +57,7 @@ export default async function ProfilePage({ params }: { params: { username: stri
                             profileView={profileView}
                         /> 
                     ) : (
-                        profileView
+                        profileView  
                     )
                 }
             </section>

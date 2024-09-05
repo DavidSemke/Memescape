@@ -8,7 +8,8 @@ type ShallowImageGridProps = {
     ) => Promise<ProcessedImage[]>,
     pageSize: number,
     linkRoot?: string,
-    onImageClick?: (image: ProcessedImage) => void
+    onImageClick?: (image: ProcessedImage) => void,
+    maxColumnCount?: 2 | 3 | 4
 }
 
 /*
@@ -20,8 +21,9 @@ type ShallowImageGridProps = {
 export default async function ShallowImageGrid({
     fetchAction, 
     pageSize,
-    linkRoot=undefined,
-    onImageClick=undefined
+    linkRoot,
+    onImageClick,
+    maxColumnCount=4
 }: ShallowImageGridProps) {
     const images = await fetchAction(1, pageSize)
 
@@ -30,6 +32,7 @@ export default async function ShallowImageGrid({
             imageGroups={[images]}
             linkRoot={linkRoot}
             onImageClick={onImageClick}
+            maxColumnCount={maxColumnCount}
         />
     )
 }

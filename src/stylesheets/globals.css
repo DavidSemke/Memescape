@@ -65,11 +65,23 @@
 
 @layer components { 
   .btn-primary {
-    @apply flex gap-2 px-3 py-2 rounded-xl border-2 bg-action-primary hover:bg-action-primary-hover border-stress-primary text-color hover:text-color;
+    @apply flex gap-2 justify-center px-3 py-2 rounded-xl border-2 bg-action-primary hover:bg-action-primary-hover border-stress-primary text-color hover:text-color;
   }
 
   .btn-secondary {
-    @apply flex gap-2 px-3 py-2 rounded-xl border-2 bg-action-secondary hover:bg-action-secondary-hover border-stress-secondary text-color;
+    @apply flex gap-2 justify-center px-3 py-2 rounded-xl border-2 bg-action-secondary hover:bg-action-secondary-hover border-stress-secondary text-color hover:text-color;
+  }
+
+  .column-view {
+    @apply w-full sm:w-4/5 md:w-3/4 lg:w-3/5 xl:w-1/2;
+  }
+
+  .multi-column-view-3 {
+    @apply columns-2 md:columns-3;
+  }
+
+  .multi-column-view-4 {
+    @apply columns-2 md:columns-3 xl:columns-4;
   }
 }
 

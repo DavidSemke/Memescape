@@ -5,7 +5,7 @@ export default function SignLayout({
 }) {
     return (
         <div className="flex justify-center items-center min-h-screen w-full">
-            <div className="flex w-full mb-12 p-4 border border-stress-tertiary">
+            <div className="column-view flex mb-12 p-4 border border-stress-tertiary">
                 {children}
             </div>
         </div>

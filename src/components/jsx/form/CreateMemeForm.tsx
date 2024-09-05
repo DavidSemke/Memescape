@@ -62,14 +62,14 @@ export default function CreateMemeForm({
         <form
             ref={formRef}
             action={action} 
-            className="flex flex-col gap-4"
+            className="flex flex-col gap-8 items-center w-full"
         >
             <section className="flex flex-col gap-4 w-full">
                 <h2>Template</h2>
                 <div className="flex">
                     {
                         template === null ? (
-                            <div className='flex items-center w-32 h-32 border-2 border-stress-secondary italic text-center'>
+                            <div className='flex justify-center items-center w-40 sm:w-52 md:w-64 lg:w-80 aspect-square border-2 border-stress-secondary italic text-center'>
                                 Template Appears Here
                             </div>
                         ) : (
@@ -78,7 +78,7 @@ export default function CreateMemeForm({
                                 width={0}
                                 height={0}
                                 alt={template.image.alt}
-                                className="w-32 border-2 border-stress-secondary"
+                                className="w-40 sm:w-52 md:w-64 lg:w-80 xl:w-96 h-auto border-2 border-stress-secondary"
                             />
                         )
                     }
@@ -186,7 +186,7 @@ export default function CreateMemeForm({
             }
             <button 
                 type='button' 
-                className="btn-primary justify-center"
+                className="btn-primary w-1/2 mb-4"
                 onClick={async () => {
                     const formData = new FormData(formRef.current!)
                     const parseObject: Record<string, unknown> = {
