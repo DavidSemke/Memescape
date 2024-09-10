@@ -2,16 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 
-  Note that there is an odd error with this build. Dynamic use of Tailwind breakpoints 
-  (breakpoint inserted via template string) followed by an edit to this file may cause 
-  breakpoint utility classes to stop working. This occurred with `hidden ${bp}:block`.
-
-  Also, if a component accepts a class string via an attrs object prop, make sure to 
-  assign the classes separately to avoid server/client class clashes, e.g.:
-  <div {...attrs.root} className={attrs.root.className}>...</div>
-*/
-
 :root {
   --color: white;
   --primary: #000030;
