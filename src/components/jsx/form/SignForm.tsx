@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { signInUser, postUser } from "@/data/api/controllers/user"
 import { useFormState } from "react-dom"
-import { Input } from "./Input"
+import Input from "./Input"
 import Logo from "../image/Logo"
 import { FormStateView } from "./FormStateView"
 import { Action, FormState } from "@/data/api/types/action/types"

@@ -1,6 +1,6 @@
 "use client"
 
-import { Input } from "@/components/jsx/form/Input"
+import Input from "@/components/jsx/form/Input"
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline"
 import { useFormState } from "react-dom"
 import { FormStateView } from "./FormStateView"
