@@ -31,7 +31,7 @@ export default function Logo({
           src="/logo.png"
           width={50}
           height={50}
-          alt="Memescape home."
+          alt="Memescape home"
           className="rounded-full"
         />
       </Link>

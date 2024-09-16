@@ -3,8 +3,8 @@
 import { UserCircleIcon } from "@heroicons/react/24/outline"
 import Link from "next/link"
 import Image from "next/image"
-import { SidebarContext } from "../context/SidebarContext"
-import { SignButton } from "../button/SignButton"
+import { SidebarContext } from "../../context/SidebarContext"
+import { SignButton } from "../../button/SignButton"
 import { useContext } from "react"
 import clsx from "clsx"
 import { usePathname } from "next/navigation"
@@ -41,7 +41,7 @@ export default function Sidebar({ sessionUser }: SidebarProps) {
             src={profileImageSrc}
             width={48}
             height={48}
-            alt="Your profile picture."
+            alt="Your profile picture"
             className="rounded-full"
           />
         ) : (
@@ -80,26 +80,24 @@ export default function Sidebar({ sessionUser }: SidebarProps) {
           </Link>
         </section>
       )}
-      {links.findMemes && links.createMeme && (
-        <section className="flex w-full flex-col gap-4 border-b-2 border-stress-secondary pb-4">
-          <Link
-            href={links.findMemes}
-            className={clsx({
-              underline: pathname === links.findMemes,
-            })}
-          >
-            Find Memes
-          </Link>
-          <Link
-            href={links.createMeme}
-            className={clsx({
-              underline: pathname === links.createMeme,
-            })}
-          >
-            Create Meme
-          </Link>
-        </section>
-      )}
+      <section className="flex w-full flex-col gap-4 border-b-2 border-stress-secondary pb-4">
+        <Link
+          href={links.findMemes}
+          className={clsx({
+            underline: pathname === links.findMemes,
+          })}
+        >
+          Find Memes
+        </Link>
+        <Link
+          href={links.createMeme}
+          className={clsx({
+            underline: pathname === links.createMeme,
+          })}
+        >
+          Create Meme
+        </Link>
+      </section>
       {sessionUser && <SignButton type="out" />}
     </nav>
   )

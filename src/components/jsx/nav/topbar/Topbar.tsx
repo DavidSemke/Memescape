@@ -1,10 +1,10 @@
 "use client"
 
 import { Bars3Icon, MagnifyingGlassIcon } from "@heroicons/react/24/outline"
-import Logo from "../image/Logo"
-import { SidebarContext } from "../context/SidebarContext"
-import { TopSearchbarContext } from "../context/TopSearchbarContext"
-import { SignButton } from "../button/SignButton"
+import Logo from "../../image/Logo"
+import { SidebarContext } from "../../context/SidebarContext"
+import { TopSearchbarContext } from "../../context/TopSearchbarContext"
+import { SignButton } from "../../button/SignButton"
 import { useContext } from "react"
 import { NestedUser } from "@/data/api/types/model/types"
 
@@ -42,7 +42,7 @@ export default function Topbar({ sessionUser }: TopbarProps) {
         <button
           type="button"
           className="btn-secondary"
-          aria-label="Open sidebar."
+          aria-label="Open sidebar"
           onClick={() => {
             setShowSidebar((val) => !val)
           }}
