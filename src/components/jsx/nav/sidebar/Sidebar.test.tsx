@@ -1,18 +1,29 @@
 import { render, screen } from '@testing-library/react'
-import { User } from "@prisma/client"
 import createUserData from "@/data/placeholder/create/createUserData"
 import Sidebar from "./Sidebar"
+import { NestedUser } from '@/data/api/types/model/types'
+import { base64String } from '@/data/api/utils'
 
-let sessionUser: User
+let sessionUser: NestedUser
 
 beforeAll(async () => {
-    [sessionUser] = await createUserData([], 1)
+    const users = await createUserData([], 1)
+    sessionUser = users[0]
+    sessionUser.profile_image = {
+        id: '',
+        mime_type: '',
+        alt: '',
+        base64: base64String(Buffer.from(''), 'image/jpeg')
+    }
 })
 
 it('Session user exists', () => {
     render(
         <Sidebar sessionUser={sessionUser}/>
     )
+
+    // Profile pic
+    expect(screen.getByAltText('profile picture', { exact: false })).toBeInTheDocument()
 
     // Links
     expect(screen.getByRole('link', { name: 'Your Profile'})).toHaveAttribute('href', `/${sessionUser.name}`)
@@ -27,6 +38,9 @@ it('Session user does not exist', () => {
     render(
         <Sidebar sessionUser={null}/>
     )
+
+    // Profile pic
+    expect(screen.getByLabelText('profile picture', { exact: false })).toBeInTheDocument()
 
     // Links
     expect(screen.queryByRole('link', { name: 'Your Profile'})).toBeNull()

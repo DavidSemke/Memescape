@@ -45,7 +45,11 @@ export default function Sidebar({ sessionUser }: SidebarProps) {
             className="rounded-full"
           />
         ) : (
-          <UserCircleIcon className="h-12 w-12" />
+          <UserCircleIcon 
+            role="img"
+            aria-label="Default profile picture"
+            className="h-12 w-12" 
+          />
         )}
         <div className="text-lg">
           {sessionUser ? sessionUser.name : "Anonymous"}
