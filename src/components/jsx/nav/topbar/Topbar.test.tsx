@@ -1,18 +1,13 @@
 import { render, screen } from '@testing-library/react'
-import { User } from "@prisma/client"
-import createUserData from "@/data/placeholder/create/createUserData"
 import Topbar from "./Topbar"
+import { mockUser } from '@/__tests__/mocks/data/user'
 
 /* 
     Presence of search button depends on page and scroll position.
     Therefore, it is ignored here.
 */
 
-let sessionUser: User
-
-beforeAll(async () => {
-    [sessionUser] = await createUserData([], 1)
-})
+const sessionUser = mockUser()
 
 it('Session user exists', () => {
     render(

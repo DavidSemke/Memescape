@@ -97,9 +97,9 @@ const config = {
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
-    '@/auth': '<rootDir>/__tests__/mocks/auth.ts',
-    'next-auth/providers/credentials': '<rootDir>/__tests__/mocks/next-auth-providers-credentials.ts',
-    'next-auth': '<rootDir>/__tests__/mocks/next-auth.ts'
+    '@/auth': '<rootDir>/src/__tests__/mocks/auth/auth.ts',
+    'next-auth/providers/credentials': '<rootDir>/src/__tests__/mocks/auth/next-auth-providers-credentials.ts',
+    'next-auth': '<rootDir>/src/__tests__/mocks/auth/next-auth.ts'
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader

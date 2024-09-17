@@ -1,21 +1,8 @@
 import { render, screen } from '@testing-library/react'
-import createUserData from "@/data/placeholder/create/createUserData"
 import Sidebar from "./Sidebar"
-import { NestedUser } from '@/data/api/types/model/types'
-import { base64String } from '@/data/api/utils'
+import { mockUser } from '@/__tests__/mocks/data/user'
 
-let sessionUser: NestedUser
-
-beforeAll(async () => {
-    const users = await createUserData([], 1)
-    sessionUser = users[0]
-    sessionUser.profile_image = {
-        id: '',
-        mime_type: '',
-        alt: '',
-        base64: base64String(Buffer.from(''), 'image/jpeg')
-    }
-})
+const sessionUser = mockUser(null, true)
 
 it('Session user exists', () => {
     render(

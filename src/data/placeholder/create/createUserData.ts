@@ -9,6 +9,20 @@ function generateUsername() {
   return Math.random().toString(36).slice(2, 8)
 }
 
+export function generateUniqueUsername(exclusionSet: Set<string> | null) {
+  if (!exclusionSet) {
+    return generateUsername()
+  }
+
+  let name: string
+
+  do {
+    name = generateUsername()
+  } while (exclusionSet.has(name))
+
+  return name
+}
+
 export default async function createUserData(
   profileImages: Image[],
   count = 3,
@@ -29,12 +43,7 @@ export default async function createUserData(
     if (i < usernames.length) {
       name = usernames[i]
     } else {
-      name = generateUsername()
-
-      while (nameSet.has(name)) {
-        name = generateUsername()
-      }
-
+      name = generateUniqueUsername(nameSet)
       nameSet.add(name)
     }
 

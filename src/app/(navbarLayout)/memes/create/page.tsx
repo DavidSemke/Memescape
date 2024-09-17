@@ -1,5 +1,5 @@
 import { auth } from "@/app/api/auth/[...nextauth]/auth"
-import CreateMemeForm from "@/components/jsx/form/CreateMemeForm"
+import CreateMemeForm from "@/components/jsx/form/createMemeForm/CreateMemeForm"
 import { DeepImageGridFetchAction } from "@/components/jsx/grid/DeepImageGrid"
 import { getTemplates } from "@/data/api/controllers/template"
 
