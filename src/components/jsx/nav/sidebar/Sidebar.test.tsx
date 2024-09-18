@@ -1,8 +1,13 @@
 import { render, screen } from '@testing-library/react'
 import Sidebar from "./Sidebar"
 import { mockUser } from '@/__tests__/mocks/data/user'
+import { NestedUser } from '@/data/api/types/model/types'
 
-const sessionUser = mockUser(null, true)
+let sessionUser: NestedUser
+
+beforeAll(async () => {
+    sessionUser = await mockUser(null, true)
+})
 
 it('Session user exists', () => {
     render(

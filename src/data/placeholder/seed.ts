@@ -55,7 +55,10 @@ async function seed() {
     seedTable<Template>("template", templates),
   ])
   // Seed users, memes, and bookmarks
-  const users = await createUserData(seededUserImages)
+  const users = await createUserData(
+    ['Alexus', 'Barney', 'Carrie'],
+    seededUserImages
+  )
   const seededUsers = await seedTable<User>("user", users)
   const seededMemes = await seedTable<Meme>(
     "meme",

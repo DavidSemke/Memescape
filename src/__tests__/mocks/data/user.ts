@@ -1,12 +1,12 @@
 import { NestedUser, ProcessedImage } from "@/data/api/types/model/types"
-import { generateUniqueUsername } from "@/data/placeholder/create/createUserData"
+import { generateUniqueUsername, createOneUser } from "@/data/placeholder/create/createUserData"
 import { mockProcessedImage } from "./image"
 import { v4 as uuidv4 } from "uuid"
 
-export function mockUser(
+export async function mockUser(
     nameExclusionSet: Set<string> | null = null,
     includeProfileImage=false
-): NestedUser {
+): Promise<NestedUser> {
     let profileImageId: string | null = null
     let profileImage: ProcessedImage | undefined = undefined
 
@@ -15,11 +15,13 @@ export function mockUser(
         profileImage = mockProcessedImage(profileImageId)
     }
 
+    const baseUser = await createOneUser(
+        generateUniqueUsername(nameExclusionSet),
+        profileImageId
+    )
+
     return {
-        id: uuidv4(),
-        name: generateUniqueUsername(nameExclusionSet),
-        password: '123456',
-        profile_image_id: profileImageId,
+        ...baseUser,
         profile_image: profileImage
     }
 }

@@ -1,13 +1,18 @@
 import { render, screen } from '@testing-library/react'
 import Topbar from "./Topbar"
 import { mockUser } from '@/__tests__/mocks/data/user'
+import { NestedUser } from '@/data/api/types/model/types'
 
 /* 
     Presence of search button depends on page and scroll position.
     Therefore, it is ignored here.
 */
 
-const sessionUser = mockUser()
+let sessionUser: NestedUser
+
+beforeAll(async () => {
+    sessionUser = await mockUser()
+})
 
 it('Session user exists', () => {
     render(

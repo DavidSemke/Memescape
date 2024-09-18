@@ -2,14 +2,13 @@ import { v4 as uuidv4 } from "uuid"
 import { Image, User } from "@prisma/client"
 import bcrypt from "bcryptjs"
 
-const usernames = ["Alexus", "Barney", "Carrie"]
-const password = "123456"
-
 function generateUsername() {
   return Math.random().toString(36).slice(2, 8)
 }
 
-export function generateUniqueUsername(exclusionSet: Set<string> | null) {
+export function generateUniqueUsername(
+  exclusionSet: Set<string> | null = null
+) {
   if (!exclusionSet) {
     return generateUsername()
   }
@@ -23,7 +22,22 @@ export function generateUniqueUsername(exclusionSet: Set<string> | null) {
   return name
 }
 
+export async function createOneUser(
+  name: string,
+  profileImageId: string | null = null
+) {
+  const hashedPassword = await bcrypt.hash('123456', 10)
+
+  return {
+    id: uuidv4(),
+    name,
+    password: hashedPassword,
+    profile_image_id: profileImageId,
+  }
+}
+
 export default async function createUserData(
+  usernames: string[],
   profileImages: Image[],
   count = 3,
 ): Promise<User[]> {
@@ -33,27 +47,16 @@ export default async function createUserData(
     throw new Error("Count cannot be less than the number of profile images.")
   }
 
-  const users: User[] = []
-  const nameSet = new Set(usernames)
+  const users = []
+  const nameSet = new Set<string>()
 
   for (let i = 0; i < count; i++) {
-    let name: string | null = null
-
-    // If count exceeds num of given usernames, generate username
-    if (i < usernames.length) {
-      name = usernames[i]
-    } else {
-      name = generateUniqueUsername(nameSet)
-      nameSet.add(name)
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10)
-    users.push({
-      id: uuidv4(),
-      name,
-      password: hashedPassword,
-      profile_image_id: profileImages[i]?.id ?? null,
-    })
+    const name = usernames[i] ?? generateUniqueUsername(nameSet)
+    users.push(await createOneUser(
+      name, 
+      profileImages[i]?.id ?? null
+    ))
+    nameSet.add(name)
   }
 
   return users
