@@ -20,10 +20,10 @@ export default function RootLayout({
       <body
         className={clsx(
           inter.className,
-          "flex min-h-screen flex-col items-center bg-secondary text-color antialiased",
+          "flex flex-col items-center min-h-screen bg-secondary text-color antialiased",
         )}
       >
-        {children}
+          {children}
       </body>
     </html>
   )

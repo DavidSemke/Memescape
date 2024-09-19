@@ -1,6 +1,10 @@
 "use client"
 
-import { ButtonHTMLAttributes, ReactElement, useRef } from "react"
+import { 
+  ButtonHTMLAttributes,
+  ReactElement, 
+  useRef 
+} from "react"
 import useContainerHeight from "@/components/hooks/useContainerHeight"
 import Modal from "./Modal"
 import clsx from "clsx"
