@@ -3,17 +3,17 @@
 import Input from "@/components/jsx/form/Input"
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline"
 import { useFormState } from "react-dom"
-import { FormStateView } from "./FormStateView"
+import { FormStateView } from "../FormStateView"
 import { FormState } from "@/data/api/types/action/types"
 import { postMeme } from "@/data/api/controllers/meme"
-import { DeepImageGridFetchAction } from "../grid/DeepImageGrid"
+import { DeepImageGridFetchAction } from "../../grid/DeepImageGrid"
 import { useRef, useState } from "react"
 import { ProcessedImage } from "@/data/api/types/model/types"
 import Image from "next/image"
 import { getOneTemplate } from "@/data/api/controllers/template"
 import { createMemeSchema } from "@/data/api/validation/meme"
-import { SelectTemplateModal } from "../modal/SelectTemplateModal"
-import { CreateMemeModal } from "../modal/CreateMemeModal"
+import { SelectTemplateModal } from "../../modal/selectTemplateModal/SelectTemplateModal"
+import { CreateMemeModal } from "../../modal/createMemeModal/CreateMemeModal"
 
 type CreateMemeFormProps = {
   sessionUserId: string | null
@@ -26,20 +26,24 @@ export default function CreateMemeForm({
 }: CreateMemeFormProps) {
   const formRef = useRef<HTMLFormElement | null>(null)
   const newTemplateImageRef = useRef<ProcessedImage | null>(null)
+
   const [template, setTemplate] = useState<{
     image: ProcessedImage
     lineCount: number
   } | null>(null)
   const [selectTemplateModalIsOpen, setSelectTemplateModalIsOpen] =
     useState<boolean>(false)
+  
   // Only set to true if form data is validated.
   // Data is validated again on the server.
   const [createMemeModalIsOpen, setCreateMemeModalIsOpen] =
     useState<boolean>(false)
+
   const [state, action] = useFormState<FormState, FormData>(
     postMeme.bind(null, template?.lineCount ?? null),
     false,
   )
+
   const [errors, setErrors] = useState<Record<
     string,
     string[] | undefined
@@ -79,7 +83,7 @@ export default function CreateMemeForm({
           <button
             type="button"
             className="btn-secondary items-center rounded-s-none"
-            aria-label="Search for a template."
+            aria-label="Search for a template"
             onClick={() => setSelectTemplateModalIsOpen(true)}
           >
             <MagnifyingGlassIcon className="h-6 w-6" />

@@ -3,12 +3,12 @@
 import Image from "next/image"
 import { useEffect, useState } from "react"
 import { ProcessedImage } from "@/data/api/types/model/types"
-import { ScrollModal } from "./ScrollModal"
+import { ScrollModal } from "../ScrollModal"
 import { generateMemeImage } from "@/data/api/controllers/meme"
-import Ellipsis from "../loading/Ellipsis"
+import Ellipsis from "../../loading/Ellipsis"
 import { ArrowDownTrayIcon } from "@heroicons/react/24/outline"
-import CheckButton from "../button/CheckButton"
-import XButton from "../button/XButton"
+import CheckButton from "../../button/CheckButton"
+import XButton from "../../button/XButton"
 
 type CreateMemeModalProps = {
   lineCount: number

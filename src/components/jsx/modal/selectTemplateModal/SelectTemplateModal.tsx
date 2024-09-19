@@ -1,12 +1,12 @@
 "use client"
 
 import { useState } from "react"
-import Searchbar from "../search/Searchbar"
-import DeepImageGrid, { DeepImageGridFetchAction } from "../grid/DeepImageGrid"
+import Searchbar from "../../search/Searchbar"
+import DeepImageGrid, { DeepImageGridFetchAction } from "../../grid/DeepImageGrid"
 import { ProcessedImage } from "@/data/api/types/model/types"
-import { ScrollModal } from "./ScrollModal"
-import XButton from "../button/XButton"
-import CheckButton from "../button/CheckButton"
+import { ScrollModal } from "../ScrollModal"
+import XButton from "../../button/XButton"
+import CheckButton from "../../button/CheckButton"
 
 type SelectTemplateModalProps = {
   fetchAction: DeepImageGridFetchAction
