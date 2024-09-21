@@ -1,7 +1,5 @@
-const originalModule = jest.requireActual("react-dom");
-  
 module.exports = {
-    ...originalModule,
+    ...jest.requireActual("react-dom"),
     useFormState: () => [
     [
         // mock state

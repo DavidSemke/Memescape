@@ -5,7 +5,7 @@ import {
 } from "zod"
 import { minMaxErrorMap } from "./errorMsg"
 
-const textLineLen = { max: 100 }
+export const textLineLen = { max: 100 }
 
 /* 
     A post request occurs if the user is signed in (userRequired=true).

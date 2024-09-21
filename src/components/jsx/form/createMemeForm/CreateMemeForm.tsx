@@ -91,7 +91,7 @@ export default function CreateMemeForm({
           {selectTemplateModalIsOpen && (
             <SelectTemplateModal
               fetchAction={templateGridFetchAction}
-              onTemplateSelect={async (image) => {
+              onTemplateSelect={(image) => {
                 newTemplateImageRef.current = image
               }}
               onCancel={() => {
