@@ -1,5 +1,5 @@
 import { auth } from "@/app/api/auth/[...nextauth]/auth"
-import ProfileForm from "@/components/jsx/form/ProfileForm"
+import ProfileForm from "@/components/jsx/form/profileForm/ProfileForm"
 import { getOneUser } from "@/data/api/controllers/user"
 import { NestedUser } from "@/data/api/types/model/types"
 import { notFound } from "next/navigation"
