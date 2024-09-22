@@ -2,15 +2,15 @@ import { object, string, instanceof as z_instanceof } from "zod"
 import { minMaxErrorMap } from "./errorMsg"
 import { getOneUser } from "../controllers/user"
 
-const usernameLen = { min: 6, max: 20 }
-const usernameRegex = /^[-\dA-Za-z]*$/
+export const usernameLen = { min: 6, max: 20 }
+export const usernameRegex = /^[-\dA-Za-z]*$/
 // It is assumed that illegal names are lowercase
-const illegalNames = ["memes", "sign-in", "sign-up", "anonymous"]
+export const illegalNames = ["memes", "sign-in", "sign-up", "anonymous"]
 
-const passwordLen = { min: 8, max: 32 }
-const passwordSpecialChars = "!@#$%^&*"
+export const passwordLen = { min: 8, max: 32 }
+export const passwordSpecialChars = "!@#$%^&*"
 
-const validProfilePicTypes = ["png", "jpeg", "webp"]
+export const validProfilePicTypes = ["png", "jpeg", "webp"]
 const maxUploadSize = 1024 * 1024 // 1MB
 
 export const postUserSchema = object({

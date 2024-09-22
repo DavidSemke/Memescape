@@ -26,12 +26,12 @@ export default function Logo({
 
   return (
     <div {...attrs.root} className={styles.root}>
-      <Link href="/">
+      <Link href="/" aria-label="Home">
         <Image
           src="/logo.png"
           width={50}
           height={50}
-          alt="Memescape home"
+          alt="Memescape logo"
           className="rounded-full"
         />
       </Link>

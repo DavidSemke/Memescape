@@ -1,13 +1,27 @@
 import { Screen } from '@testing-library/react'
 import { UserEvent } from '@testing-library/user-event'
 import { within } from '@testing-library/react'
+import { DeepImageGridFetchAction } from '../../grid/DeepImageGrid'
+import { mockProcessedImage } from '@/__tests__/mocks/data/image'
 
-type CreateMemeFormScreen = Screen<typeof import(
-    "c:/Users/David/Programming/WebDevelopment/Projects/Portfolio/Memescape/node_modules/@testing-library/dom/types/queries"
-)>
+export const templateFetchMock: DeepImageGridFetchAction = async (
+    query,
+    page,
+    pageSize,
+) => {
+    "use server"
+
+    const templates = []
+
+    for (let i=0; i<pageSize; i++) {
+        templates.push(mockProcessedImage(`template${i}`))
+    }
+
+    return templates
+}
 
 export async function selectTemplateWithoutConfirm(
-    screen: CreateMemeFormScreen, 
+    screen: Screen, 
     user: UserEvent
 ) {
     // Open select template modal
@@ -24,7 +38,7 @@ export async function selectTemplateWithoutConfirm(
 }
 
 export async function selectTemplateAndConfirm(
-    screen: CreateMemeFormScreen, 
+    screen: Screen, 
     user: UserEvent
 ) {
     await selectTemplateWithoutConfirm(screen, user)
@@ -41,7 +55,7 @@ export async function selectTemplateAndConfirm(
 }
 
 export async function previewMemeWithoutConfirm(
-    screen: CreateMemeFormScreen, 
+    screen: Screen, 
     user: UserEvent,
     sessionUserIsValid: boolean
 ) {
@@ -59,7 +73,7 @@ export async function previewMemeWithoutConfirm(
 }
 
 export async function previewMemeAndConfirm(
-    screen: CreateMemeFormScreen, 
+    screen: Screen, 
     user: UserEvent,
     sessionUserIsValid: boolean
 ) {

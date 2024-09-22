@@ -1,13 +1,13 @@
 "use client"
 
 import { useFormState } from "react-dom"
-import Input from "./Input"
+import Input from "../Input"
 import { putUser } from "@/data/api/controllers/user"
 import { FormState } from "@/data/api/types/action/types"
 import { NestedUser } from "@/data/api/types/model/types"
 import { useEffect, useState } from "react"
 import { PencilIcon } from "@heroicons/react/24/outline"
-import { FormStateView } from "./FormStateView"
+import { FormStateView } from "../FormStateView"
 
 type ProfileFormProps = {
   user: NestedUser
