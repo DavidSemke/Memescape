@@ -63,6 +63,7 @@ export default function CreateMemeForm({
       ref={formRef}
       action={action}
       className="flex w-full flex-col items-center gap-8"
+      aria-label="Create meme"
     >
       <section className="flex w-full flex-col gap-4">
         <h2>Template</h2>

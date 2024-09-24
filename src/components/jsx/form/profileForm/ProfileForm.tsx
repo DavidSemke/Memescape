@@ -56,6 +56,7 @@ export default function ProfileForm({ user, profileView }: ProfileFormProps) {
       action={action}
       className="flex flex-col gap-4"
       onSubmit={() => setShowStateView(true)}
+      aria-label="Update profile"
     >
       <Input
         name="profile-image"

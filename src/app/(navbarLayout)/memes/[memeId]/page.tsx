@@ -104,7 +104,7 @@ export default async function MemePage({
 
         <div className="flex w-full gap-4">
           {sessionUserId && (
-            <form action={postBookmark}>
+            <form action={postBookmark} aria-label="Bookmark meme">
               <input type="hidden" name="user_id" value={sessionUserId} />
               <input type="hidden" name="meme_id" value={mainMeme.id} />
               <button
