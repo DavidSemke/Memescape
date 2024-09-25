@@ -1,14 +1,23 @@
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 import SignForm from './SignForm'
-import userEvent from '@testing-library/user-event'
-import { 
-    usernameLen, 
-    illegalNames,
-    passwordLen,
-    passwordSpecialChars
-} from '@/data/api/validation/user'
-import { signUpSubmit } from './testUtils'
+import { useFormState, useFormStatus } from 'react-dom'
+
+// Note that you cannot replace this beforeEach with a __mocks__
+// implementation since a mock reset removes it.
+beforeEach(() => {
+    const mockedFormState = (useFormState as jest.Mock)
+    mockedFormState.mockImplementation((action, initState) => [
+        initState,
+        undefined,
+    ])
+    const mockedFormStatus = (useFormStatus as jest.Mock)
+    mockedFormStatus.mockImplementation(() => ({ pending: false }))
+})
+
+afterEach(() => {
+    jest.resetAllMocks()
+})
 
 describe('Independent elements', () => {
     it('Includes home link', () => {
@@ -63,159 +72,55 @@ describe('Prop dependent elements', () => {
     })
 })
 
-describe('Signing up action', () => {
-    describe('Invalid username', () => {
-        it('Username too long', async () => {
-            render(<SignForm signingUp={true}/>)
-            const user = userEvent.setup()
+describe('Signing action', () => {
+    it('Invalid username', () => {
+        (useFormState as jest.Mock).mockReturnValue([
+            { 
+                errors: { 
+                    username: ['Username is invalid'] 
+                } 
+            }, 
+            undefined
+        ])
+        
+        render(<SignForm signingUp={true}/>)
 
-            await signUpSubmit(
-                screen, 
-                user, 
-                { username: 'x'.repeat(usernameLen.max + 1) }
-            )
-
-            expect(screen.getByText(
-                /username length \(\d+\) must be .+ characters/i
-            )).toBeInTheDocument()
-        })
-
-        it('Username too short', async () => {
-            render(<SignForm signingUp={true}/>)
-            const user = userEvent.setup()
-
-            await signUpSubmit(
-                screen, 
-                user, 
-                { username: 'x' }
-            )
-
-            expect(screen.getByText(
-                /username length \(\d+\) must be .+ characters/i
-            )).toBeInTheDocument()
-        })
-
-        it('Username contains invalid character', async () => {
-            render(<SignForm signingUp={true}/>)
-            const user = userEvent.setup()
-
-            await signUpSubmit(
-                screen, 
-                user, 
-                { username: '/' }
-            )
-
-            expect(screen.getByText(
-                /username must only contain/i
-            )).toBeInTheDocument()
-        })
-
-        it('Username is listed as illegal', async () => {
-            render(<SignForm signingUp={true}/>)
-            const user = userEvent.setup()
-
-            await signUpSubmit(
-                screen, 
-                user, 
-                { username: illegalNames[0] }
-            )
-
-            expect(screen.getByText(
-                /username already taken/i
-            )).toBeInTheDocument()
-        })
-
-        it('Username already taken', async () => {
-            render(<SignForm signingUp={true}/>)
-            const user = userEvent.setup()
-
-            await signUpSubmit(
-                screen, 
-                user, 
-                { username: 'username' }
-            )
-
-            expect(screen.getByText(
-                /username already taken/i
-            )).toBeInTheDocument()
-        })
+        expect(screen.getByText('Username is invalid')).toBeInTheDocument()
     })
 
-    describe('Invalid password', () => {
-        it('Password too long', async () => {
-            render(<SignForm signingUp={true}/>)
-            const user = userEvent.setup()
+    it('Invalid password', () => {
+        (useFormState as jest.Mock).mockReturnValue([
+            { 
+                errors: { 
+                    username: ['Password is invalid'] 
+                } 
+            }, 
+            undefined
+        ])
+        
+        render(<SignForm signingUp={true}/>)
 
-            await signUpSubmit(
-                screen, 
-                user, 
-                { password: 'x'.repeat(passwordLen.max + 1) }
-            )
-            
-            expect(screen.getByText(
-                /password length \(\d+\) must be .+ characters/i
-            )).toBeInTheDocument()
-        })
+        expect(screen.getByText('Password is invalid')).toBeInTheDocument()
+    })
 
-        it('Password too short', async () => {
-            render(<SignForm signingUp={true}/>)
-            const user = userEvent.setup()
-
-            await signUpSubmit(
-                screen, 
-                user, 
-                { password: 'x' }
-            )
-
-            expect(screen.getByText(
-                /password length \(\d+\) must be .+ characters/i
-            )).toBeInTheDocument()
-        })
-
-        it('Password does not contain digit', async () => {
-            render(<SignForm signingUp={true}/>)
-            const user = userEvent.setup()
-
-            await signUpSubmit(
-                screen, 
-                user, 
-                { password: 'x' }
-            )
-
-            expect(screen.getByText(
-                /password must contain .+ digit/i
-            )).toBeInTheDocument()
-        })
-
-        it('Password does not contain special character', async () => {
-            render(<SignForm signingUp={true}/>)
-            const user = userEvent.setup()
-
-            await signUpSubmit(
-                screen, 
-                user, 
-                { password: 'x' }
-            )
-
-            expect(screen.getByText(
-                new RegExp(
-                    `password must contain one of ${passwordSpecialChars}`, 'i'
-                )
-            )).toBeInTheDocument()
-        })
+    it('Invalid, not field-specific', () => {
+        (useFormState as jest.Mock).mockReturnValue([
+            'Something went wrong',
+            undefined
+        ])
+        
+        render(<SignForm signingUp={true}/>)
+        expect(screen.getByText('Something went wrong')).toBeInTheDocument()
     })
 
     it('Valid fields', async () => {
-        render(<SignForm signingUp={true}/>)
-        const user = userEvent.setup()
+        (useFormState as jest.Mock).mockReturnValue([
+            true, 
+            undefined
+        ])
 
-        await signUpSubmit(
-            screen, 
-            user, 
-            { 
-                username: 'username',
-                password: '1!aaaaaa'
-            }
-        )
+        render(<SignForm signingUp={true}/>)
+
+        expect(screen.getByText(/submission accepted/i)).toBeInTheDocument()
     })
 })
