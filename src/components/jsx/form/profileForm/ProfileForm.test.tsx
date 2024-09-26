@@ -6,8 +6,6 @@ import userEvent from '@testing-library/user-event'
 import { mockUser } from '@/__tests__/mocks/data/user'
 import { useFormState, useFormStatus } from 'react-dom'
 
-jest.createMockFromModule('@/data/api/controllers/user')
-
 let renderSetup: () => void
 
 beforeAll(async () => {
