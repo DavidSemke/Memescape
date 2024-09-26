@@ -1,82 +1,153 @@
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 import ProfileForm from './ProfileForm'
+import ProfileView from '../../view/ProfileView'
 import userEvent from '@testing-library/user-event'
-import { NestedUser } from '@/data/api/types/model/types'
 import { mockUser } from '@/__tests__/mocks/data/user'
-import ProfileView from "../../view/ProfileView"
+import { useFormState, useFormStatus } from 'react-dom'
 
-function renderSetup(
-    user: NestedUser
-) {
-    render(
-        <ProfileForm
-            user={user}
-            profileView={
-                <ProfileView 
-                    user={profileUser}
-                    profileAlt='profile picture'
-                />
-            }
-        />
-    )
-}
+jest.createMockFromModule('@/data/api/controllers/user')
 
-let profileUser: NestedUser
+let renderSetup: () => void
 
 beforeAll(async () => {
-    profileUser = await mockUser(null, true)
+    const profileUser = await mockUser(null, true)
+    renderSetup = () => {
+        render(
+            <ProfileForm
+                user={profileUser}
+                profileView={
+                    <ProfileView 
+                        user={profileUser}
+                        profileAlt='profile picture'
+                    />
+                }
+            />
+        )
+    }
 })
 
-describe('Independent elements', () => {
-    it('Includes username input', () => {
-        renderSetup(profileUser)
-    })
+// Note that you cannot replace this beforeEach with a __mocks__
+// implementation since a mock reset removes it.
+beforeEach(() => {
+    const mockedFormState = (useFormState as jest.Mock)
+    mockedFormState.mockImplementation((action, initState) => [
+        initState,
+        undefined,
+    ])
+    const mockedFormStatus = (useFormStatus as jest.Mock)
+    mockedFormStatus.mockImplementation(() => ({ pending: false }))
+})
 
-    it('Includes profile picture input', () => {
-        renderSetup(profileUser)
-    })
+afterEach(() => {
+    jest.resetAllMocks()
+})
 
-    it('Includes submit button', () => {
-        renderSetup(profileUser)
-    })
+it('Includes independent elements', async () => {
+    renderSetup()
+    const user = userEvent.setup()
 
-    it('Includes cancel button', () => {
-        renderSetup(profileUser)
-    })
+    await user.click(screen.getByRole(
+        'button', { name: 'Open profile form' })
+    )
+
+    // Username input
+    expect(
+        screen.getByRole('textbox', { name: 'Username' })
+    ).toBeInTheDocument()
+    
+    // Profile picture input
+    expect(
+        screen.getByLabelText('Profile Image')
+    ).toBeInTheDocument()
+
+    // Submit button
+    expect(
+        screen.getByRole('button', { name: 'Submit' })
+    ).toBeInTheDocument()
+
+    // Cancel button
+    expect(
+        screen.getByRole('button', { name: 'Cancel' })
+    ).toBeInTheDocument()
 })
 
 describe('Update profile action', () => {
-    describe('Invalid username', () => {
-        it('Username too long', async () => {
-            renderSetup(profileUser)
-            const user = userEvent.setup()
+    it('Invalid profile image', async () => {
+        const mockedFormState = useFormState as jest.Mock
+        mockedFormState.mockReturnValue([
+            { 
+                errors: { 
+                    profileImage: ['Profile image is invalid'] 
+                } 
+            }, 
+            undefined
+        ])
 
-            // await signUpSubmit(
-            //     screen, 
-            //     user, 
-            //     { username: 'x'.repeat(usernameLen.max + 1) }
-            // )
+        renderSetup()
+        const user = userEvent.setup()
 
-            // expect(screen.getByText(
-            //     /username length \(\d+\) must be .+ characters/i
-            // )).toBeInTheDocument()
-        })
+        await user.click(screen.getByRole(
+            'button', { name: 'Open profile form'}
+        ))
 
-        it('Username too short', async () => {
-            
-        })
-
-        it('Username contains invalid character', async () => {
-            
-        })
-
-        it('Username is listed as illegal', async () => {
-           
-        })
-
-        it('Username already taken', async () => {
-           
-        })
+        expect(screen.getByText('Profile image is invalid')).toBeInTheDocument()
     })
+    
+    it('Invalid username', async () => {
+        const mockedFormState = useFormState as jest.Mock
+        mockedFormState.mockReturnValue([
+            { 
+                errors: { 
+                    profileImage: ['Username is invalid'] 
+                } 
+            }, 
+            undefined
+        ])
+
+        renderSetup()
+        const user = userEvent.setup()
+
+        await user.click(screen.getByRole(
+            'button', { name: 'Open profile form'}
+        ))
+
+        expect(screen.getByText('Username is invalid')).toBeInTheDocument()
+    })
+
+    it('Valid inputs', async () => {
+        const mockedFormState = useFormState as jest.Mock
+        mockedFormState.mockReturnValue([
+            true, 
+            undefined
+        ])
+
+        renderSetup()
+        const user = userEvent.setup()
+
+        await user.click(screen.getByRole(
+            'button', { name: 'Open profile form'}
+        ))
+
+        expect(screen.getByText(/submission accepted/i)).toBeInTheDocument()
+    })
+})
+
+it('Cancel profile update action', async () => {
+    renderSetup()
+    const user = userEvent.setup()
+
+    expect(screen.queryByRole('form')).toBeNull()
+
+    await user.click(screen.getByRole(
+        'button', { name: 'Open profile form'}
+    ))
+
+    expect(screen.getByRole('form')).toBeInTheDocument()
+
+    await user.click(screen.getByRole(
+        'button', { name: 'Cancel'}
+    ))
+
+    expect(screen.queryByRole('form')).toBeNull()
 })

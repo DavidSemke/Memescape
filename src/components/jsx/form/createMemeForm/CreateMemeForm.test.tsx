@@ -12,7 +12,6 @@ import {
 import userEvent from '@testing-library/user-event'
 import { textLineLen as memeTextLineLen } from '@/data/api/validation/meme'
 
-// Module mocks
 jest.mock('@/data/api/controllers/template')
 jest.mock('@/data/api/controllers/meme')
 

@@ -41,6 +41,7 @@ export default function ProfileForm({ user, profileView }: ProfileFormProps) {
           type="button"
           className="btn-secondary items-center"
           onClick={() => setIsGone(false)}
+          aria-label="Open profile form"
         >
           <PencilIcon className="h-6 w-6" />
         </button>
