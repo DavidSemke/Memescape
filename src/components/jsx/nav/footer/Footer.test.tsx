@@ -6,7 +6,7 @@ it('Includes logo link', () => {
         <Footer />
     )
 
-    expect(screen.getByRole('link', { name: 'Memescape home'})).toHaveAttribute('href', '/')})
+    expect(screen.getByRole('link', { name: 'Home'})).toHaveAttribute('href', '/')})
 
 it('Includes copyright', () => {
     render(

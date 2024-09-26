@@ -11,6 +11,7 @@ import {
 } from './testUtils'
 import userEvent from '@testing-library/user-event'
 import { textLineLen as memeTextLineLen } from '@/data/api/validation/meme'
+import { useFormState, useFormStatus } from 'react-dom'
 
 jest.mock('@/data/api/controllers/template')
 jest.mock('@/data/api/controllers/meme')
@@ -30,59 +31,63 @@ beforeAll(async () => {
     // By default, sessionUserId is not null
     const sessionUser = await mockUser(null, true)
     sessionUserId = sessionUser.id
+
+    // As long as these mocks are not overridden in a test,
+    // no need to use them in beforeEach with reset
+    const formStateMock = (useFormState as jest.Mock)
+    formStateMock.mockImplementation((action, initState) => [
+        initState,
+        undefined,
+    ])
+    const formStatusMock = (useFormStatus as jest.Mock)
+    formStatusMock.mockImplementation(() => ({ pending: false }))
 })
 
-describe('Independent elements', () => {
-    describe('Template section', () => {
-        it('Includes heading', () => {
-            renderSetup(sessionUserId)
-            expect(screen.getByRole('heading', { name: 'Template' })).toBeInTheDocument()
-        })
-    
-        it('Includes search button', () => {
-            renderSetup(sessionUserId)
-            expect(screen.getByRole('button', { name: 'Search for a template' })).toBeInTheDocument()
-        }) 
-    })
+it('Independent elements', () => {
+    renderSetup(sessionUserId)
 
-    describe('Text section', () => {
-        it('Includes heading', () => {
-            renderSetup(sessionUserId)
-            expect(screen.getByRole('heading', { name: 'Text' })).toBeInTheDocument()
-        })
-    })
+    // Template section
+    expect(
+        screen.getByRole('heading', { name: 'Template' })
+    ).toBeInTheDocument()
+    expect(
+        screen.getByRole('button', { name: 'Search for a template' })
+    ).toBeInTheDocument()
 
-    it('Includes preview button', () => {
-        renderSetup(sessionUserId)
-        expect(screen.getByRole('button', { name: 'Preview' })).toBeInTheDocument()
-    })
+    // Text section
+    expect(
+        screen.getByRole('heading', { name: 'Text' })
+    ).toBeInTheDocument()
+
+    // Sectionless
+    expect(
+        screen.getByRole('button', { name: 'Preview' })
+    ).toBeInTheDocument()
 })
 
 describe('Prop dependent elements', () => {
-    describe('Valid session user', () => {
-        it('Includes heading', () => {
-            renderSetup(sessionUserId)
-            expect(screen.getByRole('heading', { name: 'Metadata' })).toBeInTheDocument()
-        })
+    it('Valid session user', () => {
+        renderSetup(sessionUserId)
+        
+        expect(
+            screen.getByRole('heading', { name: 'Metadata' })
+        ).toBeInTheDocument()
 
-        it('Includes private checkbox', () => {
-            renderSetup(sessionUserId)
-            expect(screen.getByRole('checkbox', { name: 'Private' })).toBeInTheDocument()
-        })
+        expect(
+            screen.getByRole('checkbox', { name: 'Private' })
+        ).toBeInTheDocument()
     })
 
-    describe('Invalid session user', () => {
-        const sessionUserId = null
+    it('Invalid session user', () => {
+        renderSetup(null)
 
-        it('Excludes heading', () => {
-            renderSetup(sessionUserId)
-            expect(screen.queryByRole('heading', { name: 'Metadata' })).toBeNull()
-        })
+        expect(
+            screen.queryByRole('heading', { name: 'Metadata' })
+        ).toBeNull()
 
-        it('Excludes private checkbox', () => {
-            renderSetup(sessionUserId)
-            expect(screen.queryByRole('checkbox', { name: 'Private' })).toBeNull()
-        })
+        expect(
+            screen.queryByRole('checkbox', { name: 'Private' })
+        ).toBeNull()
     })
 })
 

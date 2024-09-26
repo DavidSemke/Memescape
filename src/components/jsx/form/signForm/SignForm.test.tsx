@@ -19,56 +19,31 @@ afterEach(() => {
     jest.resetAllMocks()
 })
 
-describe('Independent elements', () => {
-    it('Includes home link', () => {
-        render(<SignForm />)
-        expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument()
-    }) 
+it('Independent elements', () => {
+    render(<SignForm />)
 
-    it('Includes username input', () => {
-        render(<SignForm />)
-        expect(screen.getByRole('textbox', { name: 'Username' })).toBeInTheDocument()
-    })
-
-    it('Includes password input', () => {
-        render(<SignForm />)
-        expect(screen.getByLabelText('Password')).toBeInTheDocument()
-    }) 
+    expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument()
+    expect(screen.getByRole('textbox', { name: 'Username' })).toBeInTheDocument()
+    expect(screen.getByLabelText('Password')).toBeInTheDocument() 
 })
 
 describe('Prop dependent elements', () => {
-    describe('Signing up', () => {
-        it('Includes heading', () => {
-            render(<SignForm signingUp={true} />)
-            expect(screen.getByRole('heading', { name: 'Sign Up' })).toBeInTheDocument()
-        })
+    it('Signing up', () => {
+        render(<SignForm signingUp={true} />)
 
-        it('Includes submit button', () => {
-            render(<SignForm signingUp={true} />)
-            expect(screen.getByRole('button', { name: 'Sign Up' })).toBeInTheDocument()
-        })
-
-        it('Includes alternative link', () => {
-            render(<SignForm signingUp={true} />)
-            expect(screen.getByRole('link', { name: 'Sign In' })).toBeInTheDocument()
-        })
+        expect(screen.getByRole('heading', { name: 'Sign Up' })).toBeInTheDocument()
+        expect(screen.getByRole('button', { name: 'Sign Up' })).toBeInTheDocument()
+        // Alternative link
+        expect(screen.getByRole('link', { name: 'Sign In' })).toBeInTheDocument()
     })
 
-    describe('Not signing up', () => {
-        it('Includes heading', () => {
-            render(<SignForm />)
-            expect(screen.getByRole('heading', { name: 'Sign In' })).toBeInTheDocument()
-        })
+    it('Not signing up', () => {
+        render(<SignForm />)
 
-        it('Includes submit button', () => {
-            render(<SignForm />)
-            expect(screen.getByRole('button', { name: 'Sign In' })).toBeInTheDocument()
-        })
-
-        it('Includes alternative link', () => {
-            render(<SignForm />)
-            expect(screen.getByRole('link', { name: 'Sign Up' })).toBeInTheDocument()
-        })
+        expect(screen.getByRole('heading', { name: 'Sign In' })).toBeInTheDocument()
+        expect(screen.getByRole('button', { name: 'Sign In' })).toBeInTheDocument()
+        // Alternative link
+        expect(screen.getByRole('link', { name: 'Sign Up' })).toBeInTheDocument()
     })
 })
 

@@ -35,7 +35,7 @@ it('Includes logo link', () => {
         <Topbar sessionUser={null}/>
     )
 
-    expect(screen.getByRole('link', { name: 'Memescape home'})).toHaveAttribute('href', '/')
+    expect(screen.getByRole('link', { name: 'Home'})).toHaveAttribute('href', '/')
 })
 
 it('Includes sidebar button', () => {

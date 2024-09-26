@@ -5,24 +5,26 @@ import ProfileView from '../../view/ProfileView'
 import userEvent from '@testing-library/user-event'
 import { mockUser } from '@/__tests__/mocks/data/user'
 import { useFormState, useFormStatus } from 'react-dom'
+import { NestedUser } from '@/data/api/types/model/types'
 
-let renderSetup: () => void
+const renderSetup = (profileUser: NestedUser) => {
+    render(
+        <ProfileForm
+            user={profileUser}
+            profileView={
+                <ProfileView 
+                    user={profileUser}
+                    profileAlt='profile picture'
+                />
+            }
+        />
+    )
+}
+
+let profileUser: NestedUser
 
 beforeAll(async () => {
-    const profileUser = await mockUser(null, true)
-    renderSetup = () => {
-        render(
-            <ProfileForm
-                user={profileUser}
-                profileView={
-                    <ProfileView 
-                        user={profileUser}
-                        profileAlt='profile picture'
-                    />
-                }
-            />
-        )
-    }
+    profileUser = await mockUser(null, true)
 })
 
 // Note that you cannot replace this beforeEach with a __mocks__
@@ -41,8 +43,8 @@ afterEach(() => {
     jest.resetAllMocks()
 })
 
-it('Includes independent elements', async () => {
-    renderSetup()
+it('Independent elements', async () => {
+    renderSetup(profileUser)
     const user = userEvent.setup()
 
     await user.click(screen.getByRole(
@@ -82,7 +84,7 @@ describe('Update profile action', () => {
             undefined
         ])
 
-        renderSetup()
+        renderSetup(profileUser)
         const user = userEvent.setup()
 
         await user.click(screen.getByRole(
@@ -103,7 +105,7 @@ describe('Update profile action', () => {
             undefined
         ])
 
-        renderSetup()
+        renderSetup(profileUser)
         const user = userEvent.setup()
 
         await user.click(screen.getByRole(
@@ -120,7 +122,7 @@ describe('Update profile action', () => {
             undefined
         ])
 
-        renderSetup()
+        renderSetup(profileUser)
         const user = userEvent.setup()
 
         await user.click(screen.getByRole(
@@ -132,7 +134,7 @@ describe('Update profile action', () => {
 })
 
 it('Cancel profile update action', async () => {
-    renderSetup()
+    renderSetup(profileUser)
     const user = userEvent.setup()
 
     expect(screen.queryByRole('form')).toBeNull()
