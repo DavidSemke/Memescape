@@ -18,6 +18,7 @@ export function mockProcessedImage(
         id,
         mime_type: 'image/jpeg',
         alt,
-        base64: base64String(Buffer.from(''), 'image/jpeg')
+        base64: base64String(Buffer.from(''), 'image/jpeg'),
+        linkId: id
     }
 }

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import ImageGrid from "./ImageGrid"
+import ImageGrid from "./imageGrid/ImageGrid"
 import Ellipsis from "../loading/Ellipsis"
 import { ProcessedImage } from "@/data/api/types/model/types"
 

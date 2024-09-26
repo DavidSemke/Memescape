@@ -1,5 +1,5 @@
 import { ProcessedImage } from "@/data/api/types/model/types"
-import ImageGrid from "./ImageGrid"
+import ImageGrid from "./imageGrid/ImageGrid"
 
 type ShallowImageGridProps = {
   fetchAction: (page: number, pageSize: number) => Promise<ProcessedImage[]>
