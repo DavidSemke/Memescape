@@ -1,8 +1,8 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import ImageGrid from "./imageGrid/ImageGrid"
-import Ellipsis from "../loading/Ellipsis"
+import ImageGrid from "../imageGrid/ImageGrid"
+import Ellipsis from "../../loading/Ellipsis"
 import { ProcessedImage } from "@/data/api/types/model/types"
 
 export type DeepImageGridFetchAction = (
@@ -27,6 +27,18 @@ type DeepImageGridProps = FetchProps & {
 /*
     Shows up to one page's worth of images in a grid initially.
     Scrolling to the bottom and pressing button reveals more images.
+    
+    If initImages.length is:
+    1 - Less than the given pageSize, it is assumed that there are 
+    no more images to see.
+    2 - More than the given pageSize, an error is thrown.
+    
+    It is assumed that fetchAction is used to produce initImages.
+    The idea behind the initImages param is that sometimes an initial 
+    fetch is not desired, such as when it is before a user has typed 
+    in a search bar.
+    In the future, it would be better to replace the initImages param 
+    with a boolean to determine if an init fetch happens. 
 */
 export default function DeepImageGrid({
   initImages,
@@ -37,6 +49,10 @@ export default function DeepImageGrid({
   onImageClick,
   maxColumnCount = 4,
 }: DeepImageGridProps) {
+  if (initImages.length > pageSize) {
+    throw new Error('Argument initImages has length that exceeds page size.')
+  }
+
   const initRenderRef = useRef<boolean>(true)
   const pageRef = useRef<number>(1)
   const [imageGroups, setImageGroups] = useState<ProcessedImage[][]>([
