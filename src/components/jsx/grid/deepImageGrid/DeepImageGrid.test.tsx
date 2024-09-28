@@ -1,7 +1,6 @@
 import '@testing-library/jest-dom'
-import { render, screen } from '@testing-library/react'
+import { act, render, screen, waitFor, waitForElementToBeRemoved } from '@testing-library/react'
 import DeepImageGrid, { DeepImageGridFetchAction } from './DeepImageGrid'
-import { ProcessedImage } from '@/data/api/types/model/types'
 import { mockProcessedImage } from '@/__tests__/mocks/data/image'
 import userEvent from '@testing-library/user-event'
 
@@ -10,7 +9,7 @@ import userEvent from '@testing-library/user-event'
     These are handled in the ImageGrid component.
 */
 
-const fetchActionMock: DeepImageGridFetchAction = jest.fn(async (
+const fetchAction: DeepImageGridFetchAction = async (
     query,
     page,
     pageSize,
@@ -24,37 +23,94 @@ const fetchActionMock: DeepImageGridFetchAction = jest.fn(async (
     }
 
     return images
-})
+}
+const fetchActionMock = jest.fn(fetchAction)
 
 function renderSetup(
-    initImages: ProcessedImage[] = [],
+    addInitImages = false,
+    query: string | null = null,
     pageSize = 1
 ) {
     render(
         <DeepImageGrid 
-            initImages={initImages}
+            addInitImages={addInitImages}
             fetchAction={fetchActionMock}
-            query={null}
+            query={query}
             pageSize={pageSize}
         />
     )
 }
 
 describe('Prop dependent elements', () => {
-    it('initImages', () => {
-        const initImages: ProcessedImage[] = [
-            mockProcessedImage('initImage0'),
-            mockProcessedImage('initImage1')
-        ]
-
-        renderSetup(initImages)
-        expect(screen.getAllByRole('img').length).toBe(initImages.length)
-    })
-
-    it('pageSize', async () => {
-        renderSetup()
+    it('addInitImages === false', async () => {
+        renderSetup(false)
         
-
-        expect(screen.getAllByRole('img').length).toBe(initImages.length)
+        const images = screen.queryAllByRole(
+            'img', { name: /page\d+-image\d+/}
+        )
+        expect(images.length).toBe(0)
     })
+
+    it('addInitImages === true, query === ""', async () => {
+        renderSetup(true, '', 1)
+
+        const images = screen.queryAllByRole(
+            'img', { name: /page\d+-image\d+/}
+        )
+        expect(images.length).toBe(0)
+    })
+
+    it('addInitImages === true, query !== "", pageSize === 0', async () => {
+        renderSetup(true, null, 0)
+        
+        await waitFor(() => {
+            const images = screen.queryAllByRole(
+                'img', { name: /page\d+-image\d+/}
+            )
+            expect(images.length).toBe(0)
+        })
+    })
+
+    it('addInitImages === true, query !== "", pageSize > 0', async () => {
+        const pageSize = 1
+        renderSetup(true, null, pageSize)
+
+        const images = await screen.findAllByRole(
+            'img', { name: /page\d+-image\d+/}
+        )
+        expect(images.length).toBe(pageSize)
+    })
+})
+
+it('Load more images action', async () => {
+    const pageSize = 1
+    renderSetup(true, null, pageSize)
+    const user = userEvent.setup()
+
+    // Load more images on click.
+    let moreButton = await screen.findByRole('button', { name: 'More' })
+    await user.click(moreButton)
+    expect(fetchActionMock).toHaveBeenCalled()
+
+    // addInitImages === true, so it started with pageSize images.
+    // Therefore, adding pageSize images means there are pageSize * 2 images.
+    const images = await screen.findAllByRole(
+        'img', { name: /page\d+-image\d+/}
+    )
+    expect(images.length).toBe(pageSize * 2)
+
+    // Load more images, but this time there are no more to show.
+    fetchActionMock.mockImplementation(async (query, page, pageSize) => {
+        "use server"
+        return []
+    })
+
+    moreButton = await screen.findByRole('button', { name: 'More' })
+    await user.click(moreButton)
+    expect(fetchActionMock).toHaveBeenCalled()
+
+    // If a page has fewer than pageSize images, it should show text
+    // that indicates that there are no more images.
+    const endOfResultsText = await screen.findByText(/end of results/i)
+    expect(endOfResultsText).toBeInTheDocument()
 })

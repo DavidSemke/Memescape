@@ -1,11 +1,7 @@
 const authMock = {
     auth: {
-        session: {
-        jwt: true,
-        },
-        jwt: {
-        secret: process.env.AUTH_SECRET,
-        },
+        session: { jwt: true },
+        jwt: { secret: process.env.AUTH_SECRET },
     },
     signIn: jest.fn(),
     signOut: jest.fn(),
