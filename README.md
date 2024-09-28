@@ -1,6 +1,6 @@
 # Memescape
 
-[Deployed on Vercel](https://memescape-lj1zk54es-davsems-projects.vercel.app/)
+[Deployed on Vercel](https://memescape.vercel.app/)
 
 Screenshot of index page:
 
