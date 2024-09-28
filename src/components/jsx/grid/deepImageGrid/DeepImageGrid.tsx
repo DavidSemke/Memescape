@@ -18,7 +18,7 @@ type FetchProps = {
 }
 
 type DeepImageGridProps = FetchProps & {
-  initImages: ProcessedImage[]
+  addInitImages?: boolean
   linkRoot?: string
   onImageClick?: (image: ProcessedImage) => void
   maxColumnCount?: 2 | 3 | 4
@@ -27,21 +27,9 @@ type DeepImageGridProps = FetchProps & {
 /*
     Shows up to one page's worth of images in a grid initially.
     Scrolling to the bottom and pressing button reveals more images.
-    
-    If initImages.length is:
-    1 - Less than the given pageSize, it is assumed that there are 
-    no more images to see.
-    2 - More than the given pageSize, an error is thrown.
-    
-    It is assumed that fetchAction is used to produce initImages.
-    The idea behind the initImages param is that sometimes an initial 
-    fetch is not desired, such as when it is before a user has typed 
-    in a search bar.
-    In the future, it would be better to replace the initImages param 
-    with a boolean to determine if an init fetch happens. 
 */
 export default function DeepImageGrid({
-  initImages,
+  addInitImages = false,
   fetchAction,
   query = null,
   pageSize = 20,
@@ -49,20 +37,12 @@ export default function DeepImageGrid({
   onImageClick,
   maxColumnCount = 4,
 }: DeepImageGridProps) {
-  if (initImages.length > pageSize) {
-    throw new Error('Argument initImages has length that exceeds page size.')
-  }
-
   const initRenderRef = useRef<boolean>(true)
   const pageRef = useRef<number>(1)
-  const [imageGroups, setImageGroups] = useState<ProcessedImage[][]>([
-    initImages,
-  ])
+  const [imageGroups, setImageGroups] = useState<ProcessedImage[][]>([])
   const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false)
   // If more images could exist on the next page, moreExist is true
-  const [moreExist, setMoreExist] = useState<boolean>(
-    initImages.length === pageSize,
-  )
+  const [moreExist, setMoreExist] = useState<boolean>(false)
   // Query is always trimmed if able
   query &&= query.trim()
   const [prevFetchProps, setPrevFetchProps] = useState<FetchProps>({
@@ -82,13 +62,15 @@ export default function DeepImageGrid({
     // Init memes are provided, so skip first activation
     if (initRenderRef.current) {
       initRenderRef.current = false
-      return
+
+      if (!addInitImages) {
+        return
+      }
     }
 
     let isMounted = true
 
     if (query !== "") {
-      initRenderRef.current = false
       addImages()
     }
 
@@ -123,7 +105,8 @@ export default function DeepImageGrid({
 
   return (
     <div className="flex flex-col items-center gap-4">
-      {prevFetchProps.fetchAction === fetchAction &&
+      {
+        prevFetchProps.fetchAction === fetchAction &&
         prevFetchProps.query === query &&
         prevFetchProps.pageSize === pageSize && (
           <ImageGrid
@@ -132,7 +115,8 @@ export default function DeepImageGrid({
             onImageClick={onImageClick}
             maxColumnCount={maxColumnCount}
           />
-        )}
+        )
+      }
       {isLoadingMore ? (
         <Ellipsis />
       ) : moreExist ? (

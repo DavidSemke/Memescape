@@ -1,5 +1,5 @@
 import UrlSearchbar from "@/components/jsx/search/UrlSearchbar"
-import DeepImageGrid from "@/components/jsx/grid/DeepImageGrid"
+import DeepImageGrid from "@/components/jsx/grid/deepImageGrid/DeepImageGrid"
 import { getMemes } from "@/data/api/controllers/meme"
 import { auth } from "@/app/api/auth/[...nextauth]/auth"
 import TabbedUserMemeView from "@/components/jsx/view/TabbedUserMemeView"
@@ -40,8 +40,6 @@ export default async function MemeSearchPage({ searchParams }: PageProps) {
     return memes.map((meme) => meme.product_image!)
   }
 
-  const initImages = await fetchAction(query, 1, pageSize)
-
   return (
     <main className="flex flex-col items-center gap-4">
       <UrlSearchbar searchItemName="meme" />
@@ -54,7 +52,7 @@ export default async function MemeSearchPage({ searchParams }: PageProps) {
         />
       ) : (
         <DeepImageGrid
-          initImages={initImages}
+          addInitImages={true}
           fetchAction={fetchAction}
           query={query}
           pageSize={pageSize}

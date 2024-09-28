@@ -1,7 +1,7 @@
 import { Screen } from '@testing-library/react'
 import { UserEvent } from '@testing-library/user-event'
 import { within } from '@testing-library/react'
-import { DeepImageGridFetchAction } from '../../grid/DeepImageGrid'
+import { DeepImageGridFetchAction } from '../../grid/deepImageGrid/DeepImageGrid'
 import { mockProcessedImage } from '@/__tests__/mocks/data/image'
 
 export const templateFetchMock: DeepImageGridFetchAction = async (

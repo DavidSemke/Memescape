@@ -1,5 +1,5 @@
 import { getMemes } from "@/data/api/controllers/meme"
-import DeepImageGrid, { DeepImageGridFetchAction } from "../grid/DeepImageGrid"
+import DeepImageGrid, { DeepImageGridFetchAction } from "../grid/deepImageGrid/DeepImageGrid"
 import { getBookmarks } from "@/data/api/controllers/bookmark"
 import TabbedView from "./TabbedView"
 
@@ -51,22 +51,18 @@ export default async function TabbedUserMemeView({
     tabLabels.push("Bookmarks")
   }
 
-  const initImages = await Promise.all(
-    fetchActions.map((action) => action(query, 1, tabPageSize)),
-  )
-
   const tabs = tabLabels.map((label, index) => {
     return {
       label,
       view: (
         <DeepImageGrid
-          initImages={initImages[index]}
+          addInitImages={true}
           fetchAction={fetchActions[index]}
           query={query}
           pageSize={tabPageSize}
           linkRoot="/memes"
         />
-      ),
+      )
     }
   })
 
