@@ -24,7 +24,15 @@ const fetchAction: DeepImageGridFetchAction = async (
 
     return images
 }
-const fetchActionMock = jest.fn(fetchAction)
+let fetchActionMock: jest.Mock
+
+beforeEach(() => {
+    fetchActionMock = jest.fn(fetchAction)
+})
+
+afterEach(() => {
+    jest.resetAllMocks()
+})
 
 function renderSetup(
     addInitImages = false,
