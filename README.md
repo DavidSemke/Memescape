@@ -17,8 +17,11 @@ Signed in users can also:
 
 Technologies used include:
 - Next.js + React.js
-- NextAuth
+- Auth.js
 - Tailwind
 - TypeScript
+- PostgreSQL
+- Prisma ORM
+- Jest + React Testing Library
 
 Meme generation is handled using a third-party service, [Memegen.link](https://memegen.link/).
