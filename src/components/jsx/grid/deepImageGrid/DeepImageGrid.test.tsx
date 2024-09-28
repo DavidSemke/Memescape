@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom'
-import { act, render, screen, waitFor, waitForElementToBeRemoved } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import DeepImageGrid, { DeepImageGridFetchAction } from './DeepImageGrid'
 import { mockProcessedImage } from '@/__tests__/mocks/data/image'
 import userEvent from '@testing-library/user-event'
