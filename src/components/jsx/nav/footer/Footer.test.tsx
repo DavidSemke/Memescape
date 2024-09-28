@@ -7,5 +7,5 @@ it('Independent elements', () => {
     // logo link
     expect(screen.getByRole('link', { name: 'Home'})).toHaveAttribute('href', '/')
     // copyright
-    expect(screen.getByText('©', { exact: false })).toBeInTheDocument()
+    expect(screen.getByText(/©/)).toBeInTheDocument()
 })

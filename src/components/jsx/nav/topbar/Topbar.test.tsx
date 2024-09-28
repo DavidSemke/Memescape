@@ -14,34 +14,24 @@ beforeAll(async () => {
     sessionUser = await mockUser()
 })
 
-it('Session user exists', () => {
-    render(
-        <Topbar sessionUser={sessionUser}/>
-    )
-
-    expect(screen.queryByRole('button', { name: 'Sign In'})).toBeNull()
-})
-
-it('Session user does not exist', () => {
-    render(
-        <Topbar sessionUser={null}/>
-    )
-
-    expect(screen.getByRole('button', { name: 'Sign In'})).toBeInTheDocument()
-})
-
-it('Includes logo link', () => {
-    render(
-        <Topbar sessionUser={null}/>
-    )
+it('Independent elements', () => {
+    render(<Topbar sessionUser={null}/>)
 
     expect(screen.getByRole('link', { name: 'Home'})).toHaveAttribute('href', '/')
+    expect(screen.getByRole('button', { name: 'Open sidebar'})).toBeInTheDocument()
 })
 
-it('Includes sidebar button', () => {
-    render(
-        <Topbar sessionUser={null}/>
-    )
+describe('Prop dependent elements', () => {
+    it('Valid session user', () => {
+        render(<Topbar sessionUser={sessionUser}/>)
 
-    expect(screen.getByRole('button', { name: 'Open sidebar'})).toBeInTheDocument()
+        expect(screen.queryByRole('button', { name: 'Sign In'})).toBeNull()
+    })
+
+    it('Invalid session user', () => {
+        render(<Topbar sessionUser={null}/>)
+    
+        expect(screen.getByRole('button', { name: 'Sign In'})).toBeInTheDocument()
+    })
+    
 })
