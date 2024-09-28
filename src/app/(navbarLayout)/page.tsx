@@ -12,7 +12,7 @@ export default async function IndexPage() {
   }
 
   return (
-    <main className="flex flex-col items-center gap-8">
+    <main>
       <RedirectSearchbar searchItemName="meme" redirectPath="/memes" />
       <h1>Hot Memes</h1>
       <Suspense fallback={<Ellipsis />}>

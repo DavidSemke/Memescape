@@ -10,7 +10,7 @@ export default function ErrorView({
   reset: () => void
 }) {
   return (
-    <main className="flex grow flex-col items-center justify-center gap-8 pb-32 text-center">
+    <main className="grow justify-center pb-32 text-center">
       <FaceFrownIcon className="h-16 w-16" />
       <h1>Something went wrong!</h1>
       <p className="text-xl">{error.message}</p>

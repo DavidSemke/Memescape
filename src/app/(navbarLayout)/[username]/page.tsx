@@ -46,7 +46,7 @@ export default async function ProfilePage({
   )
 
   return (
-    <main className="flex flex-col items-center gap-8">
+    <main>
       <h1>{`${possessive} Profile`}</h1>
       <section>
         {isSelfProfile ? (
