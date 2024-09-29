@@ -88,11 +88,7 @@ export function CreateMemeModal({
   }
 
   return (
-    <ScrollModal
-      title={title} 
-      buttons={buttons} 
-      prefixedChildren={null}
-    >
+    <ScrollModal title={title} buttons={buttons} prefixedChildren={null}>
       <div className="flex w-full flex-col items-center gap-4">
         {memeImage ? (
           <Image

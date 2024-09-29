@@ -2,17 +2,12 @@ import { MemeImage } from "@/data/api/types/model/types"
 import { v4 as uuidv4 } from "uuid"
 
 // The memgen api provides some inappropriate example memes.
-// These memes are blacklisted here using their template ids 
+// These memes are blacklisted here using their template ids
 // for skipping.
-const blacklistedExampleTemplateIds = [
-  'apcr',
-  'blb',
-  'fmr',
-  'wkh'
-]
+const blacklistedExampleTemplateIds = ["apcr", "blb", "fmr", "wkh"]
 
 export default async function createMemeImageData(
-  count = 100
+  count = 100,
 ): Promise<MemeImage[]> {
   const factoryUrl = "https://api.memegen.link/templates/"
   const response = await fetch(factoryUrl)

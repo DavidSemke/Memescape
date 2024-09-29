@@ -1,5 +1,7 @@
 import { getMemes } from "@/data/api/controllers/meme"
-import DeepImageGrid, { DeepImageGridFetchAction } from "../grid/deepImageGrid/DeepImageGrid"
+import DeepImageGrid, {
+  DeepImageGridFetchAction,
+} from "../grid/deepImageGrid/DeepImageGrid"
 import { getBookmarks } from "@/data/api/controllers/bookmark"
 import TabbedView from "./TabbedView"
 
@@ -62,7 +64,7 @@ export default async function TabbedUserMemeView({
           pageSize={tabPageSize}
           linkRoot="/memes"
         />
-      )
+      ),
     }
   })
 

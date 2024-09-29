@@ -105,8 +105,7 @@ export default function DeepImageGrid({
 
   return (
     <div className="flex flex-col items-center gap-4">
-      {
-        prevFetchProps.fetchAction === fetchAction &&
+      {prevFetchProps.fetchAction === fetchAction &&
         prevFetchProps.query === query &&
         prevFetchProps.pageSize === pageSize && (
           <ImageGrid
@@ -115,8 +114,7 @@ export default function DeepImageGrid({
             onImageClick={onImageClick}
             maxColumnCount={maxColumnCount}
           />
-        )
-      }
+        )}
       {isLoadingMore ? (
         <Ellipsis />
       ) : moreExist ? (

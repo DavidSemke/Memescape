@@ -33,7 +33,7 @@ export default function CreateMemeForm({
   } | null>(null)
   const [selectTemplateModalIsOpen, setSelectTemplateModalIsOpen] =
     useState<boolean>(false)
-  
+
   // Only set to true if form data is validated.
   // Data is validated again on the server.
   const [createMemeModalIsOpen, setCreateMemeModalIsOpen] =
@@ -43,7 +43,7 @@ export default function CreateMemeForm({
     postMeme.bind(null, template?.lineCount ?? null),
     false,
   )
-  
+
   const [errors, setErrors] = useState<Record<
     string,
     string[] | undefined

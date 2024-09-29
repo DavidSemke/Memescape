@@ -1,101 +1,98 @@
-import '@testing-library/jest-dom'
-import { render, screen } from '@testing-library/react'
-import SignForm from './SignForm'
-import { useFormState, useFormStatus } from 'react-dom'
+import "@testing-library/jest-dom"
+import { render, screen } from "@testing-library/react"
+import SignForm from "./SignForm"
+import { useFormState, useFormStatus } from "react-dom"
 
 // Note that you cannot replace this beforeEach with a __mocks__
 // implementation since a mock reset removes it.
 beforeEach(() => {
-    const mockedFormState = (useFormState as jest.Mock)
-    mockedFormState.mockImplementation((action, initState) => [
-        initState,
-        undefined,
-    ])
-    const mockedFormStatus = (useFormStatus as jest.Mock)
-    mockedFormStatus.mockImplementation(() => ({ pending: false }))
+  const mockedFormState = useFormState as jest.Mock
+  mockedFormState.mockImplementation((action, initState) => [
+    initState,
+    undefined,
+  ])
+  const mockedFormStatus = useFormStatus as jest.Mock
+  mockedFormStatus.mockImplementation(() => ({ pending: false }))
 })
 
 afterEach(() => {
-    jest.resetAllMocks()
+  jest.resetAllMocks()
 })
 
-it('Independent elements', () => {
+it("Independent elements", () => {
+  render(<SignForm />)
+
+  expect(screen.getByRole("link", { name: "Home" })).toBeInTheDocument()
+  expect(screen.getByRole("textbox", { name: "Username" })).toBeInTheDocument()
+  expect(screen.getByLabelText("Password")).toBeInTheDocument()
+})
+
+describe("Prop dependent elements", () => {
+  it("Signing up", () => {
+    render(<SignForm signingUp={true} />)
+
+    expect(screen.getByRole("heading", { name: "Sign Up" })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "Sign Up" })).toBeInTheDocument()
+    // Alternative link
+    expect(screen.getByRole("link", { name: "Sign In" })).toBeInTheDocument()
+  })
+
+  it("Not signing up", () => {
     render(<SignForm />)
 
-    expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument()
-    expect(screen.getByRole('textbox', { name: 'Username' })).toBeInTheDocument()
-    expect(screen.getByLabelText('Password')).toBeInTheDocument() 
+    expect(screen.getByRole("heading", { name: "Sign In" })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "Sign In" })).toBeInTheDocument()
+    // Alternative link
+    expect(screen.getByRole("link", { name: "Sign Up" })).toBeInTheDocument()
+  })
 })
 
-describe('Prop dependent elements', () => {
-    it('Signing up', () => {
-        render(<SignForm signingUp={true} />)
+describe("Signing action", () => {
+  it("Invalid username", () => {
+    ;(useFormState as jest.Mock).mockReturnValue([
+      {
+        errors: {
+          username: ["Username is invalid"],
+        },
+      },
+      undefined,
+    ])
 
-        expect(screen.getByRole('heading', { name: 'Sign Up' })).toBeInTheDocument()
-        expect(screen.getByRole('button', { name: 'Sign Up' })).toBeInTheDocument()
-        // Alternative link
-        expect(screen.getByRole('link', { name: 'Sign In' })).toBeInTheDocument()
-    })
+    render(<SignForm signingUp={true} />)
 
-    it('Not signing up', () => {
-        render(<SignForm />)
+    expect(screen.getByText("Username is invalid")).toBeInTheDocument()
+  })
 
-        expect(screen.getByRole('heading', { name: 'Sign In' })).toBeInTheDocument()
-        expect(screen.getByRole('button', { name: 'Sign In' })).toBeInTheDocument()
-        // Alternative link
-        expect(screen.getByRole('link', { name: 'Sign Up' })).toBeInTheDocument()
-    })
-})
+  it("Invalid password", () => {
+    ;(useFormState as jest.Mock).mockReturnValue([
+      {
+        errors: {
+          username: ["Password is invalid"],
+        },
+      },
+      undefined,
+    ])
 
-describe('Signing action', () => {
-    it('Invalid username', () => {
-        (useFormState as jest.Mock).mockReturnValue([
-            { 
-                errors: { 
-                    username: ['Username is invalid'] 
-                } 
-            }, 
-            undefined
-        ])
-        
-        render(<SignForm signingUp={true}/>)
+    render(<SignForm signingUp={true} />)
 
-        expect(screen.getByText('Username is invalid')).toBeInTheDocument()
-    })
+    expect(screen.getByText("Password is invalid")).toBeInTheDocument()
+  })
 
-    it('Invalid password', () => {
-        (useFormState as jest.Mock).mockReturnValue([
-            { 
-                errors: { 
-                    username: ['Password is invalid'] 
-                } 
-            }, 
-            undefined
-        ])
-        
-        render(<SignForm signingUp={true}/>)
+  it("Invalid, not field-specific", () => {
+    ;(useFormState as jest.Mock).mockReturnValue([
+      "Something went wrong",
+      undefined,
+    ])
 
-        expect(screen.getByText('Password is invalid')).toBeInTheDocument()
-    })
+    render(<SignForm signingUp={true} />)
+    expect(screen.getByText("Something went wrong")).toBeInTheDocument()
+  })
 
-    it('Invalid, not field-specific', () => {
-        (useFormState as jest.Mock).mockReturnValue([
-            'Something went wrong',
-            undefined
-        ])
-        
-        render(<SignForm signingUp={true}/>)
-        expect(screen.getByText('Something went wrong')).toBeInTheDocument()
-    })
+  it("Valid fields", async () => {
+    ;(useFormState as jest.Mock).mockReturnValue([true, undefined])
 
-    it('Valid fields', async () => {
-        (useFormState as jest.Mock).mockReturnValue([
-            true, 
-            undefined
-        ])
+    render(<SignForm signingUp={true} />)
 
-        render(<SignForm signingUp={true}/>)
-
-        expect(screen.getByText(/submission accepted/i)).toBeInTheDocument()
-    })
+    expect(screen.getByText(/submission accepted/i)).toBeInTheDocument()
+  })
 })

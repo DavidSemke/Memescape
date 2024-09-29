@@ -1,8 +1,4 @@
-import {
-  object,
-  string,
-  ZodTypeAny,
-} from "zod"
+import { object, string, ZodTypeAny } from "zod"
 import { minMaxErrorMap } from "./errorMsg"
 
 export const textLineLen = { max: 100 }

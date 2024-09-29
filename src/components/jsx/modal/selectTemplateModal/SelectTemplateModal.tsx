@@ -2,7 +2,9 @@
 
 import { useState } from "react"
 import Searchbar from "../../search/Searchbar"
-import DeepImageGrid, { DeepImageGridFetchAction } from "../../grid/deepImageGrid/DeepImageGrid"
+import DeepImageGrid, {
+  DeepImageGridFetchAction,
+} from "../../grid/deepImageGrid/DeepImageGrid"
 import { ProcessedImage } from "@/data/api/types/model/types"
 import { ScrollModal } from "../ScrollModal"
 import XButton from "../../button/XButton"

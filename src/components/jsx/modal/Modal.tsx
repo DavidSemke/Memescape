@@ -23,8 +23,8 @@ export default function Modal({
 }: ModalProps) {
   return createPortal(
     <div className="fixed bottom-0 left-0 right-0 top-0 z-50 animate-fadeIn bg-overlay">
-      <div 
-        role='dialog'
+      <div
+        role="dialog"
         aria-label={title}
         className="column-view absolute left-1/2 top-1/2 flex h-[80%] -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-4 overflow-hidden border-2 border-stress-tertiary bg-tertiary p-4"
       >

@@ -12,7 +12,12 @@ type InputProps = {
   }
 }
 
-export default function Input({ name, label, errors = [], attrs = {} }: InputProps) {
+export default function Input({
+  name,
+  label,
+  errors = [],
+  attrs = {},
+}: InputProps) {
   const hide = attrs.input?.type === "hidden"
   const asRow = ["checkbox", "radio"].includes(attrs.input?.type)
   const defaultStyles = {

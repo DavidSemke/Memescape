@@ -3,11 +3,11 @@
  * https://jestjs.io/docs/configuration
  */
 
-import nextJest from 'next/jest.js'
+import nextJest from "next/jest.js"
 
 const createJestConfig = nextJest({
   // Provide the path to your Next.js app to load next.config.js and .env files in your test environment
-  dir: './',
+  dir: "./",
 })
 
 const config = {
@@ -96,10 +96,11 @@ const config = {
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1',
-    '@/auth': '<rootDir>/src/__tests__/mocks/auth/auth.ts',
-    'next-auth/providers/credentials': '<rootDir>/src/__tests__/mocks/auth/next-auth-providers-credentials.ts',
-    'next-auth': '<rootDir>/src/__tests__/mocks/auth/next-auth.ts'
+    "^@/(.*)$": "<rootDir>/src/$1",
+    "@/auth": "<rootDir>/src/__tests__/mocks/auth/auth.ts",
+    "next-auth/providers/credentials":
+      "<rootDir>/src/__tests__/mocks/auth/next-auth-providers-credentials.ts",
+    "next-auth": "<rootDir>/src/__tests__/mocks/auth/next-auth.ts",
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -112,7 +113,7 @@ const config = {
   // notifyMode: "failure-change",
 
   // A preset that is used as a base for Jest's configuration
-  preset: 'ts-jest',
+  preset: "ts-jest",
 
   // Run tests from one or more projects
   // projects: undefined,
@@ -147,7 +148,7 @@ const config = {
   // setupFiles: [],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
 
   // The number of seconds after which a test is considered as slow and reported as such in the results.
   // slowTestThreshold: 5,
@@ -171,9 +172,7 @@ const config = {
   // ],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
-  testPathIgnorePatterns: [
-    "__tests__/mocks"
-  ],
+  testPathIgnorePatterns: ["__tests__/mocks"],
 
   // The regexp pattern or array of patterns that Jest uses to detect test files
   // testRegex: [],
@@ -204,6 +203,6 @@ const config = {
 
   // Whether to use watchman for file crawling
   // watchman: true,
-};
+}
 
-export default createJestConfig(config);
+export default createJestConfig(config)

@@ -56,8 +56,8 @@ async function seed() {
   ])
   // Seed users, memes, and bookmarks
   const users = await createUserData(
-    ['Alexus', 'Barney', 'Carrie'],
-    seededUserImages
+    ["Alexus", "Barney", "Carrie"],
+    seededUserImages,
   )
   const seededUsers = await seedTable<User>("user", users)
   const seededMemes = await seedTable<Meme>(

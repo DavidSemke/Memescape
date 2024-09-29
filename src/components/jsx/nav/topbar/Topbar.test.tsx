@@ -1,7 +1,7 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen } from "@testing-library/react"
 import Topbar from "./Topbar"
-import { mockUser } from '@/__tests__/mocks/data/user'
-import { NestedUser } from '@/data/api/types/model/types'
+import { mockUser } from "@/__tests__/mocks/data/user"
+import { NestedUser } from "@/data/api/types/model/types"
 
 /* 
     Presence of search button depends on page and scroll position.
@@ -11,27 +11,31 @@ import { NestedUser } from '@/data/api/types/model/types'
 let sessionUser: NestedUser
 
 beforeAll(async () => {
-    sessionUser = await mockUser()
+  sessionUser = await mockUser()
 })
 
-it('Independent elements', () => {
-    render(<Topbar sessionUser={null}/>)
+it("Independent elements", () => {
+  render(<Topbar sessionUser={null} />)
 
-    expect(screen.getByRole('link', { name: 'Home'})).toHaveAttribute('href', '/')
-    expect(screen.getByRole('button', { name: 'Open sidebar'})).toBeInTheDocument()
+  expect(screen.getByRole("link", { name: "Home" })).toHaveAttribute(
+    "href",
+    "/",
+  )
+  expect(
+    screen.getByRole("button", { name: "Open sidebar" }),
+  ).toBeInTheDocument()
 })
 
-describe('Prop dependent elements', () => {
-    it('Valid session user', () => {
-        render(<Topbar sessionUser={sessionUser}/>)
+describe("Prop dependent elements", () => {
+  it("Valid session user", () => {
+    render(<Topbar sessionUser={sessionUser} />)
 
-        expect(screen.queryByRole('button', { name: 'Sign In'})).toBeNull()
-    })
+    expect(screen.queryByRole("button", { name: "Sign In" })).toBeNull()
+  })
 
-    it('Invalid session user', () => {
-        render(<Topbar sessionUser={null}/>)
-    
-        expect(screen.getByRole('button', { name: 'Sign In'})).toBeInTheDocument()
-    })
-    
+  it("Invalid session user", () => {
+    render(<Topbar sessionUser={null} />)
+
+    expect(screen.getByRole("button", { name: "Sign In" })).toBeInTheDocument()
+  })
 })

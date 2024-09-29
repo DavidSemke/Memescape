@@ -32,8 +32,8 @@ export default function SignForm({ signingUp = false }: SignFormProps) {
     typeof state === "object" && "errors" in state ? state.errors : null
 
   return (
-    <form 
-      action={action} 
+    <form
+      action={action}
       className="flex w-full flex-col items-center gap-4"
       aria-label={heading}
     >

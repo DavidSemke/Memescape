@@ -7,7 +7,7 @@ function generateUsername() {
 }
 
 export function generateUniqueUsername(
-  exclusionSet: Set<string> | null = null
+  exclusionSet: Set<string> | null = null,
 ) {
   if (!exclusionSet) {
     return generateUsername()
@@ -24,9 +24,9 @@ export function generateUniqueUsername(
 
 export async function createOneUser(
   name: string,
-  profileImageId: string | null = null
+  profileImageId: string | null = null,
 ) {
-  const hashedPassword = await bcrypt.hash('123456', 10)
+  const hashedPassword = await bcrypt.hash("123456", 10)
 
   return {
     id: uuidv4(),
@@ -52,10 +52,7 @@ export default async function createUserData(
 
   for (let i = 0; i < count; i++) {
     const name = usernames[i] ?? generateUniqueUsername(nameSet)
-    users.push(await createOneUser(
-      name, 
-      profileImages[i]?.id ?? null
-    ))
+    users.push(await createOneUser(name, profileImages[i]?.id ?? null))
     nameSet.add(name)
   }
 

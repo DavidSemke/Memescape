@@ -45,10 +45,10 @@ export default function Sidebar({ sessionUser }: SidebarProps) {
             className="rounded-full"
           />
         ) : (
-          <UserCircleIcon 
+          <UserCircleIcon
             role="img"
             aria-label="Default profile picture"
-            className="h-12 w-12" 
+            className="h-12 w-12"
           />
         )}
         <div className="text-lg">
