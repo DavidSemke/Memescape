@@ -10,9 +10,8 @@ export default async function IndexPage() {
     const memes = await getMemes(null, page, pageSize)
     return memes.map((meme) => meme.product_image!)
   }
-
   return (
-    <main>
+    <main className="min-h-screen-ex-topbar">
       <RedirectSearchbar searchItemName="meme" redirectPath="/memes" />
       <h1>Hot Memes</h1>
       <Suspense fallback={<Ellipsis />}>
@@ -22,9 +21,9 @@ export default async function IndexPage() {
           linkRoot="/memes"
         />
       </Suspense>
-      <div className="mb-4 flex flex-col items-center gap-4">
+      <div className="mb-4 flex flex-col items-center gap-4 w-full">
         <p className="text-center">Have an idea for a meme?</p>
-        <Link href="/memes/create" className="btn-primary w-full">
+        <Link href="/memes/create" className="btn-primary w-1/2">
           Create
         </Link>
       </div>

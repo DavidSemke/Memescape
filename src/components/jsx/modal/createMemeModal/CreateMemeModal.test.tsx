@@ -2,24 +2,55 @@ import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 import { CreateMemeModal } from './CreateMemeModal'
 
-function renderSetup() {
+jest.mock('@/data/api/controllers/meme')
+
+function renderSetup(
+    signedInPairs?: {
+        'user-id': string
+        'private': 'private' | null
+    }
+) {
+    const formData = new FormData()
+    const lineCount = 2
+
+    for (let i=0; i<lineCount; i++) {
+        formData.append(`line${i}`, 'x')
+    }
+
+    formData.append('template-id', 'x')
+    let download = false
+
+    if (signedInPairs) {
+        formData.append('user-id', signedInPairs['user-id'])
+
+        const privateMeme = signedInPairs['private']
+
+        if (privateMeme !== null) {
+            formData.append('private', privateMeme)
+        }
+    }
+    else {
+        download = true
+    }
+
     render(
         <CreateMemeModal
             lineCount={2}
-            formData={new FormData()}
+            formData={formData}
             onCancel={() => {}}
             onConfirm={() => {}}
+            download={download}
         />
     )
 }
 
-describe('Independent elements', () => {
-    it('Includes cancel button', () => {
-    })
+it('Independent elements', async () => {
+    renderSetup()
 
-    it('Includes meme image', () => {
-        // expect(screen.findByRole('img')).toBeInTheDocument()
-    })
+    // Cancel button
+    expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument()
+    // Meme image
+    expect(await screen.findByRole('img')).toBeInTheDocument()
 })
 
 describe('Prop dependent elements', () => {

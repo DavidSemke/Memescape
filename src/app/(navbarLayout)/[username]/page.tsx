@@ -46,7 +46,7 @@ export default async function ProfilePage({
   )
 
   return (
-    <main>
+    <main className="min-h-screen-ex-topbar">
       <h1>{`${possessive} Profile`}</h1>
       <section>
         {isSelfProfile ? (

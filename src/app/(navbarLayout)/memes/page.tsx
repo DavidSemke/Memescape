@@ -41,7 +41,7 @@ export default async function MemeSearchPage({ searchParams }: PageProps) {
   }
 
   return (
-    <main>
+    <main className="min-h-screen-ex-topbar">
       <UrlSearchbar searchItemName="meme" />
       {sessionUserIdInUrl ? (
         <TabbedUserMemeView

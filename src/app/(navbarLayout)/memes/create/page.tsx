@@ -20,7 +20,7 @@ export default async function CreateMemePage() {
   }
 
   return (
-    <main>
+    <main className="min-h-screen-ex-topbar">
       <h1>Create Meme</h1>
       <CreateMemeForm
         sessionUserId={sessionUser?.id ?? null}

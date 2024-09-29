@@ -49,7 +49,7 @@
   }
 
   main {
-    @apply flex flex-col items-center gap-8 w-full min-h-[calc(100vh-max(var(--h-topbar),var(--min-h-topbar)))];
+    @apply flex flex-col items-center gap-8 w-full;
   }
 }
 
@@ -78,5 +78,9 @@
 @layer utilities {
   .bg-gone {
     background: none;
+  }
+
+  .min-h-screen-ex-topbar {
+    @apply min-h-[calc(100vh-max(var(--h-topbar),var(--min-h-topbar)))];
   }
 }

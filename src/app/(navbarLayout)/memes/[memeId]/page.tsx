@@ -70,7 +70,7 @@ export default async function MemePage({
   }
 
   return (
-    <main>
+    <main className="min-h-screen-ex-topbar">
       <RedirectSearchbar searchItemName="meme" redirectPath="/memes" />
       <section className="flex flex-col gap-4">
         <Image
