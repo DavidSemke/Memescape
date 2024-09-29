@@ -24,7 +24,7 @@ export default async function IndexPage() {
       </Suspense>
       <div className="mb-4 flex flex-col items-center gap-4">
         <p className="text-center">Have an idea for a meme?</p>
-        <Link href="/memes/create" className="btn-primary">
+        <Link href="/memes/create" className="btn-primary w-full">
           Create
         </Link>
       </div>
