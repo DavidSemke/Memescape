@@ -1,14 +1,25 @@
 import "@testing-library/jest-dom"
-import { render, screen } from "@testing-library/react"
+import { render, screen, waitFor } from "@testing-library/react"
 import { CreateMemeModal } from "./CreateMemeModal"
+import userEvent from "@testing-library/user-event"
 import { generateMemeImage } from "@/data/api/controllers/meme"
+import { mockProcessedImage } from "@/data/placeholder/create/mocks/image"
 
 jest.mock("@/data/api/controllers/meme")
 
-function renderSetup(signedInPairs?: {
-  userId: string
-  private: "private" | null
-}) {
+beforeEach(() => {
+  const generateMemeImageMock = generateMemeImage as jest.Mock
+  generateMemeImageMock.mockReturnValue(mockProcessedImage())
+})
+
+function renderSetup(
+  signedInPairs?: {
+    userId: string
+    private?: "private",
+  },
+  onCancel: jest.Mock = jest.fn(),
+  onConfirm: jest.Mock = jest.fn(),
+) {
   const formData = new FormData()
   const lineCount = 2
 
@@ -24,7 +35,7 @@ function renderSetup(signedInPairs?: {
 
     const privateMeme = signedInPairs.private
 
-    if (privateMeme !== null) {
+    if (privateMeme !== undefined) {
       formData.append("private", privateMeme)
     }
   } else {
@@ -35,32 +46,83 @@ function renderSetup(signedInPairs?: {
     <CreateMemeModal
       lineCount={2}
       formData={formData}
-      onCancel={() => {}}
-      onConfirm={() => {}}
+      onCancel={onCancel}
+      onConfirm={onConfirm}
       download={download}
-    />,
+    />
   )
 }
 
 it("Independent elements", async () => {
+  const alt = 'Meme image'
+  const generateMemeImageMock = generateMemeImage as jest.Mock
+  generateMemeImageMock.mockReturnValue(mockProcessedImage(alt))
+  
   renderSetup()
 
   // Cancel button
-  expect(screen.getByRole("button", { name: "Cancel" })).toBeInTheDocument()
+  expect(
+    screen.getByRole("button", { name: "Cancel" })
+  ).toBeInTheDocument()
   // Meme image
-  expect(await screen.findByRole("img")).toBeInTheDocument()
+  const memeImage = await screen.findByRole("img", { name: alt })
+  expect(memeImage).toBeInTheDocument()
 })
 
 describe("Prop dependent elements", () => {
-  it("Valid session user", () => {
-    // expect(screen.findByRole('heading', { name: 'Create Meme' })).toBeInTheDocument()
-    // expect(screen.getByRole('button', { name: 'Confirm' })).toBeInTheDocument()
-    // expect(screen.getByText('Private:')).toBeInTheDocument()
+  it("Valid session user", async () => {
+    renderSetup({ userId: 'x' })
+
+    // Meme image state update ignored, so have to use findby here.
+    // Otherwise, you get the not wrapped in act(...) warning.
+    expect(
+      await screen.findByRole('heading', { name: 'Create this Meme?' })
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'Confirm' })
+    ).toBeInTheDocument()
+    expect(screen.getByText('Private:')).toBeInTheDocument()
   })
 
-  it("Invalid session user", () => {
-    // expect(screen.findByRole('heading', { name: 'Download Meme' })).toBeInTheDocument()
-    // expect(screen.getByRole('button', { name: 'Download' })).toBeInTheDocument()
-    // expect(screen.queryByText('Private:')).toBeNull()
+  it("Invalid session user", async () => {
+    renderSetup()
+
+    // Using findby to avoid act() warning.
+    expect(
+      await screen.findByRole('heading', { name: 'Download this Meme?' })
+    ).toBeInTheDocument()
+    // Download link uses aria-labelledby, which is not found using 
+    // getByRole + name
+    expect(screen.getByLabelText('Download')).toBeInTheDocument()
+    expect(screen.queryByText('Private:')).toBeNull()
   })
+})
+
+describe('Confirm action', () => {
+  it('Valid session user', async () => {
+    const onConfirm = jest.fn()
+    renderSetup({ userId: 'x' }, undefined, onConfirm)
+    const user = userEvent.setup()
+
+    await user.click(screen.getByRole('button', { name: 'Confirm' }))
+    expect(onConfirm).toHaveBeenCalled()
+  })
+
+  it('Invalid session user', async () => {
+    const onConfirm = jest.fn((event) => event.preventDefault())
+    renderSetup(undefined, undefined, onConfirm)
+    const user = userEvent.setup()
+    // Download link
+    await user.click(screen.getByLabelText('Download'))
+    expect(onConfirm).toHaveBeenCalled()
+  })
+})
+
+it('Cancel action', async () => {
+  const onCancel = jest.fn()
+  renderSetup(undefined, onCancel)
+  const user = userEvent.setup()
+
+  await user.click(screen.getByRole('button', { name: 'Cancel' }))
+  expect(onCancel).toHaveBeenCalled()
 })
