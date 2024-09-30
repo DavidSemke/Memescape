@@ -7,6 +7,24 @@ import { mockUser } from "@/data/placeholder/create/mocks/user"
 import { useFormState, useFormStatus } from "react-dom"
 import { NestedUser } from "@/data/api/types/model/types"
 
+let profileUser: NestedUser
+
+beforeAll(async () => {
+  profileUser = await mockUser(null, true)
+})
+
+// Note that you cannot replace this beforeEach with a __mocks__
+// implementation since a mock reset removes it.
+beforeEach(() => {
+  const formStateMock = useFormState as jest.Mock
+  formStateMock.mockReturnValue([
+    false,
+    undefined,
+  ])
+  const formStatusMock = useFormStatus as jest.Mock
+  formStatusMock.mockReturnValue({ pending: false })
+})
+
 const renderSetup = (profileUser: NestedUser) => {
   render(
     <ProfileForm
@@ -17,28 +35,6 @@ const renderSetup = (profileUser: NestedUser) => {
     />,
   )
 }
-
-let profileUser: NestedUser
-
-beforeAll(async () => {
-  profileUser = await mockUser(null, true)
-})
-
-// Note that you cannot replace this beforeEach with a __mocks__
-// implementation since a mock reset removes it.
-beforeEach(() => {
-  const mockedFormState = useFormState as jest.Mock
-  mockedFormState.mockImplementation((action, initState) => [
-    initState,
-    undefined,
-  ])
-  const mockedFormStatus = useFormStatus as jest.Mock
-  mockedFormStatus.mockImplementation(() => ({ pending: false }))
-})
-
-afterEach(() => {
-  jest.resetAllMocks()
-})
 
 it("Independent elements", async () => {
   renderSetup(profileUser)

@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react"
 import CreateMemeForm from "./CreateMemeForm"
 import { mockUser } from '@/data/placeholder/create/mocks/user'
 import {
-  templateFetchMock,
+  templateFetch,
   selectTemplateWithoutConfirm,
   selectTemplateAndConfirm,
   previewMemeAndConfirm,
@@ -12,9 +12,42 @@ import {
 import userEvent from "@testing-library/user-event"
 import { textLineLen as memeTextLineLen } from "@/data/api/validation/meme"
 import { useFormState, useFormStatus } from "react-dom"
+import { generateMemeImage, postMeme } from "@/data/api/controllers/meme"
+import { getOneTemplate } from "@/data/api/controllers/template"
+import { mockTemplate } from "@/data/placeholder/create/mocks/template"
+import { mockProcessedImage } from "@/data/placeholder/create/mocks/image"
 
-jest.mock("@/data/api/controllers/template")
-jest.mock("@/data/api/controllers/meme")
+jest.mock('@/data/api/controllers/meme')
+jest.mock('@/data/api/controllers/template')
+
+let sessionUserId: string | null
+
+beforeAll(async () => {
+  const sessionUser = await mockUser(null, true)
+  sessionUserId = sessionUser.id
+})
+
+let templateFetchMock: jest.Mock
+
+beforeEach(async () => {
+  templateFetchMock = jest.fn(templateFetch)
+
+  const formStateMock = useFormState as jest.Mock
+  formStateMock.mockReturnValue([
+    false,
+    undefined,
+  ])
+  const formStatusMock = useFormStatus as jest.Mock
+  formStatusMock.mockReturnValue({ pending: false }) 
+
+  const getOneTemplateMock = getOneTemplate as jest.Mock
+  getOneTemplateMock.mockReturnValue(mockTemplate())
+
+  const generateMemeImageMock = generateMemeImage as jest.Mock
+  generateMemeImageMock.mockReturnValue(mockProcessedImage())
+  const postMemeMock = postMeme as jest.Mock
+  postMemeMock.mockReturnValue(true)
+})
 
 function renderSetup(sessionUserId: string | null) {
   render(
@@ -24,24 +57,6 @@ function renderSetup(sessionUserId: string | null) {
     />,
   )
 }
-
-let sessionUserId: string | null
-
-beforeAll(async () => {
-  // By default, sessionUserId is not null
-  const sessionUser = await mockUser(null, true)
-  sessionUserId = sessionUser.id
-
-  // As long as these mocks are not overridden in a test,
-  // no need to use them in beforeEach with reset
-  const formStateMock = useFormState as jest.Mock
-  formStateMock.mockImplementation((action, initState) => [
-    initState,
-    undefined,
-  ])
-  const formStatusMock = useFormStatus as jest.Mock
-  formStatusMock.mockImplementation(() => ({ pending: false }))
-})
 
 it("Independent elements", () => {
   renderSetup(sessionUserId)

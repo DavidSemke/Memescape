@@ -6,17 +6,13 @@ import { useFormState, useFormStatus } from "react-dom"
 // Note that you cannot replace this beforeEach with a __mocks__
 // implementation since a mock reset removes it.
 beforeEach(() => {
-  const mockedFormState = useFormState as jest.Mock
-  mockedFormState.mockImplementation((action, initState) => [
-    initState,
+  const formStateMock = useFormState as jest.Mock
+  formStateMock.mockReturnValue([
+    false,
     undefined,
   ])
-  const mockedFormStatus = useFormStatus as jest.Mock
-  mockedFormStatus.mockImplementation(() => ({ pending: false }))
-})
-
-afterEach(() => {
-  jest.resetAllMocks()
+  const formStatusMock = useFormStatus as jest.Mock
+  formStatusMock.mockReturnValue({ pending: false })
 })
 
 it("Independent elements", () => {

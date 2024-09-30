@@ -4,7 +4,7 @@ import { within } from "@testing-library/react"
 import { DeepImageGridFetchAction } from "../../grid/deepImageGrid/DeepImageGrid"
 import { mockProcessedImage } from "@/data/placeholder/create/mocks/image"
 
-export const templateFetchMock: DeepImageGridFetchAction = async (
+export const templateFetch: DeepImageGridFetchAction = async (
   query,
   page,
   pageSize,

@@ -1,11 +1,12 @@
 import "@testing-library/jest-dom"
 import { render, screen } from "@testing-library/react"
 import { CreateMemeModal } from "./CreateMemeModal"
+import { generateMemeImage } from "@/data/api/controllers/meme"
 
 jest.mock("@/data/api/controllers/meme")
 
 function renderSetup(signedInPairs?: {
-  "user-id": string
+  userId: string
   private: "private" | null
 }) {
   const formData = new FormData()
@@ -19,9 +20,9 @@ function renderSetup(signedInPairs?: {
   let download = false
 
   if (signedInPairs) {
-    formData.append("user-id", signedInPairs["user-id"])
+    formData.append("user-id", signedInPairs.userId)
 
-    const privateMeme = signedInPairs["private"]
+    const privateMeme = signedInPairs.private
 
     if (privateMeme !== null) {
       formData.append("private", privateMeme)

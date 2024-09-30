@@ -35,7 +35,7 @@ describe("Prop dependent elements", () => {
   })
 
   it("Defined onImageClick", async () => {
-    const onImageClick = jest.fn((image) => {})
+    const onImageClick = jest.fn()
     renderSetup(undefined, onImageClick)
     const user = userEvent.setup()
 

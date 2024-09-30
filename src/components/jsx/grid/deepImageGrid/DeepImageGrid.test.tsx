@@ -26,10 +26,6 @@ beforeEach(() => {
   fetchActionMock = jest.fn(fetchAction)
 })
 
-afterEach(() => {
-  jest.resetAllMocks()
-})
-
 function renderSetup(
   addInitImages = false,
   query: string | null = null,
