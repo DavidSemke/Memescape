@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom"
 import { render, screen } from "@testing-library/react"
 import CreateMemeForm from "./CreateMemeForm"
-import { mockUser } from "@/__tests__/mocks/data/user"
+import { mockUser } from '@/data/placeholder/create/mocks/user'
 import {
   templateFetchMock,
   selectTemplateWithoutConfirm,

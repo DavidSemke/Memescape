@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react"
 import ProfileForm from "./ProfileForm"
 import ProfileView from "../../view/ProfileView"
 import userEvent from "@testing-library/user-event"
-import { mockUser } from "@/__tests__/mocks/data/user"
+import { mockUser } from "@/data/placeholder/create/mocks/user"
 import { useFormState, useFormStatus } from "react-dom"
 import { NestedUser } from "@/data/api/types/model/types"
 

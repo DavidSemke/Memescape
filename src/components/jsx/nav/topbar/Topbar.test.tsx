@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react"
 import Topbar from "./Topbar"
-import { mockUser } from "@/__tests__/mocks/data/user"
+import { mockUser } from "@/data/placeholder/create/mocks/user"
 import { NestedUser } from "@/data/api/types/model/types"
 
 /* 

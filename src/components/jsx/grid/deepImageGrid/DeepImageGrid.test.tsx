@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom"
 import { render, screen, waitFor } from "@testing-library/react"
 import DeepImageGrid, { DeepImageGridFetchAction } from "./DeepImageGrid"
-import { mockProcessedImage } from "@/__tests__/mocks/data/image"
+import { mockProcessedImage } from "@/data/placeholder/create/mocks/image"
 import userEvent from "@testing-library/user-event"
 
 /*

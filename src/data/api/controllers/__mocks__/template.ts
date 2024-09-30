@@ -1,4 +1,4 @@
-import { mockTemplate } from "@/__tests__/mocks/data/template"
+import { mockTemplate } from "@/data/placeholder/create/mocks/template"
 
 module.exports = {
   ...jest.requireActual("@/data/api/controllers/template"),

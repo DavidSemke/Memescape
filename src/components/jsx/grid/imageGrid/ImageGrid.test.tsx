@@ -2,7 +2,7 @@ import "@testing-library/jest-dom"
 import { render, screen } from "@testing-library/react"
 import ImageGrid from "./ImageGrid"
 import { ProcessedImage } from "@/data/api/types/model/types"
-import { mockProcessedImage } from "@/__tests__/mocks/data/image"
+import { mockProcessedImage } from "@/data/placeholder/create/mocks/image"
 import userEvent from "@testing-library/user-event"
 
 const imageGroups: ProcessedImage[][] = [
