@@ -1,7 +1,6 @@
 import "@testing-library/jest-dom"
 import { render, screen } from "@testing-library/react"
 import ProfileForm from "./ProfileForm"
-import ProfileView from "../../view/ProfileView"
 import userEvent from "@testing-library/user-event"
 import { mockUser } from "@/data/placeholder/create/mocks/user"
 import { useFormState, useFormStatus } from "react-dom"
@@ -22,19 +21,17 @@ beforeEach(() => {
   formStatusMock.mockReturnValue({ pending: false })
 })
 
-const renderSetup = (profileUser: NestedUser) => {
+const renderSetup = () => {
   render(
     <ProfileForm
       user={profileUser}
-      profileView={
-        <ProfileView user={profileUser} profileAlt="profile picture" />
-      }
+      profileView={<></>}
     />,
   )
 }
 
 it("Independent elements", async () => {
-  renderSetup(profileUser)
+  renderSetup()
   const user = userEvent.setup()
 
   await user.click(screen.getByRole("button", { name: "Open profile form" }))
@@ -64,7 +61,7 @@ describe("Update profile action", () => {
       undefined,
     ])
 
-    renderSetup(profileUser)
+    renderSetup()
     const user = userEvent.setup()
 
     await user.click(screen.getByRole("button", { name: "Open profile form" }))
@@ -83,7 +80,7 @@ describe("Update profile action", () => {
       undefined,
     ])
 
-    renderSetup(profileUser)
+    renderSetup()
     const user = userEvent.setup()
 
     await user.click(screen.getByRole("button", { name: "Open profile form" }))
@@ -95,7 +92,7 @@ describe("Update profile action", () => {
     const mockedFormState = useFormState as jest.Mock
     mockedFormState.mockReturnValue([true, undefined])
 
-    renderSetup(profileUser)
+    renderSetup()
     const user = userEvent.setup()
 
     await user.click(screen.getByRole("button", { name: "Open profile form" }))
@@ -105,7 +102,7 @@ describe("Update profile action", () => {
 })
 
 it("Cancel profile update action", async () => {
-  renderSetup(profileUser)
+  renderSetup()
   const user = userEvent.setup()
 
   expect(screen.queryByRole("form")).toBeNull()
