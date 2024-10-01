@@ -3,7 +3,7 @@
 import Input from "@/components/jsx/form/input/Input"
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline"
 import { useFormState } from "react-dom"
-import { FormStateView } from "../FormStateView"
+import FormStateView from "../formStateView/FormStateView"
 import { FormState } from "@/data/api/types/action/types"
 import { postMeme } from "@/data/api/controllers/meme"
 import { DeepImageGridFetchAction } from "../../grid/deepImageGrid/DeepImageGrid"

@@ -18,7 +18,7 @@ type FormStateViewProps = {
     Param setOuterPending is necessary since useFormStatus hook must be called 
     from a component within the form (cannot lift pending state up).
 */
-export function FormStateView({
+export default function FormStateView({
   state,
   setOuterPending = undefined,
 }: FormStateViewProps) {

@@ -7,7 +7,7 @@ import { FormState } from "@/data/api/types/action/types"
 import { NestedUser } from "@/data/api/types/model/types"
 import { useEffect, useState } from "react"
 import { PencilIcon } from "@heroicons/react/24/outline"
-import { FormStateView } from "../FormStateView"
+import FormStateView from "../formStateView/FormStateView"
 
 type ProfileFormProps = {
   user: NestedUser
