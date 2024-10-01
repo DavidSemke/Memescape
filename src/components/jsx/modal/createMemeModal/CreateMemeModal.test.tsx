@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom"
-import { render, screen, waitFor } from "@testing-library/react"
+import { render, screen } from "@testing-library/react"
 import { CreateMemeModal } from "./CreateMemeModal"
 import userEvent from "@testing-library/user-event"
 import { generateMemeImage } from "@/data/api/controllers/meme"
