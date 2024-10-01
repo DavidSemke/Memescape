@@ -1,7 +1,7 @@
 "use client"
 
 import { useFormState } from "react-dom"
-import Input from "../Input"
+import Input from "../input/Input"
 import { putUser } from "@/data/api/controllers/user"
 import { FormState } from "@/data/api/types/action/types"
 import { NestedUser } from "@/data/api/types/model/types"

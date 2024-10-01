@@ -15,7 +15,7 @@ beforeEach(() => {
 function renderSetup(
   signedInPairs?: {
     userId: string
-    private?: "private",
+    private?: "private"
   },
   onCancel: jest.Mock = jest.fn(),
   onConfirm: jest.Mock = jest.fn(),
@@ -49,21 +49,19 @@ function renderSetup(
       onCancel={onCancel}
       onConfirm={onConfirm}
       download={download}
-    />
+    />,
   )
 }
 
 it("Independent elements", async () => {
-  const alt = 'Meme image'
+  const alt = "Meme image"
   const generateMemeImageMock = generateMemeImage as jest.Mock
   generateMemeImageMock.mockReturnValue(mockProcessedImage(alt))
-  
+
   renderSetup()
 
   // Cancel button
-  expect(
-    screen.getByRole("button", { name: "Cancel" })
-  ).toBeInTheDocument()
+  expect(screen.getByRole("button", { name: "Cancel" })).toBeInTheDocument()
   // Meme image
   const memeImage = await screen.findByRole("img", { name: alt })
   expect(memeImage).toBeInTheDocument()
@@ -71,17 +69,15 @@ it("Independent elements", async () => {
 
 describe("Prop dependent elements", () => {
   it("Valid session user", async () => {
-    renderSetup({ userId: 'x' })
+    renderSetup({ userId: "x" })
 
     // Meme image state update ignored, so have to use findby here.
     // Otherwise, you get the not wrapped in act(...) warning.
     expect(
-      await screen.findByRole('heading', { name: 'Create this Meme?' })
+      await screen.findByRole("heading", { name: "Create this Meme?" }),
     ).toBeInTheDocument()
-    expect(
-      screen.getByRole('button', { name: 'Confirm' })
-    ).toBeInTheDocument()
-    expect(screen.getByText('Private:')).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "Confirm" })).toBeInTheDocument()
+    expect(screen.getByText("Private:")).toBeInTheDocument()
   })
 
   it("Invalid session user", async () => {
@@ -89,40 +85,40 @@ describe("Prop dependent elements", () => {
 
     // Using findby to avoid act() warning.
     expect(
-      await screen.findByRole('heading', { name: 'Download this Meme?' })
+      await screen.findByRole("heading", { name: "Download this Meme?" }),
     ).toBeInTheDocument()
-    // Download link uses aria-labelledby, which is not found using 
+    // Download link uses aria-labelledby, which is not found using
     // getByRole + name
-    expect(screen.getByLabelText('Download')).toBeInTheDocument()
-    expect(screen.queryByText('Private:')).toBeNull()
+    expect(screen.getByLabelText("Download")).toBeInTheDocument()
+    expect(screen.queryByText("Private:")).toBeNull()
   })
 })
 
-describe('Confirm action', () => {
-  it('Valid session user', async () => {
+describe("Confirm action", () => {
+  it("Valid session user", async () => {
     const onConfirm = jest.fn()
-    renderSetup({ userId: 'x' }, undefined, onConfirm)
+    renderSetup({ userId: "x" }, undefined, onConfirm)
     const user = userEvent.setup()
 
-    await user.click(screen.getByRole('button', { name: 'Confirm' }))
+    await user.click(screen.getByRole("button", { name: "Confirm" }))
     expect(onConfirm).toHaveBeenCalled()
   })
 
-  it('Invalid session user', async () => {
+  it("Invalid session user", async () => {
     const onConfirm = jest.fn((event) => event.preventDefault())
     renderSetup(undefined, undefined, onConfirm)
     const user = userEvent.setup()
     // Download link
-    await user.click(screen.getByLabelText('Download'))
+    await user.click(screen.getByLabelText("Download"))
     expect(onConfirm).toHaveBeenCalled()
   })
 })
 
-it('Cancel action', async () => {
+it("Cancel action", async () => {
   const onCancel = jest.fn()
   renderSetup(undefined, onCancel)
   const user = userEvent.setup()
 
-  await user.click(screen.getByRole('button', { name: 'Cancel' }))
+  await user.click(screen.getByRole("button", { name: "Cancel" }))
   expect(onCancel).toHaveBeenCalled()
 })

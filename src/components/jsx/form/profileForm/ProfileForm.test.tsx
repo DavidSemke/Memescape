@@ -17,10 +17,7 @@ beforeAll(async () => {
 // implementation since a mock reset removes it.
 beforeEach(() => {
   const formStateMock = useFormState as jest.Mock
-  formStateMock.mockReturnValue([
-    false,
-    undefined,
-  ])
+  formStateMock.mockReturnValue([false, undefined])
   const formStatusMock = useFormStatus as jest.Mock
   formStatusMock.mockReturnValue({ pending: false })
 })

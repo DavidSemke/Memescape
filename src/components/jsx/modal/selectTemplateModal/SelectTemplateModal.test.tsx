@@ -33,17 +33,19 @@ function renderSetup(
       onTemplateSelect={onTemplateSelect}
       onCancel={onCancel}
       onConfirm={onConfirm}
-    />
+    />,
   )
 }
 
 it("Independent elements", () => {
   renderSetup()
 
-  expect(screen.getByRole('heading', { name: 'Select Template' })).toBeInTheDocument()
-  expect(screen.getByRole('search')).toBeInTheDocument()
-  expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument()
-  expect(screen.getByRole('button', { name: 'Confirm' })).toBeInTheDocument()
+  expect(
+    screen.getByRole("heading", { name: "Select Template" }),
+  ).toBeInTheDocument()
+  expect(screen.getByRole("search")).toBeInTheDocument()
+  expect(screen.getByRole("button", { name: "Cancel" })).toBeInTheDocument()
+  expect(screen.getByRole("button", { name: "Confirm" })).toBeInTheDocument()
 })
 
 it("Template search action", async () => {
@@ -51,58 +53,44 @@ it("Template search action", async () => {
   const user = userEvent.setup()
 
   await waitFor(() => {
-    expect(
-      screen.queryAllByRole('img', { name: /template\d/ }).length
-    ).toBe(0)
+    expect(screen.queryAllByRole("img", { name: /template\d/ }).length).toBe(0)
   })
-  
-  await user.type(
-    screen.getByRole('searchbox'),
-    'test'
-  )
+
+  await user.type(screen.getByRole("searchbox"), "test")
 
   expect(
-    (await screen.findAllByRole('img', { name: /template\d/ })).length
+    (await screen.findAllByRole("img", { name: /template\d/ })).length,
   ).not.toBe(0)
 })
 
-it('Select action', async () => {
+it("Select action", async () => {
   const onTemplateSelect = jest.fn()
   renderSetup(undefined, onTemplateSelect)
   const user = userEvent.setup()
 
-  await user.type(
-    screen.getByRole('searchbox'),
-    'test'
-  )
+  await user.type(screen.getByRole("searchbox"), "test")
 
-  await user.click(
-    await screen.findByRole('img', { name: 'template0' })
-  )
+  await user.click(await screen.findByRole("img", { name: "template0" }))
 
   expect(onTemplateSelect).toHaveBeenCalled()
 })
 
-it('Confirm action', async () => {
+it("Confirm action", async () => {
   const onConfirm = jest.fn()
   renderSetup(undefined, undefined, undefined, onConfirm)
   const user = userEvent.setup()
 
-  await user.click(
-    screen.getByRole('button', { name: 'Confirm' })
-  )
+  await user.click(screen.getByRole("button", { name: "Confirm" }))
 
   expect(onConfirm).toHaveBeenCalled()
 })
 
-it('Cancel action', async () => {
+it("Cancel action", async () => {
   const onCancel = jest.fn()
   renderSetup(undefined, undefined, onCancel)
   const user = userEvent.setup()
 
-  await user.click(
-    screen.getByRole('button', { name: 'Cancel' })
-  )
+  await user.click(screen.getByRole("button", { name: "Cancel" }))
 
   expect(onCancel).toHaveBeenCalled()
 })

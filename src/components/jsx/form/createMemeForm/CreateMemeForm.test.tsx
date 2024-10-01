@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom"
 import { render, screen } from "@testing-library/react"
 import CreateMemeForm from "./CreateMemeForm"
-import { mockUser } from '@/data/placeholder/create/mocks/user'
+import { mockUser } from "@/data/placeholder/create/mocks/user"
 import {
   templateFetch,
   selectTemplateWithoutConfirm,
@@ -17,8 +17,8 @@ import { getOneTemplate } from "@/data/api/controllers/template"
 import { mockTemplate } from "@/data/placeholder/create/mocks/template"
 import { mockProcessedImage } from "@/data/placeholder/create/mocks/image"
 
-jest.mock('@/data/api/controllers/meme')
-jest.mock('@/data/api/controllers/template')
+jest.mock("@/data/api/controllers/meme")
+jest.mock("@/data/api/controllers/template")
 
 let sessionUserId: string | null
 
@@ -33,12 +33,9 @@ beforeEach(async () => {
   templateFetchMock = jest.fn(templateFetch)
 
   const formStateMock = useFormState as jest.Mock
-  formStateMock.mockReturnValue([
-    false,
-    undefined,
-  ])
+  formStateMock.mockReturnValue([false, undefined])
   const formStatusMock = useFormStatus as jest.Mock
-  formStatusMock.mockReturnValue({ pending: false }) 
+  formStatusMock.mockReturnValue({ pending: false })
 
   const getOneTemplateMock = getOneTemplate as jest.Mock
   getOneTemplateMock.mockReturnValue(mockTemplate())
