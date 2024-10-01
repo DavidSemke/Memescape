@@ -7,6 +7,25 @@ import { Meme, User } from "@prisma/client"
     Leftovers can be more ore less than the value of memesPerUser.
     If memesPerUser is null, memes are split evenly.
 */
+
+export function createOneMeme(
+  template_id: string,
+  user_id: string,
+  text: string[],
+  isPrivate: boolean,
+  product_image_id: string
+) {
+  return {
+    id: uuidv4(),
+    template_id,
+    user_id,
+    text,
+    private: isPrivate,
+    product_image_id,
+    create_date: new Date(),
+  }
+}
+
 export default function createMemeData(
   memeImages: MemeImage[],
   users: User[],
@@ -44,15 +63,13 @@ export default function createMemeData(
     for (let i = 0; i < privateCount; i++) {
       const image = memeImages[i]
       const { id, template_id, text } = image
-      memes.push({
-        id: uuidv4(),
+      memes.push(createOneMeme(
         template_id,
+        user.id,
         text,
-        user_id: user.id,
-        private: true,
-        product_image_id: id,
-        create_date: new Date(),
-      })
+        true,
+        id
+      ))
     }
 
     memeImages = memeImages.slice(privateCount)
@@ -77,15 +94,13 @@ export default function createMemeData(
     const user = users[userIndex]
     const { id, template_id, text } = image
 
-    memes.push({
-      id: uuidv4(),
+    memes.push(createOneMeme(
       template_id,
+      user.id,
       text,
-      user_id: user.id,
-      private: false,
-      product_image_id: id,
-      create_date: new Date(),
-    })
+      false,
+      id
+    ))
   }
 
   return memes
