@@ -8,6 +8,10 @@ type TabbedViewProps = {
 }
 
 export default function TabbedView({ tabs }: TabbedViewProps) {
+  if (tabs.length === 0) {
+    throw new Error("TabbedView must have at least one tab.")
+  }
+
   const [openTab, setOpenTab] = useState<string>(tabs[0].label)
 
   return (

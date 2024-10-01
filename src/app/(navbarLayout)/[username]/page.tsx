@@ -3,7 +3,7 @@ import ProfileForm from "@/components/jsx/form/profileForm/ProfileForm"
 import { getOneUser } from "@/data/api/controllers/user"
 import { NestedUser } from "@/data/api/types/model/types"
 import { notFound } from "next/navigation"
-import ProfileView from "@/components/jsx/view/ProfileView"
+import ProfileView from "@/components/jsx/view/profileView/ProfileView"
 import RedirectSearchbar from "@/components/jsx/search/RedirectSearchbar"
 import TabbedUserMemeView from "@/components/jsx/view/TabbedUserMemeView"
 

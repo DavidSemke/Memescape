@@ -22,12 +22,7 @@ beforeEach(() => {
 })
 
 const renderSetup = () => {
-  render(
-    <ProfileForm
-      user={profileUser}
-      profileView={<></>}
-    />,
-  )
+  render(<ProfileForm user={profileUser} profileView={<></>} />)
 }
 
 it("Independent elements", async () => {

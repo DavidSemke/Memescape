@@ -3,7 +3,7 @@ import DeepImageGrid, {
   DeepImageGridFetchAction,
 } from "../grid/deepImageGrid/DeepImageGrid"
 import { getBookmarks } from "@/data/api/controllers/bookmark"
-import TabbedView from "./TabbedView"
+import TabbedView from "./tabbedView/TabbedView"
 
 type TabbedUserMemeView = {
   userId: string
