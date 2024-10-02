@@ -34,13 +34,13 @@ it.only("Switch tabs action", async () => {
   const user = userEvent.setup()
 
   // Start with view at index 0 open
-  expect(screen.getByText(viewTexts[0])).not.toHaveClass('hidden')
+  expect(screen.getByText(viewTexts[0])).not.toHaveClass("hidden")
   // View at index 1 hidden
-  expect(screen.getByText(viewTexts[1])).toHaveClass('hidden')
+  expect(screen.getByText(viewTexts[1])).toHaveClass("hidden")
 
   // Switch to index 1 view
   await user.click(screen.getByRole("button", { name: tabs[1].label }))
 
-  expect(screen.getByText(viewTexts[0])).toHaveClass('hidden')
-  expect(screen.getByText(viewTexts[1])).not.toHaveClass('hidden')
+  expect(screen.getByText(viewTexts[0])).toHaveClass("hidden")
+  expect(screen.getByText(viewTexts[1])).not.toHaveClass("hidden")
 })

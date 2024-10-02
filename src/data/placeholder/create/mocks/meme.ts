@@ -9,19 +9,13 @@ export async function mockMeme(user?: NestedUser): Promise<NestedMeme> {
   if (!user) {
     user = await mockUser()
   }
-  
+
   const productImage = mockProcessedImage()
-  const baseMeme = createOneMeme(
-    uuidv4(),
-    user.id,
-    [],
-    false,
-    productImage.id
-  )
+  const baseMeme = createOneMeme(uuidv4(), user.id, [], false, productImage.id)
 
   return {
     ...baseMeme,
     product_image: productImage,
-    user
+    user,
   }
 }

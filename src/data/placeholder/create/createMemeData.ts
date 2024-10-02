@@ -13,7 +13,7 @@ export function createOneMeme(
   user_id: string,
   text: string[],
   isPrivate: boolean,
-  product_image_id: string
+  product_image_id: string,
 ) {
   return {
     id: uuidv4(),
@@ -63,13 +63,7 @@ export default function createMemeData(
     for (let i = 0; i < privateCount; i++) {
       const image = memeImages[i]
       const { id, template_id, text } = image
-      memes.push(createOneMeme(
-        template_id,
-        user.id,
-        text,
-        true,
-        id
-      ))
+      memes.push(createOneMeme(template_id, user.id, text, true, id))
     }
 
     memeImages = memeImages.slice(privateCount)
@@ -94,13 +88,7 @@ export default function createMemeData(
     const user = users[userIndex]
     const { id, template_id, text } = image
 
-    memes.push(createOneMeme(
-      template_id,
-      user.id,
-      text,
-      false,
-      id
-    ))
+    memes.push(createOneMeme(template_id, user.id, text, false, id))
   }
 
   return memes
