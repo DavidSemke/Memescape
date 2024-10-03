@@ -1,12 +1,14 @@
 import { ArrowDownTrayIcon } from "@heroicons/react/24/outline"
 
 type DownloadButtonProps = {
+    label?: string
     href: string
     downloadName: string
     onClick: () => void
   }
   
 export default function DownloadButton({
+    label = 'Download',
     href,
     downloadName,
     onClick,
@@ -21,7 +23,7 @@ export default function DownloadButton({
             onClick={onClick}
         >
             <ArrowDownTrayIcon className="h-6 w-6" />
-            <div id="download-button-label">Download</div>
+            <div id="download-button-label">{label}</div>
         </a>
     )
 }

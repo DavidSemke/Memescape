@@ -62,7 +62,8 @@ export default function Modal({
           <XButton onClick={onCancel} />
           {
             downloadData ? (
-              <DownloadButton 
+              <DownloadButton
+                label="Confirm" 
                 href={downloadData.href}
                 downloadName={downloadData.name}
                 onClick={onConfirm}

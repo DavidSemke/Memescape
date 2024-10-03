@@ -49,7 +49,7 @@ function renderSetup(
       onCancel={onCancel}
       onConfirm={onConfirm}
       download={download}
-    />,
+    />
   )
 }
 
@@ -60,11 +60,12 @@ it("Independent elements", async () => {
 
   renderSetup()
 
-  // Cancel button
-  expect(screen.getByRole("button", { name: "Cancel" })).toBeInTheDocument()
   // Meme image
   const memeImage = await screen.findByRole("img", { name: alt })
   expect(memeImage).toBeInTheDocument()
+
+  // Cancel button
+  expect(screen.getByRole("button", { name: "Cancel" })).toBeInTheDocument()
 })
 
 describe("Prop dependent elements", () => {
@@ -89,7 +90,7 @@ describe("Prop dependent elements", () => {
     ).toBeInTheDocument()
     // Download link uses aria-labelledby, which is not found using
     // getByRole + name
-    expect(screen.getByLabelText("Download")).toBeInTheDocument()
+    expect(screen.getByLabelText("Confirm")).toBeInTheDocument()
     expect(screen.queryByText("Private:")).toBeNull()
   })
 })
@@ -109,7 +110,8 @@ describe("Confirm action", () => {
     renderSetup(undefined, undefined, onConfirm)
     const user = userEvent.setup()
     // Download link
-    await user.click(screen.getByLabelText("Download"))
+    const link = await screen.findByLabelText("Confirm", { selector: 'a' })
+    await user.click(link)
     expect(onConfirm).toHaveBeenCalled()
   })
 })
