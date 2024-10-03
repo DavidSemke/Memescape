@@ -1,16 +1,18 @@
 "use client"
 
-import { ButtonHTMLAttributes, ReactElement, useRef } from "react"
+import { useRef } from "react"
 import useContainerHeight from "@/components/hooks/useContainerHeight"
 import Modal from "./Modal"
 import clsx from "clsx"
 
 type ScrollModalProps = {
   title: string
-  buttons: (
-    | ReactElement<ButtonHTMLAttributes<HTMLButtonElement>, "button">
-    | ReactElement<ButtonHTMLAttributes<HTMLAnchorElement>, "a">
-  )[]
+  onCancel: () => void
+  onConfirm: () => void
+  downloadData?: {
+    href: string,
+    name: string
+  }
   prefixedChildren: React.ReactNode
   children: React.ReactNode
 }
@@ -21,7 +23,9 @@ type ScrollModalProps = {
 */
 export function ScrollModal({
   title,
-  buttons,
+  onCancel,
+  onConfirm,
+  downloadData,
   prefixedChildren,
   children,
 }: ScrollModalProps) {
@@ -35,7 +39,9 @@ export function ScrollModal({
   return (
     <Modal
       title={title}
-      buttons={buttons}
+      onCancel={onCancel}
+      onConfirm={onConfirm}
+      downloadData={downloadData}
       buttonContainerRef={buttonContainerRef}
     >
       {prefixedChildren}

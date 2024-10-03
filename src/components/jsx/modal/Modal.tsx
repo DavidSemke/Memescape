@@ -1,26 +1,49 @@
-import { ButtonHTMLAttributes, MutableRefObject, ReactElement } from "react"
+'use client'
+
+import { MutableRefObject, useEffect } from "react"
 import { createPortal } from "react-dom"
+import XButton from "../button/XButton"
+import CheckButton from "../button/CheckButton"
+import DownloadButton from "../button/DownloadButton"
 
 type ModalProps = {
-  rootRef?: MutableRefObject<HTMLDivElement | null>
   title: string
-  buttons: (
-    | ReactElement<ButtonHTMLAttributes<HTMLButtonElement>, "button">
-    | ReactElement<ButtonHTMLAttributes<HTMLAnchorElement>, "a">
-  )[]
+  onCancel: () => void
+  onConfirm: () => void
+  downloadData?: {
+    href: string,
+    name: string
+  }
   buttonContainerRef?: MutableRefObject<HTMLDivElement | null>
   children: React.ReactNode
 }
 
-/*
-    Buttons can be links styled as buttons.
+/* 
+  Made to close on ESC press.
+  Open/closed state managed in parent component.
 */
 export default function Modal({
   title,
-  buttons,
+  onCancel,
+  onConfirm,
+  downloadData,
   buttonContainerRef,
   children,
 }: ModalProps) {
+  const onEscape = (event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      onCancel()
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener("keydown", onEscape)
+
+    return () => {
+      window.removeEventListener("keydown", onEscape)
+    }
+  }, [])
+
   return createPortal(
     <div className="fixed bottom-0 left-0 right-0 top-0 z-50 animate-fadeIn bg-overlay">
       <div
@@ -36,7 +59,18 @@ export default function Modal({
           ref={buttonContainerRef}
           className="absolute bottom-0 flex w-full justify-around p-4"
         >
-          {buttons}
+          <XButton onClick={onCancel} />
+          {
+            downloadData ? (
+              <DownloadButton 
+                href={downloadData.href}
+                downloadName={downloadData.name}
+                onClick={onConfirm}
+              />
+            ) : (
+              <CheckButton onClick={onConfirm} />
+            )
+          }
         </div>
       </div>
     </div>,

@@ -6,9 +6,6 @@ import { ProcessedImage } from "@/data/api/types/model/types"
 import { ScrollModal } from "../ScrollModal"
 import { generateMemeImage } from "@/data/api/controllers/meme"
 import Ellipsis from "../../loading/Ellipsis"
-import { ArrowDownTrayIcon } from "@heroicons/react/24/outline"
-import CheckButton from "../../button/CheckButton"
-import XButton from "../../button/XButton"
 
 type CreateMemeModalProps = {
   lineCount: number
@@ -67,28 +64,23 @@ export function CreateMemeModal({
   const userId = formData.get("user-id")
 
   const title = `${download ? "Download" : "Create"} this Meme?`
-  const buttons = [<XButton key="cancel" onClick={onCancel} />]
+  let downloadData = undefined
 
-  if (download) {
-    buttons.push(
-      <a
-        key="download"
-        href={memeImage?.base64}
-        download={memeImage?.downloadName}
-        className="btn-primary"
-        aria-labelledby="download-button-label"
-        onClick={onConfirm}
-      >
-        <ArrowDownTrayIcon className="h-6 w-6" />
-        <div id="download-button-label">Download</div>
-      </a>,
-    )
-  } else {
-    buttons.push(<CheckButton key="confirm" onClick={onConfirm} />)
+  if (download && memeImage) {
+    downloadData = {
+      href: memeImage.base64,
+      name: memeImage.downloadName!
+    }
   }
 
   return (
-    <ScrollModal title={title} buttons={buttons} prefixedChildren={null}>
+    <ScrollModal 
+      title={title} 
+      onCancel={onCancel}
+      onConfirm={onConfirm}
+      downloadData={downloadData} 
+      prefixedChildren={null}
+    >
       <div className="flex w-full flex-col items-center gap-4">
         {memeImage ? (
           <Image

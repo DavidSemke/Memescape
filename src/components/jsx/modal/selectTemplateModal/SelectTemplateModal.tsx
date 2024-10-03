@@ -7,8 +7,6 @@ import DeepImageGrid, {
 } from "../../grid/deepImageGrid/DeepImageGrid"
 import { ProcessedImage } from "@/data/api/types/model/types"
 import { ScrollModal } from "../ScrollModal"
-import XButton from "../../button/XButton"
-import CheckButton from "../../button/CheckButton"
 
 type SelectTemplateModalProps = {
   fetchAction: DeepImageGridFetchAction
@@ -24,10 +22,6 @@ export function SelectTemplateModal({
   onConfirm,
 }: SelectTemplateModalProps) {
   const [query, setQuery] = useState<string>("")
-  const buttons = [
-    <XButton key="cancel" onClick={onCancel} />,
-    <CheckButton key="confirm" onClick={onConfirm} />,
-  ]
   const prefixedChildren = (
     <Searchbar
       searchItemName="template"
@@ -38,7 +32,8 @@ export function SelectTemplateModal({
   return (
     <ScrollModal
       title="Select Template"
-      buttons={buttons}
+      onCancel={onCancel}
+      onConfirm={onConfirm}
       prefixedChildren={prefixedChildren}
     >
       <DeepImageGrid
