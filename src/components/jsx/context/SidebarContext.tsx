@@ -1,8 +1,7 @@
 "use client"
 
 import { usePathname } from "next/navigation"
-import { createContext, SetStateAction } from "react"
-import { useState } from "react"
+import { createContext, SetStateAction, useState } from "react"
 
 export const SidebarContext = createContext({
   showSidebar: false,

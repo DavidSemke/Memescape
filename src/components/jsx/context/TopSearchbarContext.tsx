@@ -1,7 +1,6 @@
 "use client"
 
-import { createContext, SetStateAction } from "react"
-import { useState } from "react"
+import { createContext, SetStateAction, useState } from "react"
 
 export const TopSearchbarContext = createContext({
   showTopSearchbarButton: false,
