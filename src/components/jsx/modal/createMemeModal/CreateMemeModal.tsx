@@ -69,16 +69,16 @@ export function CreateMemeModal({
   if (download && memeImage) {
     downloadData = {
       href: memeImage.base64,
-      name: memeImage.downloadName!
+      name: memeImage.downloadName!,
     }
   }
 
   return (
-    <ScrollModal 
-      title={title} 
+    <ScrollModal
+      title={title}
       onCancel={onCancel}
       onConfirm={onConfirm}
-      downloadData={downloadData} 
+      downloadData={downloadData}
       prefixedChildren={null}
     >
       <div className="flex w-full flex-col items-center gap-4">

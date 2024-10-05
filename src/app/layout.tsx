@@ -1,7 +1,9 @@
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
+import Inertable from "@/components/jsx/modal/Inertable"
 import clsx from "clsx"
 import "../stylesheets/globals.css"
+import { ModalProvider } from "@/components/jsx/context/ModalContext"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -23,7 +25,11 @@ export default function RootLayout({
           "flex min-h-screen flex-col items-center bg-secondary text-color antialiased",
         )}
       >
-        {children}
+        <ModalProvider>
+          <Inertable>
+            {children}
+          </Inertable>
+        </ModalProvider>
       </body>
     </html>
   )

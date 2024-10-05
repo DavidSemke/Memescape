@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import { MutableRefObject, useEffect } from "react"
 import { createPortal } from "react-dom"
@@ -11,7 +11,7 @@ type ModalProps = {
   onCancel: () => void
   onConfirm: () => void
   downloadData?: {
-    href: string,
+    href: string
     name: string
   }
   buttonContainerRef?: MutableRefObject<HTMLDivElement | null>
@@ -31,7 +31,7 @@ export default function Modal({
   children,
 }: ModalProps) {
   const onEscape = (event: KeyboardEvent) => {
-    if (event.key === 'Escape') {
+    if (event.key === "Escape") {
       onCancel()
     }
   }
@@ -48,6 +48,7 @@ export default function Modal({
     <div className="fixed bottom-0 left-0 right-0 top-0 z-50 animate-fadeIn bg-overlay">
       <div
         role="dialog"
+        aria-modal="true"
         aria-label={title}
         className="column-view absolute left-1/2 top-1/2 flex h-[80%] -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-4 overflow-hidden border-2 border-stress-tertiary bg-tertiary p-4"
       >
@@ -60,18 +61,16 @@ export default function Modal({
           className="absolute bottom-0 flex w-full justify-around p-4"
         >
           <XButton onClick={onCancel} />
-          {
-            downloadData ? (
-              <DownloadButton
-                label="Confirm" 
-                href={downloadData.href}
-                downloadName={downloadData.name}
-                onClick={onConfirm}
-              />
-            ) : (
-              <CheckButton onClick={onConfirm} />
-            )
-          }
+          {downloadData ? (
+            <DownloadButton
+              label="Confirm"
+              href={downloadData.href}
+              downloadName={downloadData.name}
+              onClick={onConfirm}
+            />
+          ) : (
+            <CheckButton onClick={onConfirm} />
+          )}
         </div>
       </div>
     </div>,

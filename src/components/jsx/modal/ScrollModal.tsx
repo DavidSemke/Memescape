@@ -10,7 +10,7 @@ type ScrollModalProps = {
   onCancel: () => void
   onConfirm: () => void
   downloadData?: {
-    href: string,
+    href: string
     name: string
   }
   prefixedChildren: React.ReactNode

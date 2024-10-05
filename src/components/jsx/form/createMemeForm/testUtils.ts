@@ -92,5 +92,5 @@ export async function previewMemeAndConfirm(
   }
 
   // Skip clicking link unless you have mocked window location
-  expect(screen.getByRole("link", { name: "Download" })).toBeInTheDocument()
+  expect(screen.getByRole("link", { name: "Confirm" })).toBeInTheDocument()
 }

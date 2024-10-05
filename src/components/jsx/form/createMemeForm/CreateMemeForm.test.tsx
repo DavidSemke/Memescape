@@ -16,6 +16,7 @@ import { generateMemeImage, postMeme } from "@/data/api/controllers/meme"
 import { getOneTemplate } from "@/data/api/controllers/template"
 import { mockTemplate } from "@/data/placeholder/create/mocks/template"
 import { mockProcessedImage } from "@/data/placeholder/create/mocks/image"
+import { ModalProvider } from "../../context/ModalContext"
 
 jest.mock("@/data/api/controllers/meme")
 jest.mock("@/data/api/controllers/template")
@@ -48,10 +49,12 @@ beforeEach(async () => {
 
 function renderSetup(sessionUserId: string | null) {
   render(
-    <CreateMemeForm
-      sessionUserId={sessionUserId}
-      templateGridFetchAction={templateFetchMock}
-    />,
+    <ModalProvider>
+      <CreateMemeForm
+        sessionUserId={sessionUserId}
+        templateGridFetchAction={templateFetchMock}
+      />
+    </ModalProvider>
   )
 }
 

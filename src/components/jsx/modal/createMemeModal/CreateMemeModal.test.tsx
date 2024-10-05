@@ -49,7 +49,7 @@ function renderSetup(
       onCancel={onCancel}
       onConfirm={onConfirm}
       download={download}
-    />
+    />,
   )
 }
 
@@ -110,7 +110,7 @@ describe("Confirm action", () => {
     renderSetup(undefined, undefined, onConfirm)
     const user = userEvent.setup()
     // Download link
-    const link = await screen.findByLabelText("Confirm", { selector: 'a' })
+    const link = await screen.findByLabelText("Confirm", { selector: "a" })
     await user.click(link)
     expect(onConfirm).toHaveBeenCalled()
   })

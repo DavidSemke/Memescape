@@ -7,13 +7,14 @@ import FormStateView from "../formStateView/FormStateView"
 import { FormState } from "@/data/api/types/action/types"
 import { postMeme } from "@/data/api/controllers/meme"
 import { DeepImageGridFetchAction } from "../../grid/deepImageGrid/DeepImageGrid"
-import { useRef, useState } from "react"
+import { useContext, useRef, useState } from "react"
 import { ProcessedImage } from "@/data/api/types/model/types"
 import Image from "next/image"
 import { getOneTemplate } from "@/data/api/controllers/template"
 import { createMemeSchema } from "@/data/api/validation/meme"
 import { SelectTemplateModal } from "../../modal/selectTemplateModal/SelectTemplateModal"
 import { CreateMemeModal } from "../../modal/createMemeModal/CreateMemeModal"
+import { ModalContext } from "../../context/ModalContext"
 
 type CreateMemeFormProps = {
   sessionUserId: string | null
@@ -24,6 +25,12 @@ export default function CreateMemeForm({
   sessionUserId,
   templateGridFetchAction,
 }: CreateMemeFormProps) {
+  const { openModalId, setOpenModalId } = useContext(ModalContext)
+  // When a modal is open, the openModalId state is set to its id.
+  // Else, openModalId === null.
+  const selectTemplateModalId = "select-template-modal"
+  const createMemeModalId = "create-meme-modal"
+
   const formRef = useRef<HTMLFormElement | null>(null)
   const newTemplateImageRef = useRef<ProcessedImage | null>(null)
 
@@ -31,13 +38,6 @@ export default function CreateMemeForm({
     image: ProcessedImage
     lineCount: number
   } | null>(null)
-  const [selectTemplateModalIsOpen, setSelectTemplateModalIsOpen] =
-    useState<boolean>(false)
-
-  // Only set to true if form data is validated.
-  // Data is validated again on the server.
-  const [createMemeModalIsOpen, setCreateMemeModalIsOpen] =
-    useState<boolean>(false)
 
   const [state, action] = useFormState<FormState, FormData>(
     postMeme.bind(null, template?.lineCount ?? null),
@@ -54,7 +54,7 @@ export default function CreateMemeForm({
     "errors" in state &&
     state.errors !== errors
   ) {
-    setCreateMemeModalIsOpen(false)
+    setOpenModalId(null)
     setErrors(state.errors)
   }
 
@@ -85,11 +85,11 @@ export default function CreateMemeForm({
             type="button"
             className="btn-secondary items-center rounded-s-none"
             aria-label="Search for a template"
-            onClick={() => setSelectTemplateModalIsOpen(true)}
+            onClick={() => setOpenModalId(selectTemplateModalId)}
           >
             <MagnifyingGlassIcon className="h-6 w-6" />
           </button>
-          {selectTemplateModalIsOpen && (
+          {openModalId === selectTemplateModalId && (
             <SelectTemplateModal
               fetchAction={templateGridFetchAction}
               onTemplateSelect={(image) => {
@@ -97,7 +97,7 @@ export default function CreateMemeForm({
               }}
               onCancel={() => {
                 newTemplateImageRef.current = null
-                setSelectTemplateModalIsOpen(false)
+                setOpenModalId(null)
               }}
               onConfirm={async () => {
                 const image = newTemplateImageRef.current
@@ -112,7 +112,7 @@ export default function CreateMemeForm({
                   lineCount: template!.lines,
                 })
                 newTemplateImageRef.current = null
-                setSelectTemplateModalIsOpen(false)
+                setOpenModalId(null)
               }}
             />
           )}
@@ -203,20 +203,20 @@ export default function CreateMemeForm({
           }
 
           setErrors(null)
-          setCreateMemeModalIsOpen(true)
+          setOpenModalId(createMemeModalId)
         }}
       >
         Preview
       </button>
       <FormStateView state={state} />
-      {createMemeModalIsOpen && (
+      {openModalId === createMemeModalId && (
         <CreateMemeModal
           lineCount={template!.lineCount}
           formData={new FormData(formRef.current!)}
-          onCancel={() => setCreateMemeModalIsOpen(false)}
+          onCancel={() => setOpenModalId(null)}
           onConfirm={() => {
             if (sessionUserId === null) {
-              setCreateMemeModalIsOpen(false)
+              setOpenModalId(null)
             } else {
               formRef.current!.requestSubmit()
             }
