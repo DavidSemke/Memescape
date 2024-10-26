@@ -5,8 +5,8 @@ import createUserData from "./create/createUserData"
 import createTemplateData from "./create/createTemplateData"
 import createMemeData from "./create/createMemeData"
 import createBookmarkData from "./create/createBookmarkData"
-import { configDotenv } from "dotenv"
 import { Image, Template, User, Meme, Bookmark, Prisma } from "@prisma/client"
+import { configDotenv } from "dotenv"
 configDotenv()
 
 async function seedTable<RecordType>(

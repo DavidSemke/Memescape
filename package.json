@@ -14,8 +14,9 @@
     "prisma-push": "prisma format & prisma db push",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "jest": "jest",
+    "jest:watch": "jest --watch",
+    "playwright": "set NODE_ENV=test &npm run build & concurrently \"npm run start\" \"npx playwright test\""
   },
   "dependencies": {
     "@heroicons/react": "^2.1.4",
