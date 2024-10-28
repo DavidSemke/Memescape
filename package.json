@@ -8,15 +8,16 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate & next build",
+    "build": "prisma generate && next build",
     "seed-db": "tsx src/data/seed",
-    "prisma-migrate": "prisma format & prisma generate & prisma migrate deploy & next build",
-    "prisma-push": "prisma format & prisma db push",
+    "prisma-migrate": "prisma format && prisma generate && prisma migrate deploy && next build",
+    "prisma-push": "prisma format && prisma db push",
     "start": "next start",
     "lint": "next lint",
+    "preinstall": "npx only-allow pnpm",
     "jest": "jest",
     "jest:watch": "jest --watch",
-    "playwright": "set NODE_ENV=test &npm run build & concurrently \"npm run start\" \"npx playwright test\""
+    "playwright": "NODE_ENV=test pnpm run build && concurrently \"npm run start\" \"npx playwright test\""
   },
   "dependencies": {
     "@heroicons/react": "^2.1.4",
@@ -48,6 +49,7 @@
     "@types/react-dom": "^18",
     "@types/uuid": "^10.0.0",
     "autoprefixer": "^10.4.19",
+    "concurrently": "^9.0.1",
     "eslint": "^8",
     "eslint-config-next": "14.2.4",
     "eslint-config-prettier": "^9.1.0",
